@@ -1,0 +1,33 @@
+#include <stdio.h>
+int main(void)
+{
+	//int s1, s2, s3, s4, s5;
+	//int Total = 0;
+	//double Average, Variance;
+	//scanf("%d %d %d %d %d", &s1, &s2, &s3, &s4, &s5);
+	//Total = s1 + s2 + s3 + s4 + s5;
+	//Average = Total / 5.0;
+	//Variance = ((s1 - Average)*(s1 - Average) +
+	//				(s2 - Average)*(s2 - Average) +
+	//				(s3 - Average)*(s3 - Average) +
+	//				(s4 - Average)*(s4 - Average) + 
+	//				(s5 - Average)*(s5 - Average)) / 5.0;
+	//printf("평균: %f, 분산: %f\n", Average, Variance);
+
+	//int a, b, c, d;
+	//double x, y;
+	//printf("첫번째 직선의 기울기와 y절편: ");
+	//scanf("%d %d", &a, &b);
+	//printf("두번째 직선의 기울기와 y절편: ");
+	//scanf("%d %d", &c, &d);
+	//x  = (d-b) / (double)(a-c);
+	//y = a * x + b;
+	//printf("두 직선의 교점 좌표: (%f, %f)\n", x, y);
+
+	unsigned char num;
+	printf("숫자 입력: ");
+	scanf("%d", &num);
+	unsigned char result = num & (unsigned char)8;
+	printf("입력한 %d 숫자의 LSB로부터 4번째 자리 숫자는 %d입니다\n", num, result>>3);
+	return 0;
+}
