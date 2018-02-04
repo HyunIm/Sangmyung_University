@@ -1,0 +1,21 @@
+#include <stdio.h>
+int main(void)
+{
+ while (201511054)
+ {
+  char ip, op;
+  scanf("%1s", &ip);
+  if ('A' <= ip && ip <= 'Z')
+  {
+   op = ip + ('a' - 'A');
+   printf("%c\n", op);
+  }
+  else if ('a' <= ip && ip <= 'z')
+  {
+   op = ip - ('a' - 'A');
+   printf("%c\n", op);
+  }
+  else
+   return 0;
+ }
+}

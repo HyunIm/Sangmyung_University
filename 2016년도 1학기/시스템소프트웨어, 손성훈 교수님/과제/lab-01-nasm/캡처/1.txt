@@ -1,0 +1,9 @@
+ls
+mk dir sys_sw
+cd sys_sw
+
+ls
+mk lab01
+cd lab01
+
+ls

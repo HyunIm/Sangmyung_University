@@ -1,0 +1,113 @@
+3.1
+
+section .data
+msg db 'Hello, world!',0x0A
+len equ $ - msg ;length of hello string.
+section .text
+global _start ;must be declared for linker (ld)
+_start: ;we tell linker where is entry point
+mov eax, 4 ;system call number (sys_write)
+mov ebx, 1 ;file descriptor (stdout)
+mov ecx, msg ;message to write
+mov edx, len ;message length
+int 0x80 ;call kernel
+mov eax, 1 ;system call number (sys_exit)
+xor ebx, ebx ;exit status of this program
+int 0x80
+
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+"hello.asm" 15L, 446C                                         1,1           All
+
+
+3.2
+
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ nasm -f elf hello.asm -l hello.lst
+
+
+3.3
+
+00000000 T _start
+0000000e a len
+00000000 d msg
+
+T = The symbol is in the text (code) section.
+a = The symbol's value is absolute, and will not be changed by further linking.
+d = The symbol is in the initialized data section.
+
+
+3.4
+
+section .data
+msg db 'Hello, world!',0x0A
+len equ $ - msg ;length of hello string.
+section .text
+global _mystart ;must be declared for linker (ld)
+_mystart: ;we tell linker where is entry point
+mov eax, 4 ;system call number (sys_write)
+mov ebx, 1 ;file descriptor (stdout)
+mov ecx, msg ;message to write
+mov edx, len ;message length
+int 0x80 ;call kernel
+mov eax, 1 ;system call number (sys_exit)
+xor ebx, ebx ;exit status of this program
+int 0x80
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+"hello_mystart.asm" 14L, 449C                                 1,1           All
+
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ vi hello_mystart.asm
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ nasm -f elf hello_mystart.asm
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ ld -s -o hello_mystart hello_mystart.o
+ld: warning: cannot find entry symbol _start; defaulting to 0000000008048080
+
+시작 상징인 _start를 찾을 수 없기 때문이다. -e 명령어를 사용하여 _mystart를 시작 상징으로 해주어야한다.
+
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ ld -e _mystart -o hello_mystart hello_mystart.o
+
+
+3.5
+
+section .data
+msg db 'Hello, world!',0x0A
+len equ $ - msg ;length of hello string.
+section .text
+global main ;must be declared for linker (ld)
+main: ;we tell linker where is entry point
+mov eax, 4 ;system call number (sys_write)
+mov ebx, 1 ;file descriptor (stdout)
+mov ecx, msg ;message to write
+mov edx, len ;message length
+int 0x80 ;call kernel
+mov eax, 1 ;system call number (sys_exit)
+xor ebx, ebx ;exit status of this program
+int 0x80
+
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+~                                                                               
+"hello_main.asm" 15L, 442C                                    1,1           All
+
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ vi hello_main.asm
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ nasm -f elf hello.asm
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ gcc hello_main.o -o hello_main
+syssw@syssw-VirtualBox:~/sys_sw/lab01$ ./hello_main
+Hello, world!
