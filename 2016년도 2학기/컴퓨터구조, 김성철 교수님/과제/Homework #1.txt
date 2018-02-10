@@ -1,0 +1,7 @@
+* 최신 PC(Personal Computer) 사양(Specifications)조사
+
+- 컴퓨터 기종
+- CPU clock rate
+- Memory Size
+- 캐시 크기
+- Any Other characteristics

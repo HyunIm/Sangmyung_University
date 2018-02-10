@@ -1,0 +1,2 @@
+인터넷에서의 TCP/IP 표준이 de facto인지 혹은 de jure인지 의견을 개진하라.
+분량: PPT font size 24로 한 페이지
