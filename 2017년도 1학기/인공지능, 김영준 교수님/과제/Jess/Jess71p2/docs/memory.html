@@ -1,0 +1,1040 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Working Memory</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li>
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li id="selected">
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li>
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li>
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li>
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>5.
+        Working Memory</h2>
+    
+
+
+<p>
+Each Jess rule engine holds a collection of knowledge nuggets called
+<i>facts.</i> This collection is known as the <i>working memory.</i>
+Working memory is important because <a href="rules.html">rules</a> can only react to additions, deletions,
+and changes to working memory. You can't write a Jess rule that will
+react to anything else.
+</p>
+
+<p>
+Some facts are <i>pure facts</i> defined and created entirely by
+Jess. Other facts are <a href="#shadow_facts"><i>shadow facts</i></a>
+connected to Java objects you provide. Shadow facts act as "bridges"
+that let Jess reason about things that happen outside of working
+memory.
+</p>
+
+
+<p>
+Every fact has a <i>template</i>. The template has a name and a set of
+<i>slots</i>, and each fact gets these things from its template. This
+is the same structure that JavaBeans -- plain old Java objects, or
+POJOs -- have, and it's also similar to how relational databases are
+set up. The template is like the class of a Java object, or like a
+relational database table. The slots are like the properties of the
+JavaBean, or the columns of a table. A fact is therefore like a single
+JavaBean, or like a row in a database table. You can think of it
+either way. </p>
+
+
+<p>
+In Jess, there are three kinds of facts: <i>unordered facts</i>,
+<i>shadow facts</i> and <i>ordered facts</i>. We'll learn about all of
+these in this chapter. First, though, we need to learn
+more about templates.</p>
+
+
+<p>
+Just so you know, as we learn about working memory: you can see a list
+of all the facts in working memory using the <a href="functions.html#facts"><tt>facts</tt></a>
+command. Facts are added using the <a href="functions.html#assert"><tt>assert</tt></a>, <a href="functions.html#add"><tt>add</tt></a>, and <a href="functions.html#definstance"><tt>definstance</tt></a> functions. You can
+remove facts with the <a href="functions.html#retract"><tt>retract</tt></a> and <a href="functions.html#undefinstance"><tt>undefinstance</tt></a> functions. The <a href="functions.html#modify"><tt>modify</tt></a> function
+lets you change the slot values of facts already in working
+memory. And finally, you can completely clear Jess of all facts and
+other data using the <a href="functions.html#clear"><tt>clear</tt></a> command.</p>
+
+
+
+<a name="templates">
+<h3>5.1. Templates</h3>
+</a>
+
+<p>As we've already stated, every fact has a <i>template</i>. A fact
+gets its <i>name</i> and its list of <i>slots</i> from its
+template. Therefore a template is something like a Java class.</p>
+
+
+<p>You usually create templates yourself using the <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> construct or the <a href="functions.html#defclass"><tt>defclass</tt></a>
+function. Other times, templates are created automatically for you,
+either while you're defining a <a href="constructs.html#defrule"><tt>defrule</tt></a> or when you
+use the <a href="functions.html#add"><tt>add</tt></a> function or the <a href="api/jess/Rete.html#add(java.lang.Object)"><tt><tt>jess.Rete.</tt>add(java.lang.Object)</tt></a> method.</p>
+
+
+<p>The deftemplate construct is the most general and most powerful way
+to create a template. You won't understand most of the options shown
+here yet, but we'll cover them all in this chapter and the next:</p>
+
+
+<div class="example">
+<pre>
+(deftemplate <i>template-name</i>
+    [extends <i>template-name</i>]
+    ["Documentation comment"]
+    [(declare  (slot-specific TRUE | <b>FALSE</b>)
+               (backchain-reactive TRUE | <b>FALSE</b>)
+               (from-class <i>class name</i>)
+               (include-variables TRUE | <b>FALSE</b>)
+               (ordered TRUE | <b>FALSE</b>))]
+     (slot | multislot <i>slot-name</i>
+         ([(type <b>ANY</b> | INTEGER | FLOAT |
+                NUMBER | SYMBOL | STRING |
+                LEXEME | OBJECT | LONG)]
+         [(default <i>default value</i>)]
+         [(default-dynamic <i>expression</i>)]
+         [(allowed-values <i>expression</i>+)])*)
+</pre>
+</div>
+
+
+<p>A template declaration includes a name, an optional documentation
+string, an optional "extends" clause, an optional list of
+declarations, and a list of zero or more slot descriptions. Each slot
+description can optionally include a type qualifier or a default value
+qualifier. In the syntax diagram, defaults for various options are
+indicated in bold letters.</p>
+
+
+<p>The <i>template-name</i> is the head of the facts that will be created
+using this template.</p>
+
+
+<p>The declarations affect either how the template will be created, or
+how facts that use it will act, or both. We'll cover most of the
+declarations in this chapter; others are covered in the <a href="constructs.html">Constructs</a> appendix or in the <a href="rules.html">chapter on rules.</a>
+</p>
+
+
+<p>Every template has a single parent template, which can be specified
+with the "extends" clause. A template inherits all the slots of its
+parent template, as well as declared properties
+  like <tt>slot-specific</tt> and <tt>backchain-reactive</tt>. If you don't
+specify a parent, a template extends a template named "__fact", which
+has no slots.</p>
+        
+
+<p>Some template declarations include <i>slots</i> (those that don't
+will generally have implicitly defined slots.) There may
+be an arbitrary number of slots in a template. Each
+<i>&lt;slot-name&gt;</i> must be a symbol. A <i>multislot</i> is a slot
+    that can hold a list of values, while a normal slot can hold just one
+    value at a time. The name of a slot may <i>not</i> contain a '.'
+    (dot) character.</p>
+
+
+<p>Each slot can have a list of zero or more <i>slot qualifiers.</i>
+    The <tt>default</tt> slot qualifier gives a value to use for a
+    slot when the fact is first created, if no other value is specified;
+    the default is the symbol <tt>nil</tt> for a regular slot, and
+    the empty list for a multislot.
+<tt>default-dynamic</tt> is similar but the the given
+<i>expression</i> will be evaluated each time a new fact using this template is
+asserted.</p>
+
+    
+<p>The <tt>type</tt> slot qualifier is accepted but not
+currently enforced by Jess; in theory it specifies what data type the slot is
+allowed to hold. Acceptable values are ANY, INTEGER, FLOAT, NUMBER,
+SYMBOL, STRING, LEXEME, and OBJECT.</p>
+
+    
+<p>The <tt>allowed-values</tt> slot qualifier gives a set of values allowed
+        to be in the slot. For a multislot, the allowed values are restricted to values
+    in this set. If you specify both <tt>allowed-values</tt> and <tt>default</tt>, Jess checks
+    to make sure they're consistent. If you specify <tt>allowed-values</tt> but do not specify
+    a slot default, then the first listed allowed value becomes the default.</p>
+
+
+<a name="undefining_templates">
+<h4>5.1.1. Undefining templates</h4>
+</a>
+    
+<p>Although it shouldn't be a  common requirement, you can remove a previously defined template using the
+        <a href="api/jess/Rete.html#removeDeftemplate(String)"><tt><tt>jess.Rete.</tt>removeDeftemplate(String)</tt></a> method. You might want to do this during interactive
+    development, because you can't change the slots of a template without removing the old definition first. You won't be
+        able to remove a template unless it's completely unused: no rules, other templates, deffacts, or facts may reference it. </p>
+
+
+
+
+
+<a name="unordered_facts">
+<h3>5.2. Unordered facts</h3>
+</a>
+
+
+<p>In object-oriented languages like Java, <i>objects</i> have named
+<i>fields</i> in which data appears. Unordered facts offer this
+capability (although the fields are traditionally called
+<i>slots.</i>)</p>
+
+
+<div class="example">
+<pre>
+(automobile (make Ford) (model Explorer) (year 1999))
+</pre>
+</div>
+
+
+<p>Before you can create unordered facts, you have to define the slots
+they have using the <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> construct. </p>
+
+
+<p>As an example, defining the following template:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate automobile
+  "A specific car."
+  (slot make)
+  (slot model)
+  (slot year (type INTEGER))
+  (slot color (default white)))</pre>
+
+</div>
+
+
+<p>would allow you to define the fact shown here.  </p>
+
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (automobile (model LeBaron) (make Chrysler)
+        (year 1997)))</pre>
+
+<pre>
+<i>&lt;Fact-1&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>
+f-0   (MAIN::initial-fact)
+f-1   (MAIN::automobile (make Chrysler) (model LeBaron)
+                        (year 1997) (color white))
+For a total of 2 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+<p>Note that the car is white by default. If you don't supply a default
+value for a slot, and then don't supply a value when a fact is
+asserted, the special value <tt>nil</tt> is used. Also note that any
+number of additional automobiles could also be simultaneously asserted
+onto the fact list using this template.</p>
+
+
+<p>Note also that we can specify the slots of an unordered fact in any order
+(hence the name.) Jess rearranges our inputs into a <i>canonical
+order</i> so that they're always the same.</p>
+
+
+<p>As you can see above, each fact is assigned an integer index (the
+<i>fact-id</i>) when it is asserted. You can remove an individual fact
+from the working memory using the <a href="functions.html#retract"><tt>retract</tt></a> function.</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(retract 1)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::initial-fact)
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+<p>The fact <tt>(initial-fact)</tt> is asserted by the <a href="functions.html#reset"><tt>reset</tt></a>
+command. It is used internally by Jess to keep track of its own
+operations; you should generally not retract it.</p>
+
+
+<p>A given slot in a deftemplate fact can normally hold only one
+value. If you want a slot that can hold multiple values, use the <tt>multislot</tt>
+keyword instead:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate box (slot location) (multislot contents))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?id (assert (box (location kitchen)
+                       (contents spatula sponge frying-pan))))</pre>
+
+<pre>
+<i>&lt;Fact-2&gt;</i>
+</pre>
+
+</div>
+
+
+<p>(We're saving the fact returned by (assert) in the variable ?id,
+for use below.) A multislot has the default value () (the empty list) if no other
+default is specified.</p>
+
+
+<p>You can change the values in the slots of an unordered fact using the
+<a href="functions.html#modify"><tt>modify</tt></a> command. Building on the immediately preceding
+example, we can move the box into the dining room:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(modify ?id (location dining-room))</pre>
+
+<pre>
+<i>&lt;Fact-2&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::initial-fact)
+f-2   (MAIN::box (location dining-room)
+                 (contents spatula sponge frying-pan))
+For a total of 2 facts in module MAIN.</i>
+</pre>
+
+</div>
+            
+<p></p>
+
+
+<p>The optional <tt>extends</tt> clause of the <tt>deftemplate</tt>
+construct lets you define one template in terms of
+another. For example, you could define a used-auto as a kind of automobile
+with more data:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate used-auto extends automobile
+  (slot mileage)
+  (slot blue-book-value)
+  (multislot owners))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+</div>
+
+
+<p>A used-auto fact would now have all the slots of an automobile, in
+the same order, plus three more. As we'll see later, this inheritance
+relationship will let you act on all automobiles (used or not) when
+you so desire, or only on the used ones.</p>
+
+
+
+<a name="shadow_facts">
+<h3>5.3. Shadow facts: reasoning about Java objects</h3>
+</a>
+
+
+<p>As mentioned previously, shadow facts are just unordered facts that
+serve as "bridges" to Java objects. By using shadow facts, you can put
+any Java object into Jess's working memory.</p>
+
+
+<a name="shadow_templates">
+<h4>5.3.1. Templates for shadow facts</h4>
+</a>
+
+<p>Like all other facts, shadow facts need to have a template, In this
+case, though, rather than specifying the slots ourselves, we want to
+let Jess create the template automatically by looking at a Java
+class. For example, we might be writing a banking program. Our
+imaginary Java code works with <tt>Account</tt> objects, like this:</p>
+
+
+<div class="javacode">
+<pre>
+
+import java.io.Serializable;
+
+public class Account implements Serializable {
+    private float balance;
+    public float getBalance() { return balance; }
+    public void setBalance(float balance) {
+        this.balance = balance;
+    }
+    // Other, more interesting methods
+}
+
+</pre>
+</div>
+
+
+<p> At some point the rule-based part of our program needs to deal
+with these too.  Therefore we'll need a template like this:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate Account
+    (declare (from-class Account)))
+</pre>
+
+</div>
+
+
+<p>Note how I've used the class name (minus the package prefix, if
+there was one) as the template name. This is just a convention, and
+the template name can be anything you want. But as we'll see a little
+later, Jess knows about this convention and using it can save a little
+work.</p>
+
+
+<p>This template will automatically have slots corresponding to the
+the JavaBeans properties of the <tt>Account</tt> class: in particular,
+there will be a slot named <tt>balance</tt> corresponding to the
+<tt>getBalance()</tt> method. Jess uses the <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/Introspector.html"><tt>java.beans.Introspector</tt></a> class to find the property names, so
+you can customize how Jess defines properties by writing your own
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/BeanInfo.html"><tt>java.beans.BeanInfo</tt></a> classes.</p>
+
+
+<p>The <a href="functions.html#defclass"><tt>defclass</tt></a> function can be used instead to create a
+shadow fact template; it looks like</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defclass Account Account)</pre>
+
+</div>
+
+
+<p>It is just a shortcut for using deftemplate. The chief advantage of
+<a href="functions.html#defclass"><tt>defclass</tt></a> is that because it is a function, it can be
+used anywhere, unlike <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> which is a
+construct, and can only be used at the top level of a program (see
+<a href="constructs.html">here</a> for more information.) The
+chief disadvantage is that it is limited in what it can do: many of
+the declarables that are available with <tt>deftemplate</tt> are not
+available with <tt>defclass</tt>.</p>
+
+
+<p>The <tt>from-class</tt> declaration, by itself, will create slots
+that correspond to JavaBeans properties. If you also use <tt>include-variables</tt>, like this:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate Account
+    (declare (from-class Account)
+             (include-variables TRUE))</pre>
+
+</div>
+
+
+<p>then public member variables of the class are used to define additional slots.</p>
+
+
+
+<a name="shadow_instances">
+<h4>5.3.2. Adding Java objects to working memory</h4>
+</a>
+
+
+<p>Once you've created an appropriate template, you can add some Java
+objects to working memory, automatically creating shadow facts to link
+them to Jess. Continuing with our <tt>Account</tt> example, imagine
+that you want to create an <tt>Account</tt>, and you want to add this
+object to working memory because rules will be working with it. Then
+all you need to do is:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?a (new Account))</pre>
+
+<pre>
+<i>&lt;Java-Object:Account&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(add ?a)</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::Account
+             (balance 0.0)
+             (class &lt;Java-Object:java.lang.Class&gt;)
+             (OBJECT &lt;Java-Object:Account&gt;))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+<p>The <a href="functions.html#add"><tt>add</tt></a> function creates a shadow fact and links it
+to our <tt>Account</tt> object. We'll explore the nature of that link in
+the following section, but before we do that, I want to point out two
+things about <a href="functions.html#add"><tt>add</tt></a> and about shadow fact templates in
+general.</p>
+
+
+<p>First, note that the template has a slot named <tt>OBJECT</tt>. All
+shadow fact templates have this slot. Each shadow fact created from
+this template will use that slot to hold a reference to the Java
+object itself. Therefore, the original object is always easily
+available. The reverse mapping (given a Java object, finding its
+shadow fact) is also available using the method <a href="api/jess/Rete.html#getShadowFactForObject(java.lang.Object)"><tt><tt>jess.Rete.</tt>getShadowFactForObject(java.lang.Object)</tt></a>.</p>
+
+
+<p>Second, the <a href="functions.html#add"><tt>add</tt></a> function understands the template
+naming convention discussed in the previous section. If you call
+<a href="functions.html#add"><tt>add</tt></a> without creating a matching template first, <a href="functions.html#add"><tt>add</tt></a> will create a template automatically, using that naming
+convention.</p>
+
+
+
+
+<a name="property_change_events">
+<h4>5.3.3. Responding to changes</h4>
+</a>
+
+
+<p>Continuing with our <tt>Account</tt> example, we can use the <a href="functions.html#modify"><tt>modify</tt></a> function to change the fact, and the Java object will
+be automatically modified too:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(printout t (?a getBalance) crlf)</pre>
+
+<pre>
+<i>0.0</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(modify 0 (balance 1))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::Account
+                   (balance 1)
+                   (class &lt;Java-Object:java.lang.Class&gt;)
+                   (OBJECT &lt;Java-Object:Account&gt;))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(printout t (?a getBalance) crlf)</pre>
+
+<pre>
+<i>1.0</i>
+</pre>
+
+</div>
+
+
+
+<p>But what happens if we modify the <tt>Account</tt> directly?</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(printout t (?a getBalance) crlf)</pre>
+
+<pre>
+<i>1.0</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(?a setBalance 2)</pre>
+
+<pre>
+<b>Jess&gt; </b>(printout t (?a getBalance) crlf)</pre>
+
+<pre>
+<i>2.0</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::Account
+             (balance 1)
+             (class &lt;Java-Object:java.lang.Class&gt;)
+             (OBJECT &lt;Java-Object:Account&gt;))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+<p>The working memory still thinks our Account's balance is
+1.0. There are several ways to notify Jess that the object is changed
+and working memory needs updating. One is using the <a href="functions.html#update"><tt>update</tt></a> function:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(update ?a)</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::Account
+             (balance 2.0)
+             (class &lt;Java-Object:java.lang.Class&gt;)
+             (OBJECT &lt;Java-Object:Account&gt;))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+<p> 
+<a href="functions.html#update"><tt>update</tt></a> tells Jess to refresh the slot values of
+the shadow fact linked to the given Java object. The <a href="functions.html#reset"><tt>reset</tt></a> function, which resets working memory, updates the
+slots of <i>all</i> shadow facts in the process.  You can also
+actively tell Jess to refresh its knowledge of the properties of
+individual objects using the <a href="api/jess/Rete.html#updateObject(java.lang.Object)"><tt><tt>jess.Rete.</tt>updateObject(java.lang.Object)</tt></a> method.</p>
+
+
+<p>This behaviour is what you get for objects that don't support
+<i>property change notification.</i> In practice, this is fine. Most
+rule-based programs reason about static "value" objects whose
+properties don't change over time, or change only occasionally or at
+well-defined times.</p>
+
+
+<p>But if your objects will be changed often from outside of Jess,
+then it would be nice to have updates happen automatically. If you want to
+have your shadow facts stay continuously up to date, Jess needs to be
+notified whenever a Bean property changes. For this to happen, the
+Bean has to support the use of <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/PropertyChangeListener.html"><tt>java.beans.PropertyChangeListener</tt></a>s. For Beans that fulfill
+this requirement Jess will automatically arrange for working memory to
+be updated every time a property of the Bean changes. We can modify
+our Account class to support this feature like this:</p>
+
+
+<div class="javacode">
+<pre>
+
+import java.io.Serializable;
+import java.beans.*;
+
+import java.io.Serializable;
+
+public class PCSAccount implements Serializable {
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private float balance;
+    public float getBalance() { return balance; }
+    public void setBalance(float balance) {
+        float temp = this.balance;
+        this.balance = balance;
+        pcs.firePropertyChange("balance", new Float(temp), new Float(balance));
+    }
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        pcs.addPropertyChangeListener(pcl);
+    }
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        pcs.removePropertyChangeListener(pcl);
+    }
+    // Other, more interesting methods
+}
+
+</pre>
+</div>
+
+
+<p>Now whenever an Account balance is modified, Jess will be notified
+and the corresponding shadow fact will be updated immediately.</p>
+
+
+
+
+<a name="more_property_change">
+<h4>5.3.4. More about PropertyChangeEvents</h4>
+</a>
+    
+<p>
+       PropertyChangeEvents and shadow facts seem magical to some people; the flow of control
+       can be confusing, and the notion of things happening "automatically" sometimes makes people
+       forget that no code executes in Java unless something, somewhere, invokes it.
+       They're not magical, and to prove it, I'll explain exactly where they come from, what they do,
+       and what Jess does when it sees one -- or not.
+    </p>
+
+    
+<p>
+        First, have a look back at the PCSAccount class above. It's a classic example of a JavaBean that
+        supports PropertyChangeListeners. When you add an instance of this class to working memory, Jess
+        will <i>usually</i> call <tt>addPropertyChangeListener(listener)</tt> on it, where <i>listener</i> is a
+        Jess object designed to respond to change events. The listener object is
+        added to a list of objects that want to be notified when the PCSAccount object's properties change. This list
+        is managed by the <tt>PropertyChangeSupport</tt> object that the PCSAccount holds as a member (Why "usually?"
+        If you use <a href="functions.html#definstance"><tt>definstance</tt></a> to add the object to working memory and specify <tt>static</tt> as the
+        final argument, then Jess will skip this step.)
+    </p>
+
+    
+<p>
+        Of course, many (most) Java classes <i>don't</i> allow you to add PropertyChangeListeners to them,
+        and so for many of the Java objects you'll add to working memory, Jess doesn't register itself with
+        the object in any way. The object is filed away in working memory, and that's it.
+    </p>
+
+    
+<p>
+        There are now two main scenarios of interest: an object in working memory can be modified from Jess code, or
+        from Java code. Each of these scenarios can happen with or without PropertyChangeListeners, for a total of four
+        cases. We'll discuss each of these four situations separately. The most important things to remember is that all of the
+        steps discussed here happen synchronously: neither Jess, nor the <tt>PropertyChangeSupport</tt> class, will spawn any
+        new threads to process change events. Everything happens on the thread that initiates the change. Now, on to the four cases:
+    </p>
+
+    
+<ol>
+    
+<li>
+        
+<i>Object modified from Java, no PropertyChangeListeners.</i> In this case, the Java code modifies the object, and Jess
+        doesn't know about it. Bad things may happen as a result: Jess's working memory indices may need to be updated.
+        Therefore you should always call the
+        <a href="api/jess/Rete.html#updateObject(java.lang.Object)"><tt><tt>jess.Rete.</tt>updateObject(java.lang.Object)</tt></a> method to tell Jess when an object is changed
+        in this way.
+    </li>
+
+    
+<li>
+        
+<i>Object modified from Java, PropertyChangeListeners.</i> In this case, Java code calls a method like <tt>setBalance()</tt>
+        above, which calls <tt>firePropertyChange()</tt>, which iterates over that list of listeners we mentioned previously and calls
+        <tt>propertyChanged()</tt> on each listener. One of those listeners will be the Jess object. Jess will examine
+        the PropertyChangeEvent object that <tt>propertyChange()</tt> receives as an argument and update working memory appropriately.
+    </li>
+
+        
+<li>
+        
+<i>Object modified from Jess, no PropertyChangeListeners.</i> If you use <a href="functions.html#modify"><tt>modify</tt></a> (or the Java equivalent)
+           to modify a shadow fact, then Jess will call the appropriate "setter" methods on the object, and update working memory.
+        </li>
+
+
+        
+<li>
+        
+<i>Object modified from Jess, PropertyChangeListeners.</i> This is the most complicated case. Note that there is a problem:
+            if Jess calls a setter method on the object, then the object will send a redundant <tt>PropertyChangeEvent</tt> back to Jess.
+            Unless Jess is careful, there could be an infinite loop. What Jess does is to call the setter methods, and then rely on the
+            object to send a <tt>PropertyChangeEvent</tt> back. When Jess receives the change event, it will update working
+            memory in response. This works fine as long as property change notification is implemented correctly by the object.
+            If the object accepts <tt>PropertyChangeListeners</tt> but then doesn't send <tt>PropertyChangeEvents</tt>, however,
+            then working memory will not be updated. If you have a class that behaves this way and you can't fix it, then you can always use <a href="functions.html#definstance"><tt>definstance</tt></a> with the <tt>static</tt> option so that Jess ignores the change support.
+        </li>
+
+    
+</ol>
+
+
+
+
+    
+<a name="shadow_misc">
+<h4>5.3.5. Shadow fact miscellany</h4>
+</a>
+
+        
+<p>Shadow fact templates, like all templates, can
+<tt>extend</tt> one another. In fact, shadow fact templates can extend
+ordinary templates, and ordinary templates can extend shadow fact
+templates. Of course, for a shadow fact template to extend a plain
+template, the corresponding Java class must have property names that
+match the plain template's slot names. Note, also, that just because
+two Java classes have an inheritance relationship doesn't mean that
+templates created from them will have the same relationship. You must
+explicitly declare all such relationships using <tt>extends.</tt> See
+the full documenation for <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> for details.
+        </p>
+
+        
+<p>One final note about Java Beans used with Jess: Beans are often
+        operating in a multithreaded environment, and so it's
+        important to protect their data with synchronized blocks or
+        synchronized methods. However, sending
+        <tt>PropertyChangeEvents</tt> while holding a lock on the Bean
+          itself can be dangerous, as the Java Beans Specification
+          points out:</p>
+
+        
+<blockquote>
+"In order to reduce the risk of deadlocks, we strongly recommend that
+event sources should avoid holding their own internal locks when they
+call event listener methods. Specifically, as in the example code in
+Section 6.5.1, we recommend they should avoid using a synchronized
+method to fire an event and should instead merely use a synchronized
+block to locate the target listeners and then call the event listeners
+from unsynchronized code." -- JavaBean Specification, v 1.0.1, p.31.
+        </blockquote>
+Failing to heed this advice can indeed cause deadlocks in Jess.
+
+    
+
+        <a name="ordered_facts">
+<h3>5.4. Ordered facts</h3>
+</a>
+
+        
+<p>Most of the time, you will use unordered facts (or their
+            cousins, shadow facts.)  They are nicely structured, and
+            they're the most efficient kind of fact in Jess. In some
+            cases, though, slot names are redundant, and force you to
+            do more typing than you'd like. For example, if a fact
+            represents a single number, it seems silly to use an
+            unordered fact like this:</p>
+
+
+<div class="example">
+<pre>
+(number (value 6))
+</pre>
+</div>
+
+            
+<p>What you'd like would be a way to leave out that redundant "value" identifier.
+                Ordered facts let you do exactly that.</p>
+            Ordered facts are simply Jess lists, where the first field (the <i>head</i>
+        of the list) acts as a sort of category for the fact. Here are some
+        examples of ordered facts:
+
+<div class="example">
+<pre>
+(shopping-list eggs milk bread)
+(person "Bob Smith" Male 35)
+(father-of danielle ejfried)
+</pre>
+</div>
+
+        
+<p>You can add ordered facts to the working memory using the
+        <a href="functions.html#assert"><tt>assert</tt></a> function, just as with unordered facts.
+        If you add a fact to working memory whose head hasn't been
+        used before, Jess assumes you want it to be an ordered fact
+        and creates an appropriate template
+        automatically. Alternatively, you can explicitly declare an
+        ordered template using the <tt>ordered</tt> declaration with
+        the deftemplate construct:</p>
+
+        
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate father-of
+             "A directed association between a father and a child."
+             (declare (ordered TRUE)))</pre>
+        
+</div>
+
+        
+<p>The quoted string is a <i>documentation comment</i>; you can use it to
+        describe the template you're defining. Although declaring
+        ordered templates this way is optional, it's good style to
+        declare all your templates.</p>
+
+            
+<p>Note that an ordered fact is very similar to an unordered fact with
+                only one multislot. The similarity is so strong, that
+                in fact this is how ordered facts are implemented in Jess. If you
+                assert an ordered fact, Jess automatically generates a template
+                for it. This generated template will contain a single slot named
+                "__data". Jess treats these facts specially - the name of the slot is
+                normally hidden when the facts are displayed. This is really just a
+                syntactic shorthand, though; ordered facts really are just unordered
+                facts with a single multislot named "__data".</p>
+
+    
+
+        
+<a name="deffacts">
+<h3>5.5. The deffacts construct</h3>
+</a>
+
+
+<p>Typing separate <a href="functions.html#assert"><tt>assert</tt></a> commands for each of many facts is
+rather tedious. To make life easier in this regard, Jess includes the
+            <a href="constructs.html#deffacts"><tt>deffacts</tt></a> construct. A <tt>deffacts</tt> construct is a simply
+a named list of facts. The facts in all defined <tt>deffacts</tt> are
+asserted into the working memory whenever a <a href="functions.html#reset"><tt>reset</tt></a> command is
+issued:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deffacts my-facts "Some useless facts"
+  (foo bar)
+  (bar foo))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::initial-fact)
+f-1   (MAIN::foo bar)
+f-2   (MAIN::bar foo)
+For a total of 3 facts in module MAIN.</i>
+</pre>
+
+</div>
+
+
+
+
+<a name="implementation">
+<h3>5.6. How Facts are Implemented</h3>
+</a>
+
+
+<p>Every fact, shadow or otherwise, corresponds to a single instance
+of the <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a> class. You can learn more about this
+class <a href="library.html#jess.Fact">here.</a> Templates are
+represented by instances of <a href="api/jess/Deftemplate.html"><tt>jess.Deftemplate</tt></a>, which
+you can read about <a href="library.html#jess.Deftemplate">here.</a>
+</p>
+
+
+
+
+</div>
+</body>
+
+</html>

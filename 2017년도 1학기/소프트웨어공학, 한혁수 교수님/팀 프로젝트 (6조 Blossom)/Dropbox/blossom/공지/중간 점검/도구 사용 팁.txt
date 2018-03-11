@@ -1,0 +1,18 @@
+Windows 재부팅.
+Windows 탐색기 죽였다가, 파일에서 새작업 실행.
+Clone을 다시 받는다.
+충돌을 일으킬 것.
+
+
+maven
+1. import
+	-> maven
+		-> 1. Checkout from SCL
+			gtd M2E (맨 밑에서 2번째에 있는 EGit~~)
+		   2. exig~~
+			pom.xml
+
+1. step overflow
+2. 왜 객체지향이고, public private 고려
+3. 변수명 규칙 정할 것
+4. for문 3개 이상 사용

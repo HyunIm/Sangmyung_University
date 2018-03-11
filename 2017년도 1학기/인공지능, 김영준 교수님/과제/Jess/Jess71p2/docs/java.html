@@ -1,0 +1,663 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Using Java from Jess</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li>
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li>
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li>
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li>
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li id="selected">
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>8.
+        Using Java from Jess</h2>
+
+    
+<a name="reflection">
+<h3>8.1. Java reflection</h3>
+</a>
+
+
+<p>Jess includes a number of functions that let you create and
+manipulate Java objects directly from Jess. Using them, you can do
+virtually anything you can do from Java code, including defining new
+classes. Here is an example in which I create a Java <tt>HashMap</tt>
+and add a few String objects to it, then lookup one object and display
+it. To do this, I use Jess's <a href="functions.html#new"><tt>new</tt></a> and <a href="functions.html#call"><tt>call</tt></a> functions:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?ht (new java.util.HashMap))</pre>
+
+<pre>
+<i>&lt;Java-Object:java.util.HashMap&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(call ?ht put "key1" "element1")</pre>
+<pre>
+<i></i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(call ?ht put "key2" "element2")</pre>
+<pre>
+<i></i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(call ?ht get "key1")</pre>
+
+<pre>
+<i>"element1"</i>
+</pre>
+
+</div>
+
+As you can see, Jess converts freely between Java and Jess types when
+it can. Java objects that can't be represented as a Jess type are
+called <i>Java object values</i>. The <tt>HashMap</tt> in the
+example above is one of these.
+        <p></p>
+
+      Most of the time you can omit the <a href="functions.html#call"><tt>call</tt></a>, leading to a
+      notation a little more like Java code -- i.e.,
+        <div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?ht (new java.util.HashMap))</pre>
+
+<pre>
+<i>&lt;Java-Object:java.util.HashMap&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(?ht put "key1" "element1")</pre>
+<pre>
+<i></i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(?ht put "key2" "element2")</pre>
+<pre>
+<i></i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(?ht get "key1")</pre>
+
+<pre>
+<i>"element1"</i>
+</pre>
+        
+</div>
+        
+<p></p>
+
+Jess can also access member variables of Java objects using the same
+        <a href="functions.html#set"><tt>set</tt></a> and <a href="functions.html#get"><tt>get</tt></a> functions; if
+        these functions don't find a JavaBeans property by the given
+        name, they'll look for an instance variable next. There are
+        also functions named <a href="functions.html#set-member"><tt>set-member</tt></a> and <a href="functions.html#get-member"><tt>get-member</tt></a> functions that will only work with
+        instance variables; these can be handy if a class has instance
+        variables and accessor methods by the same name (like the
+        <tt>x</tt> member and <tt>getX()</tt> method in <tt>Point</tt>:)
+
+        <div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?pt (new java.awt.Point))</pre>
+
+<pre>
+<i>&lt;Java-Object:java.awt.Point&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(set-member ?pt x 37)</pre>
+
+<pre>
+<i>37</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(set-member ?pt y 42)</pre>
+
+<pre>
+<i>42</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(get-member ?pt x)</pre>
+
+<pre>
+<i>37</i>
+</pre>
+        
+</div>
+
+You can access static members by using the name of the class instead
+of an object as the first argument to these functions.
+
+        <div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(get-member System out)</pre>
+
+<pre>
+<i>&lt;Java-Object:java.io.PrintStream&gt;</i>
+</pre>
+        
+</div>
+
+Note that we don't have to say "java.lang.System". The java.lang
+package is implicitly "imported" much as it is in Java code. Jess also has an
+        <a href="functions.html#import"><tt>import</tt></a> function that you can use explicitly.
+
+
+        <p></p>
+Sometimes you might have trouble calling overloaded methods -- for
+example, passing the String "TRUE" to a Java method that is overloaded
+to take either a boolean or a String. In this case, you can always
+resort to using an explicit wrapper class -- in this case, passing a
+        <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Boolean.html"><tt>java.lang.Boolean</tt></a> object should fix the problem.
+
+        <p></p>
+To learn more about the syntax of <a href="functions.html#call"><tt>call</tt></a>, <a href="functions.html#new"><tt>new</tt></a>, <a href="functions.html#set-member"><tt>set-member</tt></a>,
+        <a href="functions.html#get-member"><tt>get-member</tt></a>, and other Java integration functions, see the <a href="functions.html">Jess function guide.</a>
+
+
+<a name="static_methods">
+<h4>8.1.1. Calling static methods</h4>
+</a>
+
+<p>
+You can invoke static methods using <a href="functions.html#call"><tt>call</tt></a> as well by
+specifying the name of the class as the first argument rather than a
+Java object. When you're calling a static method, "call" is not optional.
+</p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(call System gc)</pre>
+
+<pre>
+<i></i>
+</pre>
+
+</div>
+
+<p>
+There's a problem with using <a href="functions.html#call"><tt>call</tt></a> with static methods,
+though: it can be ambiguous if a static method has the same name as an
+instance method of the <tt>java.lang.String</tt> class. In practice,
+this doesn't happen often, but when it does, it can be
+confusing. Therefore, in Jess 7, the preferred mechanism for invoking
+Java static methods is <i>not</i> to use <a href="functions.html#call"><tt>call</tt></a>, but
+instead to use Jess's <a href="functions.html#import"><tt>import</tt></a> function to import the
+method's class. This will automatically create a Jess function that
+invokes the given static method. For example:
+</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.util.Calendar)</pre>
+
+<pre>
+<i></i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?cal (Calendar.getInstance))</pre>
+
+<pre>
+<i>&lt;Java-Object:java.util.GregorianCalendar&gt;</i>
+</pre>
+
+</div>
+
+
+
+<a name="type_conversion">
+<h4>8.1.2. Type conversion of arguments</h4>
+</a>
+        
+<p></p>
+Jess converts values from Java to Jess types according to the following table.
+        <p></p>
+        
+<table border="1" ncols="2">
+            
+<tr>
+<th>Java type</th><th>Jess type</th>
+</tr>
+            
+<tr>
+<td>A null reference</td><td>The symbol 'nil'</td>
+</tr>
+            
+<tr>
+<td>A void return value</td><td>The symbol 'nil'</td>
+</tr>
+            
+<tr>
+<td>String</td><td>RU.STRING</td>
+</tr>
+            
+<tr>
+<td>An array</td><td>A Jess list</td>
+</tr>
+            
+<tr>
+<td>boolean or java.lang.Boolean</td><td>The symbols 'TRUE' and 'FALSE'</td>
+</tr>
+            
+<tr>
+<td>byte, short, int, or their wrappers</td><td>RU.INTEGER</td>
+</tr>
+            
+<tr>
+<td>long or Long</td><td>RU.LONG</td>
+</tr>
+            
+<tr>
+<td>double, float or their wrappers</td><td>RU.FLOAT</td>
+</tr>
+            
+<tr>
+<td>char or java.lang.Character</td><td>RU.SYMBOL</td>
+</tr>
+            
+<tr>
+<td>anything else</td><td>RU.JAVA_OBJECT</td>
+</tr>
+        
+</table>
+        
+<p></p>
+Jess converts values from Jess to Java types with some flexibility,
+according to this table. Generally when converting in this direction,
+Jess has some idea of a <i>target type;</i> i.e., Jess has a
+        <tt>java.lang.Class</tt> object and a <tt>jess.Value</tt> object, and
+wants to turn the <tt>Value</tt>'s contents into something assignable
+to the type named by the <tt>Class</tt>. Hence the symbol 'TRUE' could
+be passed to a function expecting a boolean argument, or to one
+expecting a String argument, and the call would succeed in both cases.
+        <p></p>
+        
+<table border="1" ncols="2">
+            
+<tr>
+<th>Jess type</th><th>Possible Java types</th>
+</tr>
+            
+<tr>
+<td>RU.JAVA_OBJECT</td><td>The wrapped object</td>
+</tr>
+            
+<tr>
+<td>The symbol 'nil'</td><td>A null reference</td>
+</tr>
+            
+<tr>
+<td>The symbols 'TRUE' or 'FALSE'</td><td>java.lang.Boolean or boolean</td>
+</tr>
+            
+<tr>
+<td>RU.SYMBOL, RU.STRING</td><td>String, char, java.lang.Character</td>
+</tr>
+            
+<tr>
+<td>RU.FLOAT</td><td>float, double, and their wrappers</td>
+</tr>
+            
+<tr>
+<td>RU.INTEGER</td><td>long, short, int, byte, char, and their wrappers</td>
+</tr>
+            
+<tr>
+<td>RU.LONG</td><td>long, short, int, byte, char, and their wrappers</td>
+</tr>
+            
+<tr>
+<td>RU.LIST</td><td>A Java array</td>
+</tr>
+        
+</table>
+
+
+    
+
+    
+<a name="xfer">
+<h3>8.2. Transferring values between Jess and Java code</h3>
+</a>
+
+This section describes a very easy-to-use mechanism for communicating
+inputs and results between Jess and Java code.
+        <p></p>
+These methods are available in the class <tt>jess.Rete:</tt>
+
+
+<div class="example">
+<pre>
+public Value store(String name, Value val);
+public Value store(String name, Object val);
+public Value fetch(String name);
+public void clearStorage();
+</pre>
+</div>
+
+while these functions are available in Jess:
+
+<div class="example">
+<pre>
+(store &lt;name&gt; &lt;value&gt;)
+(fetch &lt;name&gt;)
+(clear-storage)
+</pre>
+</div>
+
+Both <tt>store</tt> methods accept a "name" and a value (in Java,
+either in the form of a <tt>jess.Value</tt> object or an ordinary Java
+object; in Jess, any value), returning any old value with that name,
+or null (or nil in Jess) if there is none. Both <tt>fetch</tt> methods
+accept a name, and return any value stored under that name, or
+null/nil if there is no such object. These functions therefore let you
+transfer data between Jess and Java that cannot be represented
+textually (of course they work for Strings, too.) In this example we
+create an object in Java, then pass it to Jess to be used as an
+argument to the <tt>list</tt> command.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExFetch {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    r.store("DIMENSION", new java.awt.Dimension(10, 10));
+    r.eval("(bind ?list (list dimension (fetch DIMENSION)))");
+    r.eval("(printout t ?list)");
+  }
+}
+<b>C:\&gt;</b> java ExFetch
+<pre>
+<i>(dimension &lt;Java-Object:java.awt.Dimension&gt;)</i>
+</pre>
+
+</pre>
+</div>
+
+        
+<p></p>
+Note that storing a null (or nil) value will result in the
+given name being removed from the hashtable altogether. <tt>clearStorage()</tt>
+and <tt>clear-storage</tt> each remove all data from the hashtable.
+
+        <p></p> Note that the Jess <tt>clear</tt> and Java <tt>clear()</tt>
+functions will call <tt>clearStorage(),</tt> but <tt>reset</tt> and
+        <tt>reset()</tt> will not. Stored data is thus available across calls
+to <tt>reset()</tt>.
+
+    
+
+    <a name="proxies">
+<h3>8.3. Implementing Java interfaces with Jess</h3>
+</a>
+        
+<p>Many Java libraries expect you to use <i>callbacks</i>. A callback is an object that
+            implements a specific interface; you pass it to a library method, and the methods of the
+            callback are invoked at some expected time. GUIs work this way -- the callbacks are called
+            <i>event handlers.</i> But Java Threads work this way too
+        -- a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Runnable.html"><tt>java.lang.Runnable</tt></a> is a callback that
+             gets invoked on a new thread. So being able to implement an interface is an important part of
+            programming in Java.
+        </p>
+        
+<p>
+            Jess supports creating callbacks with the <a href="functions.html#implement"><tt>implement</tt></a> function.  This function is
+            simple to use: you tell it the name of an interface, and the name of a deffunction, and it returns
+            an object that implements that interface by calling that function. When any method of that interface is
+            invoked, the deffunction will be called. The first argument will be the name of the interface function, and
+            all the arguments of the interface function will follow.
+        </p>
+        
+<p>
+            As an example, here is an implementation of <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Comparator.html"><tt>java.util.Comparator</tt></a> which sorts Strings
+            in case-insensitive order:
+        </p>
+
+        
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.util.Comparator)</pre>
+
+<pre>
+<b>Jess&gt; </b>(deffunction compare(?name ?s1 ?s2)
+    (return ((?s1 toUpperCase) compareTo (?s2 toUpperCase))))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?c (implement Comparator using compare))</pre>
+
+</div>
+
+        
+<a name="lambda">
+<h4>8.3.1. Lambda expressions</h4>
+</a>
+            
+<p>There's a nice shortcut you can use when calling <a href="functions.html#implement"><tt>implement</tt></a>. Instead of defining a separate
+            <a href="constructs.html#deffunction"><tt>deffunction</tt></a>, you can define one in-line using the <a href="functions.html#lambda"><tt>lambda</tt></a> facility. The <a href="functions.html#lambda"><tt>lambda</tt></a>
+            function lets you define a deffunction without naming it, and without adding it to a Rete engine. We can redo the example
+            above using <a href="functions.html#lambda"><tt>lambda</tt></a> like this:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.util.Comparator)</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?c (implement Comparator using (lambda (?name ?s1 ?s2)
+    (return ((?s1 toUpperCase) compareTo (?s2 toUpperCase))))))</pre>
+
+</div>
+
+        
+
+    
+
+    
+
+    
+<a name="equals_and_hashcode">
+<h3>8.4. Java Objects in working memory</h3>
+</a>
+
+        You can let Jess pattern-match on Java objects using
+        <a href="functions.html#definstance"><tt>definstance</tt></a>. You can also easily put Java objects into
+        the slots of other Jess facts, as described elsewhere in this document. This section describes some
+        minimal requirements for objects used in either of these ways.
+        <p></p>
+        Jess may call the <tt>equals</tt> and <tt>hashCode</tt> methods of any
+        objects in working memory. As such, it is very important
+        that these methods be implemented properly. The Java API documentation
+        lists some important properties of <tt>equals</tt> and
+        <tt>hashCode</tt>, but I will reiterate the most important (and most
+        often overlooked) one here: if you write <tt>equals</tt>, you probably
+        <i>must</i> write <tt>hashCode</tt> too. For any pair of instances of a
+        class for which <tt>equals</tt> returns <tt>true</tt>,
+        <tt>hashCode</tt> must return the same value for both instances. If this rule is not
+        observed, Jess will appear to malfunction when processing facts
+        containing these improperly defined objects in their slots. In
+        particular, rules that should fire may not do so.
+
+        <p>A <i>value object</i> is an instance of a class that represents a specific value.
+            They are often immutable like Integer, Double, and String. For Jess's purposes, a value object
+            is one whose <tt>hashCode()</tt> method returns a constant -- i.e., whose hash code doesn't change
+            during normal operation of the class. Integer, Double, and all the other wrapper classes
+            qualify, as does String, and generally all immutable classes. Any class that doesn't override the
+            default <tt>hashCode()</tt> method also qualifies as a value object by the definition. Java's
+            Collection classes (Lists, Maps, Sets, etc.) are classic examples of classes that are <i>not</i>
+            value objects, because their hash codes depend on the collection's contents.</p>
+
+        
+<p>As far as Jess is concerned, an object is a value object as long as its hash code won't
+            change while the object is in working memory. This includes the case where the object is contained in a slot
+            of any fact. If the hash code will only change during calls to <a href="functions.html#modify"><tt>modify</tt></a>, then the object
+            is still a value object.</p>
+
+        
+<p>Jess can make certain assumptions about value objects that lead to large performance increases
+            during pattern matching. Because many classes are actually value classes by Jess's broad definition,
+            Jess now assumes that all objects (except for Maps and Collections) are value objects by default. If you're working
+            with a class that is <i>not</i> a value class, it's very important that you tell Jess about it by
+            using the <a href="functions.html#set-value-class"><tt>set-value-class</tt></a> function. Failure to do so will lead to undefined (bad) behavior.</p>
+
+    
+
+    
+<a name="beanprops">
+<h3>8.5. Setting and Reading Java Bean Properties</h3>
+</a>
+        As mentioned previously, Java objects can be explicitly pattern-matched
+        on the LHS of rules, but only to the extent that they are <i>Java Beans</i>.
+        A Java Bean is really just a Java object that has a number of methods that
+        obey a simple naming convention for <i>Java Bean properties.</i> A class
+        has a Bean property if, for some string <i>X</i> and type <i>T</i> it has
+        either or both of:
+        <ul>                  
+            
+<li>
+                A method named <tt>get<i>X</i></tt> which returns <i>T</i> and accepts
+                no arguments; or, if <i>T</i> is boolean, named <tt>is<i>X</i></tt> which
+                accepts no arguments;</li>
+
+            
+<li>
+                A method named <tt>setX</tt> which returns void and accepts a single argument
+                of type <i>T</i>.</li>
+        
+</ul>
+
+        Note that the capitalization is also important: for example, for a method
+        named isVisible, the property's name is <i>visible</i>, with a lower-case
+        <tt>V</tt>. Only the capitalization of the first letter of the name is
+        important. You can conveniently set and get these properties using the
+        Jess <tt>set</tt> and <tt>get</tt> methods. Note that many of the trivial
+        changes in Java 1.1 were directed towards making most visible properties
+        of objects into Bean properties.
+
+        <p></p>
+        An example: AWT components have many Bean properties. One is <i>visible</i>,
+        the property of being visible on the screen. We can read this property
+        in two ways: either by explicitly calling the <tt>isVisible()</tt> method,
+        or by querying the Bean property using <tt>get.</tt>
+
+        
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*frame* = (new java.awt.Frame "Frame Demo"))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Directly call 'isVisible', or...
+(printout t (call ?*frame* isVisible) crlf)</pre>
+
+<pre>
+<i>FALSE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; ... equivalently, query the Bean property
+(printout t (get ?*frame* visible) crlf)</pre>
+
+<pre>
+<i>FALSE</i>
+</pre>
+        
+</div>
+
+    
+
+
+
+
+
+</div>
+</body>
+
+</html>

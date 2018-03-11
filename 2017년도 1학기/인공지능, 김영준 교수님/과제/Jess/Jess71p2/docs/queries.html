@@ -1,0 +1,482 @@
+<html>
+    
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Querying Working Memory</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li>
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li>
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li>
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li id="selected">
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li>
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>7.
+        Querying Working Memory</h2>
+
+
+<p>Jess's working memory is similar to a database; it's filled with indexed, structured data.
+ Most of the time, you'll access working memory by pattern matching from a rule. But once in a while,
+ you'll write some procedural code that needs to extract data from working memory directly. This chapter
+ tells you how.</p>
+
+
+<a name="filters">
+<h3>7.1. Linear search</h3>
+</a>
+        
+<p>A time-honored way to search a collection of items is by using linear search and a <i>filter</i>,
+            a Boolean function that
+            indicates whether an item should be part of the search result or not. Jess supports this kind of brute-force
+            search of Java objects in working memory using the <a href="api/jess/Filter.html"><tt>jess.Filter</tt></a> interface. You can implement <a href="api/jess/Filter.html"><tt>jess.Filter</tt></a>
+            and then pass an instance of your filter to the <a href="api/jess/Rete.html#getObjects(jess.Filter)"><tt><tt>jess.Rete.</tt>getObjects(jess.Filter)</tt></a> method,
+            which will return an <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Iterator.html"><tt>java.util.Iterator</tt></a> over the selected objects. Although this might not be practical for
+            large working memory sizes, it's certainly convenient. In the following, we run a Jess program that deals in <tt>Payment</tt> objects, then
+            query working memory for all the <tt>Payment</tt> objects and call <tt>process()</tt> on each one:
+
+<div class="javacode">
+<pre>
+    
+import jess.*;
+import java.util.Iterator;
+public class ExMyFilter {
+    interface Payment { void process(); }
+    public static void main(String[] argv) throws JessException {
+        Rete engine = new Rete();
+        engine.batch("cashier.clp");
+        Iterator it = engine.getObjects(new Filter() {
+            public boolean accept(Object o) {
+                return o instanceof Payment;
+            }
+        });
+        while (it.hasNext()) {
+            ((Payment) it.next()).process();
+        }
+    }
+}
+
+</pre>
+</div>
+
+
+</p>
+
+
+
+        
+<a name="queries">
+<h3>7.2. The defquery construct</h3>
+</a>
+        
+<p>
+
+            While linear search is convenient, it's inefficient. The <a href="constructs.html#defquery"><tt>defquery</tt></a> construct lets you create a special kind of rule
+with no right-hand-side. While normal rules act spontaneously,
+queries are used to search the working memory under direct program
+control. Whereas a rule is activated once for each matching set of facts,
+a query gives you a <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a> object which gives you access
+to a list of all the matches.</p>
+
+        
+<p>Using a defquery involves three steps:
+        </p>
+        
+<ol>
+            
+<li>
+<a href="#write_query">Writing the query</a>
+</li>
+            
+<li>
+<a href="#invoke_query">Invoking the query</a>
+</li>
+            
+<li>
+<a href="#using_results">Using the results</a>
+</li>
+        
+</ol>
+
+
+<p>In the following section, we'll examine a specific example of how this is done.</p>
+
+
+
+<a name="query_example">
+<h3>7.3. A simple example</h3>
+</a>
+
+An example should make this clear. We'll go through the three steps listed above, showing one or more ways to perform each step.
+
+
+<a name="write_query">
+<h4>7.3.1. Writing the query</h4>
+</a>
+
+Once again, we're writing a program that deals with a database of people.
+    Once again, we'll use the following deftemplate
+
+<div class="jesscode">
+    
+<pre>
+<b>Jess&gt; </b>(deftemplate person (slot firstName) (slot lastName) (slot age))</pre>
+
+</div>
+
+    
+<p>Imagine that we want
+    to be able to query working memory to find people with a given last name. Once we've found
+    a person, we'll want to know their first name as well, and their age.
+    We can write a query which lets us specify the last name we're interested in,
+    and also lets us easily recover the first name and age of each match.</p>
+
+    A query looks a lot like the left-hand side of a rule. We write a pattern which matches the facts
+    that we're interested in.
+    We <i>declare</i> the variable <tt>?ln</tt>, which makes it a parameter to the query,
+    and we also include variables <tt>?fn</tt> and <tt>?age</tt> bound to the
+    <tt>firstName</tt> and <tt>age</tt> slots, respectively.
+
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(defquery search-by-name
+  "Finds people with a given last name"
+  (declare (variables ?ln))
+  (person (lastName ?ln) (firstName ?fn) (age ?age)))</pre>
+
+</div>
+
+
+<p>While we're at it, let's define some facts for the query to work
+with and load them into working memory:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deffacts data
+  (person (firstName Fred)   (lastName Smith)    (age 12))
+  (person (firstName Fred)   (lastName Jones)    (age 9))
+  (person (firstName Bob)    (lastName Thomas)   (age 32))
+  (person (firstName Bob)    (lastName Smith)    (age 22))
+  (person (firstName Pete)   (lastName Best)     (age 21))
+  (person (firstName Pete)   (lastName Smith)    (age 44))
+  (person (firstName George) (lastName Smithson) (age 1))
+  )</pre>
+  
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+</div>
+
+
+
+
+
+<a name="invoke_query">
+<h4>7.3.2. Invoking the query</h4>
+</a>
+
+<p>After we define a query, we can call it using the <a href="functions.html#run-query*"><tt>run-query*</tt></a> function in Jess, or the
+<a href="api/jess/Rete.html#runQueryStar(java.lang.String, jess.ValueVector)"><tt><tt>jess.Rete.</tt>runQueryStar(java.lang.String, jess.ValueVector)</tt></a>
+method in Java. In both cases, we need to pass the last name we're
+interested in as the query parameter. In Jess, this looks like
+</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?result (run-query* search-by-name Smith))</pre>
+
+</div>
+
+
+<p>The arguments to <a href="functions.html#run-query*"><tt>run-query*</tt></a> are the name of the query
+      and values for each parameter. The <tt>run-query*</tt> function
+      returns a <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a> object, which we
+      store in the variable <tt>?result</tt>.</p>
+
+
+<p>In Java, the equivalent code would look like:</p>
+
+
+<div class="example">
+<pre>
+    Rete engine = ...
+    QueryResult result = engine.runQueryStar("search-by-name", new ValueVector().add("Smith"));
+</pre>
+</div>
+
+
+
+
+<a name="using_results">
+<h4>7.3.3. Using the Results</h4>
+</a>
+
+
+<p>Now that we've created a <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a>, it's
+time to iterate over all the matches and process them however we'd
+like. For this example, let's just print a table of the people
+including their full names and ages.</p>
+
+      
+<p>The interface of the <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a> class is very similar to that of
+    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/ResultSet.html"><tt>java.sql.ResultSet</tt></a>. We use <a href="api/jess/QueryResult.html#next()"><tt><tt>jess.QueryResult.</tt>next()</tt></a> to advance to the next
+    result, and we use the set of <tt>getXXX()</tt> methods to return
+    the values bound to the variables defined in the query.
+      Then the following Jess code will print the output shown:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(while (?result next)
+    (printout t (?result getString fn) " " (?result getString ln)
+                ", age " (?result getInt age) crlf))</pre>
+
+<pre>
+<i>Fred Smith, age 12
+Bob Smith, age 22
+Pete Smith, age 44
+FALSE</i>
+</pre>
+
+</div>
+
+
+<p>because there are three people named Smith in working memory.</p>
+
+
+<p>The same loop in Java would look like</p>
+
+<div class="example">
+<pre>
+while (result.next()) {
+    System.out.println(result.getString("fn") + " " + result.getString("ln")
+                       + ", age" + result.getInt("age"));
+}
+</pre>
+</div>
+
+    
+
+<a name="in_java">
+<h4>7.3.4. One more time, in Java</h4>
+</a>
+     
+<p>For the sake of completeness, here's the whole program in Java. The file "query.clp"
+         is assumed to contain the <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a>, <a href="constructs.html#defquery"><tt>defquery</tt></a>, and
+     <a href="constructs.html#deffacts"><tt>deffacts</tt></a> from above.</p>
+
+<div class="javacode">
+<pre>
+    
+import jess.*;
+
+public class ExQuery {
+    public static void main(String[] argv) throws JessException {
+        Rete engine = new Rete();
+        engine.batch("query.clp");
+        engine.reset();
+        QueryResult result =
+            engine.runQueryStar("search-by-name", new ValueVector().add("Smith"));
+        while (result.next()) {
+            System.out.println(result.getString("fn") + " " + result.getString("ln")
+                               + ", age" + result.getInt("age"));
+        }
+    }
+}
+<b>C:\&gt;</b> java ExQuery
+</pre>
+</div>
+
+
+     
+    
+<a name="declare_variables">
+<h3>7.4. The variable declaration</h3>
+</a>
+
+You have already realized that two different kinds of variables
+can appear in a query: those that are "internal" to the query, like <tt>?age</tt>
+in the query above, and those that are "external", or to be specified in the
+        <a href="functions.html#run-query*"><tt>run-query*</tt></a> command when the query is executed,
+like <tt>?ln</tt>. Jess assumes
+all variables in a query are internal by default; you must declare any
+external variables explicitly using the syntax
+
+<div class="example">
+<pre>
+(declare (variables ?X ?Y ...))
+</pre>
+</div>
+
+which is quite similar to the syntax of a rule salience declaration.
+    
+
+    <a name="max_background_rules">
+<h3>7.5. The max-background-rules declaration</h3>
+</a>
+    It can be convenient to use queries as triggers for backward chaining.
+    For this to be useful, <a href="api/jess/Rete.html#run()"><tt><tt>jess.Rete.</tt>run()</tt></a> must be called while the query
+    is being evaluated, to allow the backward chaining to occur. Facts generated
+    by rules fired during this run may appear as part of the query results. (If this
+    makes no sense whatsoever to you, don't worry about it; just skip over
+    this section for now.)
+        <p></p>
+    By default, no rules will fire while a query is being executed. If you want
+    to allow backward chaining to occur in response to a query, you can use the
+        <tt>max-background-rules</tt> declaration -- i.e.,
+        <div class="example">
+<pre>
+(declare (max-background-rules 10))
+        </pre>
+</div>
+    would allow a maximum of 10 rules to fire while this particular query was being
+    executed.
+    
+
+    <a name="count-query-results">
+<h3>7.6. The count-query-results command</h3>
+</a>
+To obtain just the number of matches for a query, you can use the
+        <a href="functions.html#count-query-results"><tt>count-query-results</tt></a>
+function. This function accepts the same arguments as
+        <a href="functions.html#run-query*"><tt>run-query*</tt></a>, but just returns an integer, the
+number of matches.
+
+    
+
+<a name="use_dotted_in_query">
+<h3>7.7. Using dotted variables</h3>
+</a>
+
+
+<p>The <a href="basics.html#dotted_variables">dotted variable</a> syntax
+provides a convenient alternative for accessing the slots of a fact
+resulting from a query. Let's look at the rewrite the
+<tt>search-by-name</tt> query again. This time we'll bind a single variable
+to the entire fact, and use dotted variables to retrieve the results.</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defquery search-by-name
+  "Finds people with a given last name"
+  (declare (variables ?ln))
+  ?person &lt;- (person (lastName ?ln)))</pre>
+
+</div>
+
+
+<p>Running the query doesn't change:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?result (run-query* search-by-name Smith))</pre>
+
+</div>
+
+
+<p>This time, we are going to use different code to retrieve the data:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(while (?result next)
+    (bind ?p (?result getObject person))
+    (printout t ?p.firstName " " ?p.lastName ", age " ?p.age crlf))</pre>
+
+
+<pre>
+<i>
+Fred Smith, age 12
+Bob Smith, age 22
+Pete Smith, age 44
+FALSE</i>
+</pre>
+
+</div>
+
+
+<p>The <tt>bind</tt> stores the <tt>jess.Fact</tt> object that is
+retrieved from the current value of <tt>?result</tt> into variable
+<tt>?p</tt>. This, then, is conveniently accessed for its slot
+values <tt>firstName</tt>, <tt>lastName</tt> and <tt>age</tt>.</p>
+
+
+
+
+    
+</div>
+</body>
+
+</html>

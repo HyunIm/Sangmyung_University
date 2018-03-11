@@ -1,0 +1,2245 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Making Your Own Rules</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li>
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li>
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li id="selected">
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li>
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li>
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>6.
+        Making Your Own Rules</h2>
+
+    
+<a name="rules">
+<h3>6.1. Introducing defrules</h3>
+</a>
+
+Now that we've learned how to populate Jess's working memory, we can answer
+the obvious question: what is it good for? The answer is that
+        <a href="constructs.html#defquery"><tt>defquery</tt></a>s can search it to find
+relationships between facts, and <a href="constructs.html#defrule"><tt>defrule</tt></a>s
+can take actions based on the contents of one or more facts.
+        <p></p>
+A Jess rule is something like an <tt>if... then</tt> statement
+in a procedural language, but it is not used in a procedural
+way. While <tt>if... then</tt> statements are executed at a specific
+time and in a specific order, according to how the programmer writes
+them, Jess rules are executed whenever their <tt>if</tt> parts (their
+        <i>left-hand-sides</i> or <i>LHS</i>s) are satisfied, given only that
+the rule engine is running. This makes Jess rules less deterministic
+than a typical procedural program. See the chapter on <a href="rete.html">the Rete algorithm</a> for an explanation of why this
+architecture can be many orders of magnitude faster than an equivalent
+set of traditional <tt>if... then</tt> statements.
+        <p></p>
+        In this chapter we're going to make
+        a lot of use of a "person" template that looks like this:
+
+<div class="jesscode">
+    
+<pre>
+<b>Jess&gt; </b>(deftemplate person (slot firstName) (slot lastName) (slot age))</pre>
+
+</div>
+
+Rules are defined in Jess using the <tt>defrule</tt> construct. A very
+simple rule looks like this:
+
+        <div class="jesscode">
+    
+<pre>
+<b>Jess&gt; </b>(defrule welcome-toddlers
+    "Give a special greeting to young children"
+    (person {age &lt; 3})
+    =&gt;
+    (printout t "Hello, little one!" crlf))</pre>
+
+
+</div>
+
+This rule has two parts, separated by the "=&gt;" symbol (which you can
+read as "then".) The first part consists of the LHS <i>pattern</i>
+        <tt>(person {age &lt; 3})</tt>. The second part consists of the RHS
+        <i>action</i>, the call to <tt>println</tt>. If you're new to Jess,
+        it can be hard to tell the difference due
+to the LISP-like syntax, but the LHS of a rule consists of patterns which
+are used to match facts in the working memory, while the RHS contains
+function calls.
+
+        <blockquote>
+            
+<i>The LHS of a rule (the "if" part) consists of patterns that match
+facts, <b>NOT</b> function calls. The actions of a rule (the "then"
+clause) are made  up of function calls. The following rule does
+                <b>NOT</b> work:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule wrong-rule
+  (eq 1 1)
+  =&gt;
+  (printout t "Just as I thought,  1 == 1!" crlf))</pre>
+
+</div>
+
+This rule will NOT fire just because the function call <tt>(eq 1 1)</tt>
+would evaluate to true. Instead, Jess will try to find a fact in the
+working memory that looks like <tt>(eq 1 1)</tt>. Unless you have previously
+asserted such a fact, this rule will <b>NOT</b> be activated and will
+not fire. If you want to fire a rule based on the evaluation of a
+function that is not related to a pattern, you can use the
+                <a href="#test_ce">test CE</a>.</i>
+        
+</blockquote>
+
+Our example rule, then, will be activated when an appropriate
+        <tt>(person)</tt> fact appears in the working memory. When the rule
+executes, or <i>fires</i>, a message is printed.
+ Let's turn this rule into a complete program. The function
+        <tt>watch all</tt> tells Jess to print some useful diagnostics as we
+enter our program.
+
+
+<div class="jesscode">
+    
+<pre>
+<b>Jess&gt; </b>(deftemplate person (slot firstName) (slot lastName) (slot age))</pre>
+    
+<pre>
+<i>TRUE</i>
+</pre>
+    
+<pre>
+<b>Jess&gt; </b>(watch all)</pre>
+    
+<pre>
+<i>TRUE</i>
+</pre>
+    
+<pre>
+<b>Jess&gt; </b> (reset)</pre>
+
+<pre>
+<i>==&gt; f-0 (MAIN::initial-fact)
+TRUE</i>
+</pre>
+    
+<pre>
+<b>Jess&gt; </b>(defrule welcome-toddlers
+        "Give a special greeting to young children"
+        (person {age &lt; 3})
+        =&gt;
+        (printout t "Hello, little one!" crlf))</pre>
+
+<pre>
+<i>welcome-toddlers: +1+1+1+t
+TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b> (assert (person (age 2)))</pre>
+
+<pre>
+<i>==&gt; f-1 (MAIN::person (firstName nil) (lastName nil) (age 2))
+==&gt; Activation: MAIN::welcome-toddlers :  f-1
+&lt;Fact-1&gt;</i>
+</pre>
+
+</div>
+
+Some of these diagnostics are interesting. We see first of all how
+issuing the <a href="functions.html#reset"><tt>reset</tt></a> command asserts the fact
+        <tt>(initial-fact)</tt>. You should always issue a <a href="functions.html#reset"><tt>reset</tt></a>
+command when working with rules. When the rule itself is entered, we
+see the line "+1+1+t". This tells you something about how the rule is
+interpreted by Jess internally (see <a href="rete.html">The Rete
+Algorithm</a> for more information.) When the fact
+        <tt>(person (age 2))</tt> is asserted, we see the diagnostic "Activation:
+MAIN::welcome-toddlers :  f-1". This means that Jess has noticed that the rule
+        <tt>welcome-toddlers</tt> has all of its LHS conditions met by the given
+list of facts ("f-1").
+
+        <p></p>
+After all this, our rule didn't fire; why not? Jess rules only fire
+while the rule engine is running (although they can be
+        <i>activated</i> while the engine is not running.) To start the engine
+running, we issue the <a href="functions.html#run"><tt>run</tt></a> command.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>FIRE 1 MAIN::welcome-toddlers f-1
+Hello, little one!
+&lt;== Focus MAIN
+1</i>
+</pre>
+
+</div>
+
+As soon as we enter the <a href="functions.html#run"><tt>run</tt></a> command, the activated rule
+fires. Since we have <tt>watch all</tt>, Jess prints the diagnostic
+        <tt>FIRE 1 welcome-toddlers f-1</tt> to notify us of this. We then see the
+output of the rule's RHS actions. The final number "1" is the number of
+rules that fired (it is the return value of the <a href="functions.html#run"><tt>run</tt></a> command.)
+The <a href="functions.html#run"><tt>run</tt></a> function returns when there are no more activated
+rules to fire.
+
+        <p></p>
+
+ What would happen if we entered <tt>(run)</tt> again? Nothing. A rule
+will be activated only once for a given set of facts; once it has
+fired, that rule will not fire again for the same list of facts. We
+won't print the message again until another toddler shows up.
+
+        <p></p>
+
+Rules are uniquely identified by their name. If a rule named
+        <tt>my-rule</tt> exists, and you define another rule named
+        <tt>my-rule,</tt> the first version is deleted and will not fire
+again, even if it was activated at the time the new version was
+defined.
+
+
+
+    <a name="patterns_simple">
+<h3>6.2. Simple patterns</h3>
+</a>
+        
+<p>A pattern is always a set of parentheses including the name of the fact
+            to be matched plus zero or more slot descriptions. There are now two kinds of
+            slot descriptions in Jess: the new-style "simplified" or
+        "Java" syntax, and the old-style,
+            more complex but more powerful syntax. New-style slot descriptions are enclosed in
+            curly braces, like the one in our <tt>welcome-toddlers</tt> rule:</p>
+        
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule welcome-toddlers
+    "Give a special greeting to young children"
+    (person {age &lt; 3})
+    =&gt;
+    ((System.out) println "Hello, little one!"))
+        </pre>
+
+</div>
+        
+<p>
+                Old-style slot descriptions use parentheses instead of curly braces. The syntax
+                allowed for the two kinds of descriptions are different. We'll talk mostly
+                about the new simplified
+                syntax in this section, and save most of the old-style syntax for the next section.
+                However, there is one very easy and very important thing you can do with the old-style
+                syntax that we'll need right away: you can declare a variable to refer to the contents
+                of a slot. For example, look at the following pattern:
+            </p>
+        
+<div class="example">
+<pre>
+(person (age ?a) (firstName ?f) (lastName ?l))
+        </pre>
+</div>
+
+        
+<p>
+            This pattern will match any person fact. When the rule fires, Jess will
+            assign the contents of the "age" slot to a variable "?a", the firstName slot to
+            a variable "?f", and the lastName slot to "?l". You'll be able to use these variables
+            elsewhere in the same rule, both on the left-hand side and on the right-hand side.
+        </p>
+
+        
+<p>The simplified slot descriptions we'll talk about in this section are Java-like Boolean
+        expressions (infix expressions) using the following operators: </p>
+        
+<ul>
+            
+<li>&lt; (less than)</li>
+            
+<li>&lt;= (less than or equal to)</li>
+            
+<li>&gt; (greater than)</li>
+            
+<li>&lt;= (greater than or equal to)</li>
+            
+<li>== (equals)</li>
+            
+<li>!= (not equal to)</li>
+            
+<li>&lt;&gt; (not equal to, alternate syntax)</li>
+            
+<li>&amp;&amp; (and)</li>
+            
+<li>|| (or)</li>
+        
+</ul>
+
+        
+<p>These operators are used in infix format, like Java operators. Within a simplified pattern,
+            a symbol stands for the value of the slot in that pattern with the same name. The syntax is
+            simple and a few examples will serve to document it. The first example matches any person
+            who is between the ages of 13 and 19, inclusive:
+            </p>
+
+        
+<div class="jesscode">
+            
+<pre>
+<b>Jess&gt; </b>(defrule teenager
+    ?p &lt;- (person {age &gt; 12 &amp;&amp; age &lt; 20} (firstName ?name))
+    =&gt;
+    (printout t ?name " is " ?p.age " years old." crlf))</pre>
+        
+</div>
+
+        
+<p>
+            The variable "?p" is a <i><a href="#pattern_bindings">pattern binding</a></i>; it's bound
+            to the whole fact that matches this pattern. Note how we
+            use the <a href="basics.html#dotted_variables">dotted
+            variable</a> syntax to get the
+            the value of the "age" slot. We declared a variable for
+            the <tt>firstName</tt> slot in an old-style slot description.
+        </p>
+        
+<p>You can write tests that look at several slots at once:</p>
+
+        
+<div class="jesscode">
+            
+<pre>
+<b>Jess&gt; </b>(defrule same-first-and-last-name
+    (person {firstName == lastName})
+    =&gt;
+    (printout t "That is a funny name!" crlf))</pre>
+        
+</div>
+
+        
+<p>
+            You can use parentheses to group operations in Java patterns; for example:
+        </p>
+
+        
+<div class="jesscode">
+            
+<pre>
+<b>Jess&gt; </b>(defrule teenage-or-bob
+    (person {(age &gt; 12 &amp;&amp; age &lt; 20) || firstName == Bob})
+    =&gt;
+    (printout t "The person is a teenager, or is named 'Bob'." crlf))</pre>
+        
+</div>
+
+        
+<a name="dot_variables">
+<h4>6.2.1. Using multiple simple patterns together</h4>
+</a>
+            
+<p>Most rules have more than one pattern -- often many more. What's more, patterns relate
+                to one another. For example, we might want to find two unrelated people who are the same age. To do
+            this sort of task, you simply match one person, then match a second person and compare
+                them to the first. To compare the two facts, we need to bind variables to them so
+                we can refer to them; then we use a special "dot notation" to refer to the slots of the first fact:
+            </p>
+
+            
+<div class="jesscode">
+                
+<pre>
+<b>Jess&gt; </b>(defrule two-same-age-different-name
+    ?person1 &lt;- (person)
+    ?person2 &lt;- (person {age == person1.age &amp;&amp;lastName != person1.lastName})
+    =&gt;(printout t "Found two different " ?person1.age "-year-old people." crlf))</pre>
+            
+</div>
+
+            
+<p>The variable "?person1" is another <i><a href="#pattern_bindings">pattern binding</a></i>.  Note that when you refer to a pattern binding in a
+               Java pattern, the "?" variable indicator is omitted.
+            </p>
+
+
+        
+
+    
+
+        
+<a name="patterns_full">
+<h3>6.3. Patterns in Depth</h3>
+</a>
+
+            
+<p>The curly-brace notation we looked at in the previous section is a
+                simplified way of writing patterns that fills many basic needs. But Jess actually supports
+            a richer syntax that gives you more capabilities. One limitation of the curly-brace notation is that
+                it can only be used with unordered facts. It is this richer syntax
+                that we'll cover here. Whereas the simplified slot patterns use curly braces, the richer
+            syntax uses parentheses to enclose slots.</p>
+
+
+            
+<p>As previously shown, you can specify a variable name for a field in any of
+            a rule's patterns (but not the pattern's head). A variable matches any
+            value in that position within a rule. For example, the rule:</p>
+
+            
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate coordinate (slot x) (slot y))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule example-2
+    (coordinate (x ?x) (y ?y))
+    =&gt;
+    (printout t "Saw 'coordinate " ?x " " ?y "'" crlf))</pre>
+            
+</div>
+
+            will be activated once for every <tt>coordinate</tt> fact.
+            The variables ?x and ?y matched in the pattern are available in the
+            actions on the RHS of the same rule.
+
+            <p></p>
+
+
+            
+<p>A slot descriptor can also include any number of
+tests to qualify what it will match. Tests follow the variable name and
+are separated from it and from each other by an <i>and</i> (&amp;) or <i>or</i>
+(|) symbol. (The variable name itself is actually optional.) Tests can be:</p>
+            
+<ul>
+                
+<li>
+A literal value (in which case the variable matches <i>only</i> that
+value); for example, the value <tt>1.0</tt> in  <tt>(coordinate (x 1.0))</tt>.</li>
+
+                
+<li>
+A variable which was assigned earlier on the rule's LHS.
+This will constrain the field to contain the same value as the variable
+was first bound to; for example, <tt>(coordinate (x ?x) (y ?x))</tt> will only match
+                    coordinates facts with equal x and y values.</li>
+
+                
+<li>
+A colon (<tt>:</tt>) followed by a function call, in which case the test
+succeeds if the function returns the special value <tt>TRUE</tt>. These
+are called <i>predicate constraints</i>; for example, <tt>(cordinate (x ?x&amp;:(&gt; ?x 10)))</tt>
+matches "coordinate" facts with x greater 10. There is a powerful shortcut way to write many predicate
+                constraints which we'll look at in a minute.</li>
+
+                
+<li>
+An equals sign (<tt>=</tt>) followed by a function call. In this case the
+field must match the return value of the function call. These are called
+                    <i>return value constraints</i>. Note that both predicate constraints and
+return-value constraints can refer to variables bound elsewhere in this
+or any preceding pattern in the same rule. <i><b>Note</b>:</i> pretty-printing
+a rule containing a return value contstraint will show that it has been
+transformed into an equivalent predicate constraint. An example of a
+return-value constraint would be
+<div class="example">
+<pre>
+                    (coordinate (x ?x) (y =(+ ?x 1)))
+</pre>
+</div>
+                    which matches coordinates with y one greater than x.</li>
+
+                
+<li> A Java regular expression surrounded by "/" characters. The field must
+         match the given regular expression (regular expressions are available only
+         when you're using Jess under JDK 1.4 and up.) For example,
+         the pattern <tt>(person (name /A.*/)</tt> matches people whose first initial is "A".
+                </li>
+
+                
+<li>
+Any of the other options preceded by a tilde (<tt>~</tt>), in which case
+the sense of the test is reversed (inequality or false); for example
+                    <tt>(coordinate (x ?x) (y ~?x))</tt> matches coordinates in which x and y differ.
+                </li>
+            
+</ul>
+
+            
+<p></p>
+Ampersands (&amp;) represent logical "and", while pipes (|) represent
+logical "or." &amp; has a higher precedence than |, so that the
+following
+
+            <div class="example">
+<pre>
+(foo ?X&amp;:(oddp ?X)&amp;:(&lt; ?X 100)|0)
+            </pre>
+</div>
+
+matches a <tt>foo</tt> fact with a single field containing either an odd
+number less than 100, or 0.
+
+            <p></p>
+
+Here's an example of a rule that uses several kinds of tests:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule example-3
+  (not-b-and-c ?n1&amp;~b ?n2&amp;~c)
+  (different ?d1 ~?d1)
+  (same ?s ?s)
+  (more-than-one-hundred ?m&amp;:(&gt; ?m 100))
+  (red-or-blue red|blue)
+  =&gt;
+  (printout t "Found what I wanted!" crlf))</pre>
+
+</div>
+
+
+<p>The first pattern will match an ordered fact with head <tt>not-b-and-c</tt> with
+exactly two fields such that the first is not <tt>b</tt> and the second
+is not <tt>c</tt>. The second pattern will match any fact with head <tt>different</tt>
+and two fields such that the two fields have different values. The third
+pattern will match a fact with head <tt>same</tt> and two fields with identical
+values. The fourth pattern matches a fact with head <tt>more-than-one-hundred</tt>
+and a single field with a numeric value greater than 100. The last
+pattern matches a fact with head <tt>red-or-blue</tt> followed by
+either the symbol <tt>red</tt> or the symbol <tt>blue</tt>.</p>
+
+            
+<p> If you match to a defglobal with a pattern like (foo ?*x*), the
+match will only consider the value of the defglobal when the fact is
+asserted. Subsequent changes to the defglobal's value will <i>not</i>
+invalidate the match - i.e., the match does not reflect the current
+value of the defglobal, but only the value at the time the matching
+fact was asserted.</p>
+
+
+
+<a name="multimatch">
+<h3>6.4. Matching in Multislots</h3>
+</a>
+
+
+<p>Pattern matching in multislots (and in ordered facts, which are
+really just facts with a single multislot whose name is hidden) is
+similar to matching in regular slots. The main difference is that you
+may include separate clusters of tests for each <i>field</i> within a
+multislot. The number of clusters implicitly specifies the number of
+items in a matching multislot. So, for example, the
+<tt>grocery-list</tt> pattern in the following rule matches only
+grocery lists with exactly three items:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule match-three-items
+  (grocery-list ? ? ?)
+  =&gt;
+  (printout t "Found a three-item list" crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (grocery-list eggs milk bacon))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>Found a three-item list
+1</i>
+</pre>
+
+</div>
+
+
+<p>Note that, as shown here, you can match a field without binding it
+to a named variable by omitting the variable name and using just a
+question mark (<tt>?</tt>) as a placeholder.</p>
+
+
+
+<p>You can match any number (zero or more) of fields 
+in a multislot or ordered fact using a <i>multifield</i>. A
+multifield is just a variable constraint preceded by a '$'
+character. The matched items are used to construct a list, and the
+list is assigned to that variable:</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule match-whole-list
+  (grocery-list $?list)
+  =&gt;
+  (printout t "I need to buy " ?list crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (grocery-list eggs milk bacon))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>I need to buy (eggs milk bacon)
+1</i>
+</pre>
+
+</div>
+
+
+
+<p>Multifields can be used in combination with other kinds of tests,
+and they're a very convenient way of saying "... and some other
+stuff." For example, this rule matches grocery lists containing bacon
+in any position. It does this by using two blank multifields: one to
+match all the items before bacon in the list, and the other (which in
+this case, will match zero items) to match all the items after.</p>
+
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule match-list-with-bacon
+  (grocery-list $? bacon $?)
+  =&gt;
+  (printout t "Yes, bacon is on the list" crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (grocery-list eggs milk bacon))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>Yes, bacon is on the list
+1</i>
+</pre>
+
+</div>
+
+
+<p>Finally, note that a multifield is not a special kind of
+variable. When a multifield $?list is matched, it's the variable ?list
+that receives the value.</p>
+
+        
+
+        
+<a name="pattern_bindings">
+<h3>6.5. Pattern bindings</h3>
+</a>
+
+Sometimes you need a handle to an actual fact that helped to activate a
+rule. For example, when the rule fires, you may need to retract or modify
+the fact. To do this, you use a pattern-binding variable:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule example-5
+  ?fact &lt;- (a "retract me")
+  =&gt;
+  (retract ?fact))</pre>
+
+</div>
+
+The variable (<tt>?fact</tt>, in this case) is bound to the particular
+fact that activated the rule.
+
+            <p></p> Note that ?fact is a <a href="library.html#jess.Value">jess.Value</a> object of type
+RU.FACT, not an integer. It is basically a reference to a <a href="library.html#jess.Fact">jess.Fact</a> object.  You can convert
+an ordinary number into a FACT using the <a href="functions.html#fact-id"><tt>fact-id</tt></a>
+function. You can convert a FACT into an integer when necessary by
+using reflection to call the <tt>Fact.getFactId()</tt> function. The
+            <tt>jess.Value.factValue()</tt> method can be called on a
+FACT Value to obtain the actual <tt>jess.Fact</tt> object from Java
+code. In Jess code, a fact-id essentially <i>is</i> a
+            <tt>jess.Fact</tt>, and you can call <tt>jess.Fact</tt> methods on a
+fact-id directly:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule example-5-1
+  ?fact &lt;- (initial-fact)
+  =&gt;
+  (printout t (call ?fact getName) crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>initial-fact
+1</i>
+</pre>
+
+</div>
+
+See <a href="library.html#jess_factidvalue">the section on the
+jess.FactIDValue class</a> for more information.
+            <p></p>
+            
+<p>
+Note that once a fact is asserted, Jess will always use the same
+                <tt>jess.Fact</tt> object to represent it, even if the original fact
+is modified. Therefore, you can store references to fact objects in
+the slots of other facts as a way of representing structured data.
+            </p>
+
+        
+
+
+<a name="regular_expressions">
+<h3>6.6. More about regular expressions</h3>
+</a>
+
+    Jess's new regular expression facility builds on Java's <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex.html"><tt>java.util.regex</tt></a> package.
+    This section presents a few examples of how it works.
+<div class="jesscode">
+    
+<pre>
+<b>Jess&gt; </b>(defrule rule-1
+  (foo /xy+z/)
+  =&gt;)
+
+(defrule rule-2
+  (foo a ?x&amp;/d*ef/)
+  (bar ?x)
+  =&gt;)</pre>
+
+</div>
+    
+<p>
+        The first rule matches a "foo" fact with a single field of the
+        form "xyz", "xyyz", "xyyyz"... The second rule matches a "foo"
+        fact with two fields: the symbol "a" followed by a string or
+        symbol of the form "ef", "def", "ddef"...; this string is bound
+        to the variable ?x and matched to the only field in the second
+        pattern. Patterns are always matched against the entire
+        contents of the field. You can write <tt>/.*abc.*</tt> to
+        match for an embedded string "abc".
+
+    </p>
+
+    
+<p>There is also a function
+        <a href="functions.html#regexp"><tt>regexp</tt></a>
+          which
+        can be used in procedural code. In this release, it just takes
+        two arguments, a regular expression and a target string, and
+        returns a boolean result.
+    </p>
+
+
+
+        
+<a name="salience">
+<h3>6.7. Salience and conflict resolution</h3>
+</a>
+
+Each rule has a property called <i>salience</i> that is a kind of rule
+priority. Activated rules of the highest salience will fire first,
+followed by rules of lower salience. To force certain rules to always
+fire first or last, rules can include a salience declaration:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule example-6
+  (declare (salience -100))
+  (command exit-when-idle)
+  =&gt;
+  (printout t "exiting..." crlf))</pre>
+
+</div>
+
+Declaring a low salience value for a rule makes it fire after all other
+rules of higher salience. A high value makes a rule fire before all rules
+of lower salience. The default salience value is zero. Salience values
+can be integers, global variables, or function calls. See the
+            <a href="functions.html#set-salience-evaluation"><tt>set-salience-evaluation</tt></a>
+command for details about when such function calls will be evaluated.
+
+            <p></p>The order in which multiple rules of the same salience are fired is
+determined by the active <i>conflict resolution strategy.</i> Jess
+comes with two strategies: "depth" (the default) and "breadth." In the
+"depth" strategy, the most recently activated rules will fire before
+others of the same salience. In the "breadth" strategy, rules fire in
+the order in which they are activated. In many situations, the
+difference does not matter, but for some problems the conflict
+resolution strategy is important. You can write your own strategies in
+Java; see the chapter on <a href="extending.html">extending Jess with
+Java</a> for details. You can set the current strategy with the
+            <a href="functions.html#set-strategy"><tt>set-strategy</tt></a> command.
+
+            <p></p>
+Note that the use of salience is generally discouraged, for two
+reasons: first it is considered bad style in rule-based programming to
+try to force rules to fire in a particular order. Secondly, use of
+salience will have a negative impact on performance, at least with the
+built-in conflict resolution strategies.
+            <p></p>
+You can see the list of activated, but not yet fired,  rules with the
+            <a href="functions.html#agenda"><tt>agenda</tt></a> command.
+
+        
+
+        <a name="and_ce">
+<h3>6.8. The 'and' conditional element.</h3>
+</a>
+Any number of patterns can be enclosed in a list with <tt>and</tt> as
+the head. The resulting pattern is matched if and only if all of the
+enclosed patterns are matched. By themselves, <tt>and</tt> groups
+aren't very interesting, but combined with
+            <a href="#or_ce">or</a> and <a href="#not_ce">not</a>
+conditional elements, they can be used to construct complex
+logical conditions.
+            <p></p>
+The entire left hand side of every rule and query is implicitly
+enclosed in an <tt>and</tt> conditional element.
+        
+
+        <a name="or_ce">
+<h3>6.9. The 'or' conditional element.</h3>
+</a>
+        Any number of patterns can be enclosed in a list with <tt>or</tt> as
+        the head. The resulting pattern is matched if one or more of the
+        patterns inside the <tt>or</tt> are matched. If more than one
+        of the subpatterns are matched, the <tt>or</tt> is matched
+        more than once:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule or-example-1
+   (or (a) (b) (c))
+   =&gt;)</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (a) (b) (c))</pre>
+
+<pre>
+<b>Jess&gt; </b>(printout t (run) crlf)</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+</div>
+
+An <tt>and</tt> group can be used inside of an <tt>or</tt> group, and vice
+        versa. In the latter case, Jess will rearrange the patterns so
+        that there is a single <tt>or</tt> at the top level. For
+        example, the rule
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule or-example-2a
+    (and (or (a)
+             (b))
+         (c))
+      =&gt;)</pre>
+
+</div>
+will be automatically rearranged to
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule or-example-2b
+    (or (and (a) (c))
+        (and (b) (c)))
+    =&gt;)</pre>
+
+</div>
+
+DeMorgan's second rule of logical equivalence, namely
+
+<div class="example">
+<pre>
+(not (or (x) (y)))  =&gt; (and (not (x)) (not (y)))
+</pre>
+</div>
+
+will be used when necessary to hoist an <tt>or</tt> up to the top level.
+            <p></p>
+Note that if the right hand side of a rule uses a variable defined by matching
+on the left hand side of that rule, and the variable is defined by one
+or more branches of an <tt>or</tt> pattern but not all branches, then
+a runtime error may occur.
+        
+
+        <a name="not_ce">
+<h3>6.10. The 'not' conditional element.</h3>
+</a>
+Any single pattern can be enclosed in a list with <tt>not</tt> as the
+head. In this case, the pattern is considered to match if a fact (or
+set of facts) which matches the pattern is <i>not</i> found. For
+example:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule example-7
+   (person ?x)
+   (not (married ?x))
+   =&gt;
+   (printout t ?x " is not married!" crlf))</pre>
+
+</div>
+
+Note that a <tt>not</tt> pattern cannot define any variables that are
+used in subsequent patterns (since a <tt>not</tt> pattern does not match
+any facts, it cannot be used to define the values of any variables!) You
+can introduce variables in a <tt>not</tt> pattern, so long as they are
+used only within that pattern; i.e,
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule no-odd-numbers
+   (not (number ?n&amp;:(oddp ?n)))
+   =&gt;
+   (printout t "There are no odd numbers." crlf))</pre>
+
+</div>
+
+Similarly, a <tt>not</tt> pattern can't have a pattern binding.
+
+            <p></p>A <tt>not</tt> CE is evaluated only when either a fact matching it
+exists, or when the pattern immediately before the <tt>not</tt> on the
+rule's LHS is evaluated. If a <tt>not</tt> CE is the first pattern on
+a rule's LHS, or is the the first the pattern in an <tt>and</tt>
+group, or is the only pattern on a given branch of an <tt>or</tt> group,
+the pattern <tt>(initial-fact)</tt> is inserted to
+become this important preceding pattern. Therefore, the fact
+            <tt>(initial-fact)</tt> created by the <a href="functions.html#reset"><tt>reset</tt></a> command
+is necessary to the proper functioning of some <tt>not</tt>
+patterns. For this reason, it is especially important to issue a
+            <tt>reset</tt> command before attempting to run the rule engine when
+working with <tt>not</tt> patterns.
+
+            <p></p>
+        Multiple <tt>not</tt> CEs can be nested to produce some interesting
+        effects (see <a href="#exists_ce">the discussion of the
+            <tt>exists</tt> CE</a>).
+            <p></p>
+        The <tt>not</tt> CE can be used in arbitrary combination with the
+            <a href="#and_ce">and</a> and <a href="#or_ce">or</a>
+        CEs. You can define complex logical structures this way. For
+        example, suppose you want a rule to fire once if for every fact (a ?x),
+        there is a fact (b ?x). You could express that as
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule forall-example
+  (not (and (a ?x) (not (b ?x))))
+  =&gt;)</pre>
+
+</div>
+
+        i.e., "It is not true that for some ?x, there is an (a ?x) and no
+        (b ?x)". This is actually how the <a href="#forall_ce">the
+            <tt>forall</tt> CE</a> is implemented.
+
+        
+
+    
+    <a name="exists_ce">
+<h3>6.11. The 'exists' conditional element.</h3>
+</a>
+        A pattern can be enclosed in a list with <tt>exists</tt> as the head.
+        An <tt>exists</tt> CE is true if there exist any facts that match the pattern,
+        and false otherwise. <tt>exists</tt> is useful when you want a rule to fire
+        only once, although there may be many facts that could potentially activate
+        it.
+
+        <div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule exists-demo
+    (exists (honest ?))
+    =&gt;
+    (printout t "There is at least one honest man!" crlf))</pre>
+        
+</div>
+
+        If there are any honest men in the world, the rule will fire once and
+        only once.
+
+        <p>
+<tt>exists</tt> may not be combined in the same pattern with
+            a <tt>test</tt> CE.</p>
+
+        
+<p>Note that <tt>exists</tt> is precisely equivalent to (and in fact,
+            is implemented as) two nested <tt>not</tt> CEs; i.e., <tt>(exists
+            (A))</tt> is the same as <tt>(not (not (A))).</tt> It is rather common for people to
+            write something like "<tt>(not (exists (A)))</tt>," but this is just a
+            very inefficient way to write <tt>(not (A))</tt>.
+        </p>
+
+    
+
+
+        
+
+    
+<a name="test_ce">
+<h3>6.12. The 'test' conditional element.</h3>
+</a>
+A pattern with <tt>test</tt> as the head is special; the body consists
+not of a pattern to match against the working memory but of a Boolean function.
+        The result of evaluating this function
+determines whether the pattern matches. A <tt>test</tt> pattern fails if
+and only if the function evaluates to the symbol <tt>FALSE</tt>;
+if it evaluates to <tt>TRUE</tt> or any other value, the pattern
+with "match." For example:
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate person (slot age))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule example-8
+   (test (eq 4 (+ 2 2)))
+   =&gt;
+   (printout t "2 + 2 is 4!" crlf))</pre>
+
+</div>
+
+Note that a <tt>test</tt> pattern, like a <tt>not</tt>, cannot define
+any variables for use in later patterns. <tt>test</tt> and
+<tt>not</tt> may be combined:
+
+<div class="example">
+<pre>  (not (test (eq ?X 3)))</pre>
+</div>
+is equivalent to:
+<div class="example">
+<pre>  (test (neq ?X 3))</pre>
+</div>
+
+            
+<p></p>
+A <tt>test</tt> CE is evaluated every time the <i>preceding</i>
+pattern on the rule's LHS is evaluated. Therefore the following two
+rules are precisely equivalent in behaviour:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule rule_1
+  (foo ?X)
+  (test (&gt; ?X 3))
+  =&gt;)</pre>
+
+
+<pre>
+<b>Jess&gt; </b>(defrule rule_2
+  (foo ?X&amp;:(&gt; ?X 3))
+  =&gt;)</pre>
+
+</div>
+
+        
+<p>
+            In fact, starting with Jess 7.1, the functions in a <tt>test</tt> CE are simply added
+            to the previous pattern's tests. Therefore these are not only equivalent, but they are in
+            fact identical in every respect. You can use <tt>test</tt> CEs wherever you'd like without
+            worrying about performance implications. When you need to evaluate a complicated function
+            during pattern matching,  a <tt>test</tt> CE is often clearer than the equivalent slot test.
+        </p>
+
+            
+<p> You should now understand why, for rules in which a <tt>test</tt> CE is the first pattern on the
+          LHS or the first pattern in a branch of an <tt>or</tt> CE,
+          the pattern <tt>(initial-fact)</tt> is inserted to become
+          the "preceding pattern" for the <tt>test</tt>. The fact
+            <tt>(initial-fact)</tt> is therefore also important for the
+          proper functioning of the <tt>test</tt> conditional element;
+          the caution about <a href="functions.html#reset"><tt>reset</tt></a> in <a href="#not_ce">the preceding section</a> applies equally
+          to <tt>test.</tt>
+</p>
+
+            
+<a name="test_ce_calls">
+<h4>6.12.1. Time-varying method returns</h4>
+</a>
+
+                
+<p></p> One useful property of the <tt>test</tt> CE is
+        that it's the only valid place to put tests whose results
+        might change without the contents of any slot changing. For
+        example, imagine that you've got two Java classes, <tt>A</tt>
+        and <tt>B</tt>, and that <tt>A</tt> has a method
+        <tt>contains</tt> which takes a <tt>B</tt> as an argument and
+        returns boolean. Further, imagine that for any given
+        <tt>B</tt> object, the return value of <tt>contains</tt> will
+        change over time. Finally, imagine that you've defined shadow
+        fact templates for both these classes and are writing rules to
+        work with them. Under these circumstances, a set of patterns
+        like this:
+
+<div class="example">
+<pre>
+(A (OBJECT ?a))
+(B (OBJECT ?b&amp;:(?a contains ?b)))
+</pre>
+</div>
+
+       is incorrect. If the return value of <tt>contains</tt> changes, the
+       match will be invalidated and Jess's internal data structures
+       may be corrupted. In particular, this kind of construct tends
+       to cause memory leaks.
+
+                <p></p> The correct way to express this same set of patterns is to use
+              the <tt>test</tt> conditional element, like this:
+
+<div class="example">
+<pre>
+(A (OBJECT ?a))
+(B (OBJECT ?b))
+(test (?a contains ?b))
+</pre>
+</div>
+
+The function <tt>contains</tt> is now guaranteed to be called at most
+              once for each combination of target and argument, and so
+              any variation in return value will have no impact.
+
+
+            
+
+        <a name="when_test">
+<h4>6.12.2. When should I use test?</h4>
+</a>
+
+            
+<p>The <tt>test</tt> conditional element can be used whenever writing a
+                test directly in a slot would be unclear.  It is also useful with time-varying return
+                values as described previously. There is no longer any performance penalty associated
+                with the <tt>test</tt> conditional element.</p>
+        
+        
+        
+        
+<a name="logical_ce">
+<h3>6.13. The 'logical' conditional         element.</h3>
+</a>
+
+          The <tt>logical</tt> conditional element lets you specify
+            <i>logical dependencies</i> among facts. All the facts
+          asserted on the RHS of a rule become dependent on the
+          matches to the <tt>logical</tt> patterns on that rule's
+          LHS. If any of the matches later become invalid, the
+          dependent facts are retracted automatically. In this simple
+          example, a single fact is made to depend on another single
+          fact:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule rule-1
+  (logical (faucet-open))
+  =&gt;
+  (assert (water-flowing)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (faucet-open))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>1</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(facts)</pre>
+
+<pre>
+<i>f-0   (MAIN::faucet-open)
+f-1   (MAIN::water-flowing)
+For a total of 2 facts in module MAIN.</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(watch facts)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(retract (fact-id 0))</pre>
+
+<pre>
+<i>&lt;== f-0 (MAIN::faucet-open)
+&lt;== f-1 (MAIN::water-flowing)
+TRUE</i>
+</pre>
+
+</div>
+
+        The <tt>(water-flowing)</tt>  fact is logically dependent
+        on the <tt>(faucet-open)</tt> fact, so when the latter is
+        retracted, the former is removed, too.
+
+            <p></p>A fact may receive logical support from multiple
+        sources -- i.e., it may be asserted multiple times with a
+        different set of logical supports each time. Such a fact
+        isn't automatically retracted unless each of its logical
+        supports is removed.
+
+            <p></p>If a fact is asserted without explicit logical support,
+        it is said to be <i>unconditionally supported.</i> If an
+        unconditionally supported fact also receives explicit
+        logical support, removing that support will not cause the
+        fact to be retracted.
+
+            <p></p>If one or more <tt>logical</tt> CEs appear in a rule, they
+        must be the first patterns in that rule; i.e., a
+            <tt>logical</tt> CE cannot be preceded in a rule by any other
+        kind of CE.
+
+            <p></p>Shadow facts are no different than other facts with
+        regard to the <tt>logical</tt> CE. Shadow facts can
+        provide logical support and can receive logical support. In
+        the current implementation, shadow facts can only
+        provide logical support as a whole. In a future version of
+        Jess, it will be possible for a shadow fact to provide
+        logical support based on any combination of individual slot
+        values.
+
+            <p></p>The <tt>logical</tt> CE can be used together with all
+        the other CEs, including <tt>not</tt> and <tt>exists</tt>. A
+        fact can thus be logically dependent on the non-existence of
+        another fact, or on the existence of some category of facts
+        in general.
+
+            <p>The Jess language functions <a href="functions.html#dependents"><tt>dependents</tt></a> and <a href="functions.html#dependencies"><tt>dependencies</tt></a>
+            let you query the logical dependencies among facts.</p>
+
+        
+
+        
+        
+<a name="forall_ce">
+<h3>6.14. The 'forall' conditional element.</h3>
+</a>
+        The "forall"
+      grouping CE matches if, for every match of the first pattern
+      inside it, all the subsequent patterns match. An example:
+            <p></p>
+
+
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(defrule every-employee-has-a-stapler-and-holepunch
+  (forall (employee (name ?n))
+          (stapler (owner ?n))
+          (holepunch (owner ?n)))
+   =&gt;
+  (printout t "Every employee has a stapler and a holepunch." crlf))
+</pre>
+
+</div>
+
+            
+<p>This rule fires if there are a hundred employees and everyone owns the appropriate
+      supplies. If a single employee doesn't own the supplies, the
+      rule won't fire.</p>
+
+        
+
+        
+        
+<a name="accumulate_ce">
+<h3>6.15. The 'accumulate' conditional element.</h3>
+</a>
+        The "<tt>accumulate</tt>" CE is complicated, and perhaps hard
+      to understand, but it's incredibly powerful. It lets you count
+      facts, add up fields, store data into collections, etc. I will
+      eventually need to write quite a bit of documentation for it,
+      but for now, the following should get you started.
+            <p>
+      The accumulate CE looks like this:
+            </p>
+
+<div class="example">
+<pre>
+(accumulate &lt;initializer&gt; &lt;action&gt; &lt;result&gt; &lt;conditional element&gt;)
+</pre>
+</div>
+            
+<p>
+      When an accumulate CE is encountered during matching (i.e., when
+      the preceding pattern is matched, or when the contained CE is
+      matched), the following steps occur:</p>
+            
+<ol>
+                
+<li>A new execution context is created.</li>
+                
+<li>The initializer is executed in that context.</li>
+                
+<li>If the CE is activated via the left input, all the matching
+      tokens from the right memory are considered. If it's activated
+      via the right input, each of the matching left tokens are
+      visited. As each is visited, all of its matching
+      right tokens are considered in turn.</li>
+                
+<li>For each token considered, the variables it defines are
+      bound in the execution context, and the action is executed.</li>
+                
+<li>If a pattern binding is present, the result is
+      bound to the given variable.</li>
+                
+<li>Finally, the accumulate CE matches successfully and matching
+      continues at the next conditional element.</li>
+            
+</ol>
+            
+<p>
+      What this all means is that "accumulate" lets you execute some
+      code for every match, and returns the accumulated result. For
+      example, this rule counts the number of employees making more
+      than $100,000 per year. A variable is initialized to zero, and
+      incremented for every match; that variable is then bound to the
+      pattern binding.
+            </p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate employee (slot salary) (slot name))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule count-highly-paid-employees
+  ?c &lt;- (accumulate (bind ?count 0)                        ;; initializer
+                (bind ?count (+ ?count 1))                    ;; action
+                ?count                                        ;; result
+                (employee (salary ?s&amp;:(&gt; ?s 100000)))) ;; CE
+  =&gt;
+  (printout t ?c " employees make more than $100000/year." crlf))</pre>
+</div>
+
+            
+<p>This variation prints a list of those employees instead by storing all the names in an ArrayList:</p>
+
+<div class="jesscode">
+<pre>
+<b>Jess&gt; </b>(defrule count-highly-paid-employees
+  ?c &lt;- (accumulate (bind ?list (new java.util.ArrayList))   ;; initializer
+                (?list add ?name)                             ;; action
+                 ?list                                        ;; result
+                (employee (name ?name)
+                          (salary ?s&amp;:(&gt; ?s 100000))))  ;; CE
+  =&gt;
+  (printout t (?c toString)  crlf))</pre>
+</div>
+
+            
+<p>Warning: note that because matching one fact can cause
+                <tt>accumulate</tt> to iterate over a large number of other
+      facts, it can be computationally expensive. Do think about
+      what you're doing when you use it.
+            </p>
+
+            
+<p> Finally, note that <tt>accumulate</tt> is
+            non-reentrant. You cannot nest one <tt>accumulate</tt> CE
+            inside another, directly or indirectly.
+            </p>
+
+        
+
+    
+    
+<a name="unique_ce">
+<h3>6.16. The 'unique' conditional element.</h3>
+</a>
+        The <tt>unique</tt> CE has been removed. The parser will accept but ignore it.
+
+    
+
+        
+        <a name="node_index_hash">
+<h3>6.17. Node index hash value.</h3>
+</a>
+
+The <i>node index hash value</i> is a tunable performance-related
+parameter that can be set globally or on a per-rule basis. A small
+value will save memory, possibly at the expense of performance; a
+larger value will use more memory but lead to faster rule LHS execution.
+            <p></p>
+
+In general, you might want to declare a large value for a rule that
+was likely to generate many partial matches (prime numbers are the
+best choices:)
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule nihv-demo
+  (declare (node-index-hash 169))
+  (item ?a)
+  (item ?b)
+  (item ?c)
+  (item ?d)
+  =&gt;)</pre>
+
+</div>
+
+See the discussion of the
+            <a href="functions.html#set-node-index-hash"><tt>set-node-index-hash</tt></a>
+function for a full discussion of this value and what it means.
+
+        
+
+        <a name="slot-specific">
+<h3>6.18. The 'slot-specific' declaration for deftemplates</h3>
+</a>
+      Deftemplate definitions can now include a "declare" section just
+      as defrules can. There are several different properties that can
+      be declared. One is "slot-specific". A template with this
+      declaration will be matched in a special way: if a fact, created
+      from such a template, which matches the left-hand-side of a rule is
+      modified, the result depends on whether the modified slot is
+      named in the pattern used to match the fact. As an example,
+      consider the following:<p></p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate D (declare (slot-specific TRUE)) (slot A) (slot B))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>(defrule R
+  ?d &lt;- (D (A 1))
+  =&gt;
+  (modify ?d (B 3)))</pre>
+
+</div>
+
+            
+<p> Without the "slot-specific" declaration, this rule would
+      enter an endless loop, because it modifies a fact matched on the
+      LHS in such a way that the modified fact will still match. With
+      the declaration, it can simply fire once. This behavior is
+      actually what many new users expect as the default; the
+      technical term for it is <i>refraction.</i>
+            
+</p>
+        
+
+        
+<a name="no-loop">
+<h3>6.19. The 'no-loop' declaration for rules</h3>
+</a>
+        If a rule includes the declaration
+            <tt>(declare (no-loop TRUE))</tt>, then nothing that a rule does
+      while firing can cause the immediate reactivation of the same
+      rule; i.e., if a no-loop rule matches a fact, and the rule modifies that
+      same fact such that the fact still matches, the rule will not be
+      put back on the agenda, avoiding an infinite loop. This is
+            basically just a stronger form of "slot-specific."
+
+        
+
+    <a name="removing_rules">
+<h3>6.20. Removing rules</h3>
+</a>
+        
+<p>You can undefine a rule with the <a href="api/jess/Rete.html#removeDefrule(String)"><tt><tt>jess.Rete.</tt>removeDefrule(String)</tt></a> method.
+           This will remove the rule completely from the engine.
+        </p>
+    
+
+    
+<a name="chaining">
+<h3>6.21. Forward and backward chaining</h3>
+</a>
+
+The rules we've seen so far have been <i>forward-chaining</i> rules, which
+basically means that the rules are treated as <tt>if... then</tt>
+statements, with the engine passively executing the RHSs of activated
+rules. Some rule-based systems, notable Prolog and its derivatives,
+support <i>backward chaining.</i> In a backwards chaining system,
+rules are still <tt>if... then</tt> statements, but the engine seeks
+steps to activate rules whose preconditions are not met. This
+behaviour is often called "goal seeking". Jess supports both forward
+and backward chaining. Note that the explanation of backward chaining
+in Jess is necessarily simplified here since full explanation requires
+a good understanding of the <a href="rete.html">underlying
+algorithms</a> used by Jess.
+        <p></p>
+
+To use backward chaining in Jess, you must first declare that certain
+fact templates will be <i>backward chaining reactive</i>. You can do
+        this when you define the template:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate factorial
+  (declare (ordered TRUE)
+  (backchain-reactive TRUE))</pre>
+
+</div>
+
+Alternatively, you can use the <a href="functions.html#do-backward-chaining"><tt>do-backward-chaining</tt></a>
+        function after the template is defined:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(do-backward-chaining factorial)</pre>
+
+</div>
+
+Then you can define rules which match such patterns. Note that
+templates must be declared to be backwards chaining reactive
+        <i>before</i> you define any rules which use the template.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule print-factorial-10
+  (factorial 10 ?r1)
+  =&gt;
+  (printout t "The factorial of 10 is " ?r1 crlf))</pre>
+
+</div>
+
+When the rule compiler sees that a pattern matches a
+backward chaining reactive template, it rewrites the rule and inserts
+some special code into the internal representation of the rule's
+LHS. This code asserts a fact onto the fact-list that looks like
+
+<div class="example">
+<pre>
+(need-factorial 10 nil)
+</pre>
+</div>
+
+if, when the rule engine is reset, there are no matches for this
+pattern. The head of the fact is constructed by taking the head of the
+reactive pattern and adding the prefix "need-".
+
+        <p></p>
+Now, you can write rules which match these need-(x) facts.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule do-factorial
+  (need-factorial ?x ?)
+  =&gt;
+  (bind ?r 1)
+  (bind ?n ?x)
+  (while (&gt; ?n 1)
+    (bind ?r (* ?r ?n))
+    (bind ?n (- ?n 1)))
+  (assert (factorial ?x ?r)))</pre>
+
+</div>
+
+The rule compiler rewrites rules like this too: it adds a
+negated match for the factorial pattern itself to the rule's LHS.
+        <p></p>
+
+The end result is that you can write rules which match on (factorial),
+and if they are close to firing except they need a (factorial) fact to
+do so, any (need-factorial) rules may be activated. If these rules
+fire, then the needed facts appear, and the (factorial)-matching rules
+fire. This, then, is backwards chaining! Jess will chain backwards
+through any number of reactive patterns. For example:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(do-backward-chaining foo)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(do-backward-chaining bar)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule rule-1
+  (foo ?A ?B)
+  =&gt;
+  (printout t foo crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule create-foo
+  (need-foo $?)
+  (bar ?X ?Y)
+  =&gt;
+  (assert (foo A B)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule create-bar
+  (need-bar $?)
+  =&gt;
+  (assert (bar C D)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>foo
+3</i>
+</pre>
+        
+</div>
+
+In this example, none of the rules can be activated at first. Jess
+sees that <tt>rule-1</tt> could be activated if there were an
+appropriate <tt>foo</tt> fact, so it generates the request <tt>(need-foo
+nil nil)</tt>. This matches part of the LHS of rule
+        <tt>create-foo</tt> cannot fire for want of a <tt>bar</tt> fact. Jess
+therefore creates a <tt>(need-bar nil nil)</tt> request. This matches
+the LHS of the rule <tt>create-bar</tt>,which fires and asserts
+        <tt>(bar C D)</tt>. This activates <tt>create-foo, </tt> which fires,
+asserts <tt>(foo A B)</tt>, thereby activating <tt>rule-1</tt>, which
+then fires.
+
+        <p></p>
+There is a special conditional element, <tt>(explicit),</tt> which you
+can wrap around a pattern to inhibit backwards chaining on an otherwise
+reactive pattern.
+    
+
+    <a name="defmodules">
+<h3>6.22. Defmodules</h3>
+</a>
+
+      A typical rule-based system can easily include hundreds of
+      rules, and a large one can contain many thousands. Developing
+      such a complex system can be a difficult task, and preventing
+      such a multitude of rules from interfering with one another can
+      be hard too. <p></p>
+
+      You might hope to mitigate the problem by partitioning a rule
+      base into manageable chunks. <i>Modules</i> let you divide rules
+      and templates into distinct groups. The commands for listing
+      constructs let you specify the name of a module, and can then
+      operate on one module at a time. If you don't explicitly specify
+      a module, these commands (and others) operate by default on the
+        <i>current module.</i> If you don't explicitly define any
+      modules, the current module is always the <i>main module,</i>
+      which is named MAIN. All the constructs you've seen so far have
+      been defined in MAIN, and therefore are often preceded by
+      "MAIN::" when displayed by Jess.<p></p>
+
+      Besides helping you to manage large numbers of rules, modules
+      also provide a control mechanism: the rules in a module will
+      fire only when that module has the <i>focus</i>, and only one
+      module can be in focus at a time. <p></p>
+
+        
+<blockquote>
+            
+<i><b>Note for CLIPS users:</b></i> Jess's <tt>defmodule</tt>
+        construct is similar to the CLIPS construct by the same name,
+        but it is not identical. The syntax and the name resolution
+        mechanism are simplified. The focus mechanism is much the same.
+        </blockquote>
+
+
+        
+<a name="defining_modules">
+<h4>6.22.1. Defining constructs in modules</h4>
+</a>
+        You can define a new module using the <tt>defmodule</tt>
+        construct:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defmodule WORK)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+</div>
+
+        You can place a deftemplate, defrule, or deffacts into a
+        specific module by qualifying the name of the construct with
+        the module name:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate WORK::job (slot salary))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(list-deftemplates WORK)</pre>
+
+<pre>
+<i>WORK::job
+For a total of 1 deftemplates in module WORK.</i>
+</pre>
+
+</div>
+
+        Once you have defined a module, it becomes the <i>current
+        module:</i>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(get-current-module)</pre>
+
+<pre>
+<i>MAIN</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defmodule COMMUTE)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(get-current-module)</pre>
+
+<pre>
+<i>COMMUTE</i>
+</pre>
+
+</div>
+
+        If you don't specify a module, all deffacts, templates and
+        rules you define will automatically become part of the current
+        module:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate bus (slot route-number))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule take-the-bus
+  ?bus &lt;- (bus (route-number 76))
+  (have-correct-change)
+  =&gt;
+  (get-on ?bus))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(ppdefrule take-the-bus)</pre>
+
+<pre>
+<i>"(defrule COMMUTE::take-the-bus
+  ?bus &lt;- (bus (route-number 76))
+  (have-correct-change)
+  =&gt;
+  (get-on ?bus))"</i>
+</pre>
+
+</div>
+
+        You can set the current module explicitly using the <a href="functions.html#set-current-module"><tt>set-current-module</tt></a> function.
+
+        The implied template <tt>have-correct-change</tt> was
+        created in the COMMUTE module, because that's where the rule
+        was defined.
+
+
+        
+
+        <a name="module_scope">
+<h4>6.22.2. Modules, scope, and name resolution</h4>
+</a>
+
+        A module defines a <i>namespace</i> for templates and
+        rules. This means that two different modules can each contain
+        a rule with a given name without conflicting -- i.e., rules
+        named <tt>MAIN::initialize</tt> and
+            <tt>COMMUTE::initialize</tt> could be defined simultaneously
+        and coexist in the same program. Similarly, the templates
+            <tt>COMPUTER::bus</tt> and <tt>COMMUTE::bus</tt> could both be
+        defined. Given this fact, there is the question of how Jess
+        decides which template the definition of a rule or query is
+        referring to.<p></p>
+
+        When Jess is compiling a rule or deffacts definition, it will
+        look for templates in three places, in order:
+
+            <ol>
+                
+<li>If a pattern explicitly names a module, only that module
+          is searched.</li>
+
+                
+<li>If the pattern does not specify a module, then the
+          module in which the rule is defined is searched first.</li>
+
+                
+<li>If the template is not found in the rule's module, the
+          module MAIN is searched last. Note that this makes the MAIN
+          module a sort of global namespace for templates.</li>
+            
+</ol>
+
+        The following example illustrates each of these
+        possibilities:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(assert (MAIN::mortgage-payment 2000))</pre>
+
+<pre>
+<i>&lt;Fact-0&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defmodule WORK)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(deftemplate job (slot salary))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defmodule HOME)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(deftemplate hobby (slot name) (slot income))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule WORK::quit-job
+  (job (salary ?s))
+  (HOME::hobby (income ?i&amp;:(&gt; ?i (/ ?s 2))))
+  (mortgage-payment ?m&amp;:(&lt; ?m ?i))
+  =&gt;
+  (call-boss)
+  (quit-job))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(ppdefrule WORK::quit-job)</pre>
+
+<pre>
+<i>"(defrule WORK::quit-job
+   (job (salary ?s))
+   (HOME::hobby (income ?i&amp;:(&gt; ?i (/ ?s 2))))
+   (MAIN::mortgage-payment ?m&amp;:(&lt; ?m ?i))
+   =&gt;
+   (call-boss)
+   (quit-job))"</i>
+</pre>
+
+</div>
+
+        In this example, three deftemplates are defined in three
+        different modules: <tt>MAIN::mortgage-payment</tt>,
+            <tt>WORK::job</tt>, and <tt>HOME::hobby</tt>. Jess finds the
+        WORK::job template because the rule is defined in the WORK
+        module. It finds the HOME::hobby template because it is
+        explicitly qualified with the module name. And the
+        MAIN::mortgage-payment template is found because the MAIN
+        module is always searched as a last resort if no module name
+        is specified. <p></p>
+
+        Commands which accept the name of a construct as an argument
+        (like <a href="functions.html#ppdefrule"><tt>ppdefrule</tt></a>, <a href="functions.html#ppdeffacts"><tt>ppdeffacts</tt></a>, etc) will search for the
+        named construct in the same way as is described above. <p></p>
+
+        Note that many of the commands that list constructs (<a href="functions.html#facts"><tt>facts</tt></a>, <a href="functions.html#list-deftemplates"><tt>list-deftemplates</tt></a>, <a href="functions.html#rules"><tt>rules</tt></a>, etc) accept a module name or "*"
+        as an optional argument. If no argument is specified, these
+        commands operate only on the current module. If a module name
+        is given, they operate on the named module. If "*" is given,
+        they operate on all modules.
+        
+
+        <a name="focus">
+<h4>6.22.3. Module focus and execution control</h4>
+</a>
+
+        In the previous sections I described how modules provide a
+        kind of namespace facility, allowing you to partition a
+        rulebase into manageable chunks. Modules can also be used to
+        control execution. In general, although any Jess rule can be
+        activated at any time, only rules in the <i>focus module</i>
+        will fire. Note that the <i>focus module</i> is independent
+        from the <i>current module</i> discussed above. <p></p>
+
+        Initially, the module MAIN has the focus:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defmodule DRIVING)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule get-in-car
+  =&gt;
+  (printout t "Ready to go!" crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>0</i>
+</pre>
+
+</div>
+
+        In the example above, the rule doesn't fire because the
+        DRIVING module doesn't have the focus. You can move the focus
+        to another module using the <a href="functions.html#focus"><tt>focus</tt></a>
+        function (which returns the name of the previous focus module:)
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(focus DRIVING)</pre>
+
+<pre>
+<i>MAIN</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>Ready to go!
+1</i>
+</pre>
+
+</div>
+
+        Note that you can call <a href="functions.html#focus"><tt>focus</tt></a> from
+        the right-hand-side of a rule to change the focus while the
+        engine is running. <p></p>
+
+        Jess actually maintains a <i>focus stack</i> containing an
+        arbitrary number of modules. The focus module is, by
+        definition, the module on top of the stack. When there are no
+        more activated rules in the focus module, it is "popped" from
+        the stack, and the next module underneath becomes the focus
+        module. You also can manipulate the focus stack with the
+        functions <a href="functions.html#pop-focus"><tt>pop-focus</tt></a>
+            <a href="functions.html#list-focus-stack"><tt>list-focus-stack</tt></a>
+            <a href="functions.html#get-focus-stack"><tt>get-focus-stack</tt></a> and
+            <a href="functions.html#clear-focus-stack"><tt>clear-focus-stack</tt></a>
+            
+<p></p>
+
+        The example program <tt>dilemma.clp</tt> shows a good use of
+        modules for execution control.
+
+            <a name="autofocus">
+<h5>6.22.3.1. The auto-focus declaration</h5>
+</a>
+
+          You can declare that a rule has the <i>auto-focus
+          property</i>:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defmodule PROBLEMS)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule crash
+  (declare (auto-focus TRUE))
+  (DRIVING::me ?location)
+  (DRIVING::other-car ?location)
+  =&gt;
+  (printout t "Crash!" crlf)
+  (halt))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(defrule DRIVING::travel
+  ?me &lt;- (me ?location)
+  =&gt;
+  (printout t ".")
+  (retract ?me)
+  (assert (me (+ ?location 1))))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (me 1))</pre>
+
+<pre>
+<i>&lt;Fact-1&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (other-car 4))</pre>
+
+<pre>
+<i>&lt;Fact-2&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(focus DRIVING)</pre>
+
+<pre>
+<i>MAIN</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(run)</pre>
+
+<pre>
+<i>...Crash!
+4</i>
+</pre>
+                
+</div>
+
+          When an auto-focus rule is activated, the module it appears
+          in is automatically pushed onto the focus stack and becomes
+          the focus module. Modules with auto-focus rules make great
+          "background tasks."
+
+
+            
+
+            <a name="return-from-rule">
+<h5>6.22.3.2. Returning from a rule RHS</h5>
+</a>
+
+          If the function <a href="functions.html#return"><tt>return</tt></a> is
+          called from a rule's right-hand-side, it immediately
+          terminates the execution of that rule's RHS. Furthermore,
+          the current focus module is popped from the focus
+          stack. <p></p>
+          
+          
+<p>This suggests that you can call a module like a
+          subroutine. You call the module from a rule's RHS using
+                <a href="functions.html#focus"><tt>focus</tt></a> and you return from the
+          call using <a href="functions.html#return"><tt>return</tt></a>.</p>
+
+          
+<p>To stop executing a rule's actions without popping the
+          focus stack, use <a href="functions.html#break"><tt>break</tt></a> instead.</p>
+
+                
+<p>Finally, note that the auto-focus declaration can be applied to defmodules too; an auto-focus
+                    module is equivalent to a regular module in which every rule has the auto-focus property.</p>
+
+            
+
+        
+        
+<a name="removing_modules">
+<h4>6.22.4. Removing modules</h4>
+</a>
+            
+<p>This should not be a common requirement, but you can remove a module from the engine using the
+                <a href="api/jess/Rete.html#removeDefmodule(String)"><tt><tt>jess.Rete.</tt>removeDefmodule(String)</tt></a> method.
+                You might want to do this during interactive development or experimentation. You won't be able to
+            remove a module if it's in use. If there are any templates or rules defined in the module, you'll get an exception.</p>
+        
+    
+
+
+
+</div>
+</body>
+
+</html>

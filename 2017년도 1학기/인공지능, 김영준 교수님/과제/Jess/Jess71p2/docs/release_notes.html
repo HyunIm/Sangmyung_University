@@ -1,0 +1,596 @@
+<html>
+    
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Release Notes</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="functions.html">The Jess Function List</a>
+</li>
+  
+<li>
+<a href="constructs.html">Jess Constructs</a>
+</li>
+  
+<li>
+<a href="api.html">Jess's Java APIs</a>
+</li>
+  
+<li>
+<a href="rete.html">The Rete Algorithm</a>
+</li>
+  
+<li>
+<a href="references.html">For More Information...</a>
+</li>
+  
+<li id="selected">
+<a href="release_notes.html">Release Notes</a>
+</li>
+  
+<li>
+<a href="changes.html">Change History</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>21.
+        Release Notes</h2>
+
+        
+<p>Jess 7.1 introduces some new features on top of the
+            foundation laid in Jess 7.0.</p> 
+
+        
+<a name="new_features71">
+<h3>21.1. New features in Jess 7.1</h3>
+</a>
+
+	  
+<p>
+<b>Templates inherit declarables from parent.</b> In
+	  particular, templates inherit backwards chaining reactivity
+	  and slot-specific behavior from their parent template (if
+	  they have one.)</p>
+
+        
+<p>
+<b>Test CEs allowed in logical.</b> You're now allowed to
+        use <tt>test</tt> inside of the <tt>logical</tt> CE.</p>
+
+        
+<p>
+<b>Alternative character sets.</b> The <a href="functions.html#batch"><tt>batch</tt></a> function and the <a href="api/jess/Batch.html"><tt>jess.Batch</tt></a>
+        class's various methods can accept a charset argument, so Jess
+        can read files written in arbitrary character sets.</p>
+
+           
+<p>
+<b>Test CE folding.</b> The <tt>test</tt> conditional element is now
+               more efficient -- in fact, its performance is equivalent to declaring
+               the same tests somewhere in the preceding pattern. A <tt>test</tt>
+               pattern is no longer compiled to a real join node in the Rete network.
+               You can now use the <tt>test</tt> CE anywhere you want to improve program
+               readability or in generated code, without penalty.
+           </p>
+           
+           
+<p>
+<b>Automatic strength reduction.</b> Many uses of the "eq" and "neq"
+               functions in the patterns of a rule will be automatically converted to more
+               efficient direct matching. Although direct matching is still to be preferred
+               because it is less verbose, generated code can use "eq" and "neq" uniformly
+               with other functions and Jess will do this optimization when possible.</p>
+
+            
+<p>
+<b>Dot notation.</b> The
+            "simplified" or "Java" patterns can now use a "dot
+            notation" to reference slots in other patterns. This
+            powerful capability greatly expands the usefulness of Java
+            patterns and makes auto-generating Jess code much easier. Futhermore, The
+            notation "?x.y" in procedural code will be interpreted as "slot y of the fact in x".</p>
+
+            
+<p>
+<b>Name restrictions.</b>Slot names and variable names may not contain
+            a period ('.').</p>
+
+            
+<p>
+<b>Variables not bound by Java patterns.</b> The
+            semantics of Java patterns, introduced in Jess 7.0, have
+            changed slightly. These patterns no longer bind
+            user-accessible variables to any slots they're used in. To
+            access slot values of facts matched by Java patterns, use
+            the <a href="functions.html#fact-slot-value"><tt>fact-slot-value</tt></a> function or the <a href="api/jess/Fact.html#getSlotValue(java.lang.String)"><tt><tt>jess.Fact.</tt>getSlotValue(java.lang.String)</tt></a> method.</p>
+
+            
+<p>
+<b>allowed-values.</b> Template slots can now use the
+            allowed-values qualifier, which states which discrete
+            values a slot can hold. Jess will verify that your code
+            obeys this statically; optionally, it can also be verified
+            at runtime. Using allowed-values where appropriate will
+            take advantage of some new optimizations to be implemented
+            in Jess 7.1.</p>
+
+            
+<p>
+<b>Peering of Rete objects.</b> <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a>
+                objects can share their rule networks, resulting
+                in reduced memory footprint and faster setup times
+                when you're using multiple engines in a single
+                application.</p>
+
+            
+<p>
+                
+<b>elif.</b> The <a href="functions.html#if"><tt>if</tt></a> function supports
+                <tt>elif</tt> blocks.
+            </p>
+
+            
+<p> 
+<b>ValueFactory.</b> Jess uses a pooling factory for
+                Value objects, resulting in generally lower memory
+                consumption if you parse a lot of data. You can use
+                the same factory for the Value object you create.               
+                If you modify your code to use it, you can
+                conserve memory since ValueFactory caches some of the
+                Values it creates. HashCodeComputer, the class that
+                Jess uses to keep track of which objects a "value
+                objects", is also public.
+                </p>
+
+            
+<p>
+                
+<b>break.</b> The <a href="functions.html#break"><tt>break</tt></a> function lets
+                you terminate loops early as well as return from the
+                actions of a rule without popping the focus stack.
+            </p>
+
+            
+<p>
+<b>Removing constructs.</b> The <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> class now includes methods for
+            removing modules, templates, globals, and all other constructs.</p>
+
+        
+
+        
+<a name="new_features">
+<h3>21.2. New features in Jess 7.0</h3>
+</a>
+      
+<p>Jess 7 has many new features. The manual has had a major
+      rewrite for this version, although some new features may be
+      underdocumented. These notes are intended to help with that.</p>
+
+      
+<p>New features in Jess 7 include, in no particular order:</p>
+
+            
+<p>
+                
+<b>Java patterns.</b>
+            You can use a new, simplified syntax for pattern
+            matching that looks a lot like Java Boolean expressions. You can read
+                about it <a href="rules.html#patterns_simple">here.</a>
+</p>
+
+
+            
+<p>
+                
+<b>Static imports.</b>
+            Importing a class now causes all its static members to
+            be defined as functions. See <a href="functions.html#import">here</a> for details about
+            this new and useful feature!</p>
+
+            
+<p>
+                
+<b>Lambda expressions.</b>
+            You can now create unnamed functions and easily use
+            them to implement Java interfaces. See <a href="jessgui.html#events">here</a> for details.</p>
+
+
+            
+<p>
+                
+<b>New default for <a href="functions.html#definstance"><tt>definstance</tt></a>.</b> The
+                definstance function's default behavior is now to use
+                PropertyChangeEvents whenever they are available. It's
+                generally not necessary to use the "static" or
+                "dynamic" qualifiers anymore, unless you want to force
+                Jess not to use a PropertyChangeListener even when
+                that facility is available. You can explicitly use a
+                qualifier of "auto" as a synonym for the default.
+            </p>
+
+            
+<p>
+                
+<b>Eclipse-based IDE.</b> Charlemagne includes a rule
+            development environment called "JessDE" based on the
+            Eclipse open-source IDE. The toolset includes an editor, a
+            debugger, and a host of small tools to help with rule
+            development and deployment. You can read more about it
+            <a href="eclipse.html">here.</a>
+</p>
+
+            
+<p>
+                
+<b>Simplified defquery syntax.</b> A new
+        <tt>run-query*</tt> function brings a JDBC-like interface to
+        working memory queries. Read about it <a href="queries.html">here.</a>
+            
+</p>
+
+            
+<p>
+                
+<b>The "slot-specific" declaration for templates.</b>
+      Deftemplate definitions can now include a "declare" section just
+      as defrules can. There are several different properties that can
+      be declared. One is "slot-specific". Changes to facts from slot-specific
+                templates won't trigger rule activations unless the modified
+            slot is actually mentioned on the LHS of the rule.</p>
+
+            
+<p>
+                
+<b>The "backchain-reactive" declaration for
+      templates.</b> This declaration lets you declare that a
+      template is backward chaining reactive when you create it,
+      rather than after the fact.
+            </p>
+
+            
+<p>
+                
+<b>The "from-class" declaration for templates.</b>
+      This provides a different syntax for defining templates based
+      on Java classes. Using "from-class", you can apply all the
+      other template declarations to shadow fact templates.
+            </p>
+
+            
+<p>
+                
+<b>Public member variables as slots.</b> When you
+      define a template using the deftemplate from-class syntax or
+      using the Rete.defclass() method, you can tell Jess to include
+      public member variables as slots in the template. Do this by
+      passing "true" as the optional fourth argument to
+      Rete.defclass(), or by including the declaration
+      "(include-variables TRUE)" in your deftemplate. There is not yet
+      a way to turn this feature on when using the defclass function.
+            </p>
+
+
+            
+<p>
+                
+<b>The "no-loop" declaration for rules.</b> If you use
+                <tt>(declare (no-loop TRUE))</tt>, then nothing that a rule does
+      while firing can cause the immediate reactivation of the same
+      rule; i.e., if a no-loop rule matches a fact, and the rule modifies that
+      same fact such that the fact still matches, the rule will not be
+      put back on the agenda, avoiding an infinite loop.
+            </p>
+
+            
+<p>
+                
+<b>Matching with regular expressions, and the
+                    <tt>regexp</tt> function.  </b> Under JDK 1.4 and
+                    up, Jess 7 has regular expressions support. You
+                    can directly match any field with a regular
+                    expression.
+            </p>
+
+
+            
+<p>
+                
+<b>The -stacktrace switch.</b> The error messages
+      printed by the <tt>jess.Main</tt> class have always
+      (deliberately) included a stack trace to help you find the
+      specific part of Jess that rejected your input. Unfortunately,
+      stack traces are frightening to many
+      non-programmers. Furthermore, some people assume that when they
+      see a stack trace, they're seeing a bug in Jess. Therefore,
+      <tt>jess.Main</tt>'s new default behavior is not to display a
+      stack trace on error. To get the old behavior, you can include
+      the <tt>-stacktrace</tt> command-line switch when you start
+      <tt>jess.Main</tt>.
+            </p>
+
+            
+<p>
+                
+<b>RU.LONG is now a first-class type.</b> You can write long
+      literals by appending an "L" to an integral value. Values of
+      "long" type can now be used in arithmetic and logical
+      expressions. The
+                <tt>long</tt> function still exists but, as
+      it's no longer needed, it is deprecated.
+            </p>
+
+            
+<p>
+                
+<b>The "forall" conditional element.</b> Jess now
+      includes a "forall" conditional element. The "forall" grouping
+      CE matches if, for every match of the first pattern inside it,
+      all the subsequent patterns match. See <a href="rules.html#forall_ce">here</a> for more information.
+            </p>
+
+            
+<p>
+                
+<b>The "accumulate" conditional element.</b> The "accumulate"
+      CE is lets you count facts, add up fields, store data into
+      collections, etc, all as a part of pattern matching. See <a href="rules.html#accumulate_ce">here</a> for more information. </p>
+
+            
+<p>
+                
+<b>Subrules no longer user-visible.</b> The "or" CE causes
+      rules that use it to be broken into subrules, as described in
+      the manual. However, the individual subrules will no longer be
+      visible to the user; they're an implementation detail that
+      should not concern most programmers.
+            </p>
+
+            
+<p>
+                
+<b>Native XML parser.</b> Jess 7 defines its own XML
+      rule format, <i>JessML</i>, designed so that it's easy for the
+      language to support Jess's special features. An XML Schema file
+      describing this format is included in the distribution. We hope
+      to eventually provide XSLT scripts to transform this language
+      into RuleML and other standard rule languages.  Several examples
+      of the XML format are included in the examples directory which
+      are exact machine translations of standard Jess examples. The
+      <tt>batch</tt> function knows how to read these XML files in,
+      and there are a number of useful public Java classes in the
+      package <tt>jess.xml</tt> for working with this new format,
+      including a tool to translate any Jess code into JessML.
+            </p>
+
+            
+<p>
+                
+<b>Public API for rule creation.</b> The XML parser is
+      defined in its own package, and works by creating jess.Defrule
+      objects using the Java API. This is an existence proof that such
+      a thing is now possible. Documentation on <i>how</i> is
+      forthcoming.
+            </p>
+
+            
+<p>
+                
+<b>Better handling for objects with mutable
+      hashCodes.</b> Object identity in Java is a slippery thing, as
+      experienced programmers know; the interpretation of identity and
+      equality can be intimately tied to the class-specific
+      implementations of the <tt>equals</tt> and <tt>hashCode</tt>
+      methods. Jess has historically had some problems with Java
+      objects whose hash code changes over time. These problems have
+      been resolved in Jess 7. Objects with changing hashCodes can be
+      safely added to working memory even in situations that have
+      caused problems in the past.  See <a href="java.html#equals_and_hashcode">"Java objects in working
+      memory"</a> for details.
+            </p>
+
+            
+<p>
+                
+<b>Better reflection performance.</b> Jess's performance
+      while scripting Java objects in procedural code has improved by
+      20-50% in this release, especially in loops.
+            </p>
+
+            
+<p>
+                
+<b>Better method names.</b> The
+                <tt>RU.EXTERNAL_ADDRESS</tt> constant, the
+                <tt>jess.Value.externalAddressValue()</tt> method, and
+                the <a href="functions.html#external-addressp"><tt>external-addressp</tt></a> function are all
+                deprecated in favor of the new equivalents
+                <tt>RU.JAVA_OBJECT</tt>,
+                <tt>jess.Value.javaObjectValue()</tt>, and <a href="functions.html#java-objectp"><tt>java-objectp</tt></a>.
+            </p>
+
+            
+<p>
+                
+<b>New overloaded add() methods.</b> The <a href="api/jess/ValueVector.html"><tt>jess.ValueVector</tt></a> class has a
+                new set of overloaded <tt>add()</tt> methods that make Java code that uses Jess lists
+                look cleaner.
+            </p>
+
+	    
+<p>
+	      
+<b>CLEAR.</b> One minor but potentially important
+	      behavioral change in this release is that the
+	      <a href="api/jess/Rete.html#clear()"><tt><tt>jess.Rete.</tt>clear()</tt></a> method
+	      doesn't modify the event mask, set of event listeners,
+	      or watch state. Although this is a break with the
+	      traditional semantics of the clear() method, it makes
+	      more sense, especially for embedded applications.
+	    </p>
+
+
+
+        
+
+        
+<a name="porting7">
+<h3>21.3. Porting from Jess 7</h3>
+</a>
+          
+<p>Jess 7 code will generally run fine in Jess 7.1, with a
+          few small exceptions. One issue is that the period character
+          '.' is no longer valid in variable or slot names, since the
+          period is now used as a "dot operator" to denote
+          membership. If this breaks existing code, you can choose to
+          use some other character (we suggest the octothorpe '#') as
+          a membership operator by adding the following to the
+          beginning of your Jess code:</p>
+          
+<pre>
+            ((engine) setMemberChar #)
+          </pre>
+        
+
+        
+<a name="porting6">
+<h3>21.4. Porting from Jess 6</h3>
+</a>
+      In general, Jess 6 applications will run unchanged (either Java API
+      code, or Jess language code,) with a few exceptions, as noted
+      below. Nevertheless, you may want to change your application to
+      take advantage of some of the newer features -- for example, the
+      new <tt>run-query*</tt> method.
+
+            <p>
+<b>Restrictions on variable names.</b> Jess 7 accepts a
+            more limited syntax for variable names than did earlier
+            versions of Jess. Only letters, numbers, dash, asterisk,
+            colon, and underscore are legal characters in variable
+            names in this release; in particular, the period (.)
+            character is no longer allowed as part of a variable
+            name. Hopefully this won't affect any existing code.
+            </p>
+
+
+            
+<p>
+                
+<b>Newly deprecated methods.</b> The
+                <tt>Rete.executeCommand()</tt> method is deprecated in favor
+                of the new <tt>eval()</tt> method.
+            </p>
+
+            
+<p>
+                
+<b>Previously deprecated methods removed.</b> All deprecated methods
+      from Jess 6 have been removed from Jess 7. In particular, the
+      "assert()" method from the Rete class has been replaced with
+      "assertFact()".
+            </p>
+
+            
+<p>
+                
+<b>New deprecated functions.</b>The Jess function
+                "multifieldp" is now deprecated; use "listp"
+                instead. The <tt>RU.EXTERNAL_ADDRESS</tt> constant,
+                the <tt>jess.Value.externalAddressValue()</tt> method,
+                and the <a href="functions.html#external-addressp"><tt>external-addressp</tt></a> function are
+                all deprecated in favor of the new equivalents
+                <tt>RU.JAVA_OBJECT</tt>,
+                <tt>jess.Value.javaObjectValue()</tt>, and <a href="functions.html#java-objectp"><tt>java-objectp</tt></a>.
+            </p>
+
+            
+<p>
+                
+<b>USERFUNCTION_CALLED events.</b>The data associated with a JessEvent of type
+      USERFUNCTION_CALLED is no longer a Userfunction object; it's now
+      a Funcall object.
+            </p>
+
+            
+<p>
+                
+<b>Context.setVariable() behavior changed.</b>The
+      setVariable() method of jess.Context behaves a little
+      differently now. In general, you won't notice a change unless
+      you were using variables defined at the command prompt as if
+      they were global variables. They never were, and never acted as
+      if they were -- and they're even less so now.
+            </p>
+
+            
+<p>
+                
+<b>Arguments to "batch".</b>The path argument to the Jess
+      function "batch" must be a double-quoted string; using an
+      unquoted symbol instead will lead to undefined behavior.
+            </p>
+
+            
+<p>
+                
+<b>Value objects.</b> Jess now assumes that all objects
+            (except for Collections) are value objects by default. If
+            you're working with a class that is
+                <i>not</i> a value
+            class, it's very important that you tell Jess about it by
+            using the
+                <a href="functions.html#set-value-class"><tt>set-value-class</tt></a>
+            function. See
+                <a href="java.html#equals_and_hashcode">"Java
+            objects in working memory"</a> for details.
+            </p>
+            
+<p>
+                
+<b>Return types.</b> A very few public methods that used
+                to return concrete collection classes are now declared to return the
+                corresponding interface; for example, Rete.getSupportingTokens()
+                now returns List rather than ArrayList.
+            </p>
+        
+    
+</div>
+</body>
+
+</html>

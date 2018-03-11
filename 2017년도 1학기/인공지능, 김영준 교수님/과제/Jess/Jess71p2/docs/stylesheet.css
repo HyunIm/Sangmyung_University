@@ -1,0 +1,187 @@
+/* Page background color */
+body { background-color: #FFFFFF; color: #000000; font: helvetica}
+
+/* Headers */
+
+h2 { color: #000000; textAlign: center}
+h3 { color: #000000; textAlign: left}
+h4 { color: #000000; textAlign: left}
+h5 { color: #000000; textAlign: left}
+
+H4 { color: #000000; font-style: italic}
+
+
+H5 { color: #000000; font-style: italic}
+
+/* Table cell data */
+td { color: #000000 }
+
+/* Code examples */
+div.jesscode { background-color: #ffdddd; padding-left:25px  }
+div.javacode { background-color: #ddddff; padding-left:25px  }
+div.example  { background-color: #ddffdd; padding-left:25px  }
+
+dt {
+  font-weight: bold;
+}
+
+div.maintext  {
+  margin: 0 2em 0 13em;
+  font: normal 100% Arial, Helvetica, Verdana, sans-serif;
+}
+div.toc {
+  margin: 0 2em 0 14em;
+  font: normal 100% Arial, Helvetica, Verdana, sans-serif;
+}
+
+div.toc li{
+    list-style-type: none;
+}
+
+/* Image */
+.floatleft {
+  float: left;
+  padding: 10px;
+  border: none;
+}
+
+.floatright {
+  float: right;
+  padding: 10px;
+}
+
+.logo {
+  padding: 10px;
+  border: none;
+}
+
+.clear {
+  float: right;
+
+}
+
+#navbar {
+  float: left;
+}
+
+#navcontainer
+{
+width: 12em;
+padding: 0 0 1em 0;
+margin-bottom: 1em;
+margin-right: 1em;
+font-size: 90%;
+background-color: #ffaaaa;
+color: #333;
+}
+
+#navcontainer ul
+{
+list-style: none;
+margin: 0;
+padding: 0;
+border: none;
+}
+
+#navcontainer li
+{
+border-bottom: 1px solid #ffaaaa;
+margin: 0;
+border-right: 1px solid #000;
+}
+
+#navcontainer li a
+{
+display: block;
+padding: 5px 5px 5px 0.5em;
+border-left: 10px solid #ff4444;
+border-right: 10px solid #ffaaaa;
+background-color: #ff8888;
+color: #000000;
+text-decoration: none;
+width: 100%;
+font: bold 100% Arial, Helvetica, Verdana, sans-serif;
+}
+
+html>body #navcontainer li a { width: auto; }
+
+#navcontainer li a:hover
+{
+border-left: 10px solid #ff8888;
+border-right: 10px solid #ffdddd;
+background-color: #ffaaaa;
+color: #000000;
+}
+
+#navsublist li a
+{
+padding: 3px 5px 5px 1.5em;
+background-color: #ffdddd;
+font: normal 100% Arial, Helvetica, Verdana, sans-serif;
+color: #000;
+}
+
+li#selected
+{
+background-color: #ffffff;
+font: bold 100% Arial, Helvetica, Verdana, sans-serif;
+color: #ff0000;
+border-right: 0px solid #000;
+border-left: 10px solid #f44;
+}
+
+li#selected a
+{
+background-color: #ffffff;
+font: bold 100% Arial, Helvetica, Verdana, sans-serif;
+color: #ff0000;
+border-right: 0px solid #ffdddd;
+border-left: 1px solid #000;
+border-top: 1px solid #000;
+border-bottom: 1px solid #000;
+}
+
+#navcontainer li#selected a:hover
+{
+border-left: 1px solid #ff8888;
+border-right: 0px solid #ffdddd;
+background-color: #fff;
+color: #000000;
+}
+
+.fineprint {
+  font-style: italic;
+  font-size: smaller;
+}
+
+.credits {
+  font-style: italic;
+  font-size: smaller;
+  text-align: right;
+  float: right;    
+}
+
+a.filename { 
+    display: block;
+    background-color: #ffdddd;
+    padding-left:25px;
+    font-size: larger;
+} 
+
+div.jesscode {
+    margin-top: 1em;
+}
+
+div.javacode {
+    margin-top: 1em;
+}
+
+div.example {
+    margin-top: 1em;
+}
+
+div pre {
+    padding: 0;
+    margin: 0;
+}
+

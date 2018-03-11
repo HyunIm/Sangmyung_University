@@ -1,0 +1,364 @@
+<html>
+
+  
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Jess Constructs</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="functions.html">The Jess Function List</a>
+</li>
+  
+<li id="selected">
+<a href="constructs.html">Jess Constructs</a>
+</li>
+  
+<li>
+<a href="api.html">Jess's Java APIs</a>
+</li>
+  
+<li>
+<a href="rete.html">The Rete Algorithm</a>
+</li>
+  
+<li>
+<a href="references.html">For More Information...</a>
+</li>
+  
+<li>
+<a href="release_notes.html">Release Notes</a>
+</li>
+  
+<li>
+<a href="changes.html">Change History</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>17.
+        Jess Constructs</h2>
+
+    
+<p>A <i>construct</i> is something that looks like a function, but
+    isn't one. It generally has odd syntax that can't be used in a regular
+    function call. Most of the names starting with "def-" in Jess are
+    construct names: defrule, defglobal, etc. You can only use
+    constructs at the top level of a Jess program -- i.e., you can't use
+    a construct on the right hand side of a rule, or inside a
+    function.</p>
+
+    
+<p>A construct is basically the same as a <i>special form</i> in
+    Lisp or Scheme. The odd syntax has to be handled specially by the
+    parser, hence the name. </p>
+
+    
+<a name="deffacts">
+<h4>17.1. deffacts</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(deffacts <i>deffacts-name</i>
+    ["Documentation comment"]
+    <i>fact</i>* )
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>A <i>deffacts</i> is just a list of facts. When
+          the "reset" function is called, Jess clears working memory,
+          asserts the special "initial-fact" fact, and then asserts
+          all the facts defined by deffacts. </dd>
+      
+</dl>
+<a name="deffunction">
+<h4>17.2. deffunction</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(deffunction <i>function-name</i> (<i>argument</i>*)
+    ["Documentation comment"]
+    <i>function call</i>* )
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>A <i>deffunction</i> is a function written in the
+          Jess language. You can call deffunctions from the Jess
+          prompt, from a rule, or from another deffunction. </dd>
+      
+</dl>
+<a name="defglobal">
+<h4>17.3. defglobal</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(defglobal ?<i>name</i> = <i>value</i>
+           [?<i>name</i> = <i>value</i>]* )
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>A <i>defglobal</i> construct defines one or more
+          global variables and sets their initial values. <b>The name of
+          a global variable must begin and end with an asterisk
+          (*)</b>.</dd>
+      
+</dl>
+<a name="defmodule">
+<h4>17.4. defmodule</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(defmodule <i>module-name</i>
+    ["Documentation comment"]
+    [(declare (auto-focus <i>value</i>))]
+    )
+</pre>
+</div>                        
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd> The <i>defmodule</i> construct introduces a Jess module. The
+          current module is set to be the new module, so any rules
+          defined after a defmodule will implicitly belong to that module. If a module has the <tt>auto-focus</tt> property,
+        then all the rules in that module have the <tt>auto-focus</tt> property.</dd>
+      
+</dl>
+<a name="defquery">
+<h4>17.5. defquery</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(defquery <i>query-name</i>
+    ["Documentation comment"]
+    [(declare (variables <i>variable</i>+)
+              (node-index-hash <i>value</i>)
+              (max-background-rules <i>value</i>))]
+    <i>conditional element</i>* )
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>A <i>query</i> consists of an optional variable
+          declaration followed by a list of <i>conditional
+          elements.</i> A conditional element is either a
+          <i>pattern</i>, or a grouping construct like "and", "or", or
+          "not." Queries are used to search working memory for facts
+          that satisfy the conditional elements. A query can be
+          invoked using the "run-query*" function. </dd>
+      
+</dl>
+<a name="defrule">
+<h4>17.6. defrule</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(defrule <i>rule-name</i>
+    ["Documentation comment"]
+    [(declare (salience <i>value</i>)
+              (node-index-hash <i>value</i>)
+              (auto-focus TRUE | FALSE)
+              (no-loop TRUE | FALSE))]
+    <i>conditional element</i>*
+    =&gt;
+    <i>function call</i>* )
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>A <i>rule</i> consists of a left-hand side, the
+          symbol "=&gt;", and a right-hand side, in that order. The
+          left-hand side is made up of zero or more <i>conditional
+          elements</i>, while the right-hand side consists of zero or
+          more function calls. A conditional element is either a
+          <i>pattern</i>, or a grouping construct like "and", "or", or
+          "not." The conditional elements are matched against Jess's
+          working memory. When they all match, and if the engine is
+          running, the code on the rule's right-hand side will be
+          executed.</dd>
+      
+</dl>
+<a name="deftemplate">
+<h4>17.7. deftemplate</h4>
+</a>
+<dl>
+        
+<dt>Syntax:</dt>
+<dd>
+
+<div class="example">
+<pre>
+(deftemplate <i>template-name</i>
+    [extends <i>template-name</i>]
+    ["Documentation comment"]
+    [(declare  (slot-specific TRUE | <b>FALSE</b>)
+               (backchain-reactive TRUE | <b>FALSE</b>)
+               (from-class <i>class name</i>)
+               (include-variables TRUE | <b>FALSE</b>)
+               (ordered TRUE | <b>FALSE</b>))]
+     (slot | multislot <i>slot-name</i>
+         ([(type ANY | INTEGER | FLOAT | NUMBER | SYMBOL | STRING |
+                LEXEME | OBJECT | LONG)]
+         [(default <i>default value</i>)]
+         [(default-dynamic <i>expression</i>)]
+         [(allowed-values <i>expression</i>+)])*)
+</pre>
+</div>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+<p>A <i>deftemplate</i> describes a kind of fact,
+          precisely in the same way as a Java class describes a kind
+          of object. In particular, a deftemplate lists the "member
+          variables" (called <i>slots</i>) that this particular kind
+          of fact can have.</p>
+
+        
+<p>Deftemplate definitions can include a "declare" section. Each
+        declaration will affect either how the template is defined or
+        how facts that use the template will behave.</p>
+
+        
+<p>The first declaration we'll learn about is
+        <tt>slot-specific</tt>. A template with this declaration will be
+        matched in a special way: if a fact, created from such a
+        template, which matches the left-hand-side of a rule is
+        modified, the result depends on whether the modified slot is
+        named in the pattern used to match the fact. As an example,
+        consider the following:</p>
+
+            
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deftemplate D (declare (slot-specific TRUE)) (slot A) (slot B))
+
+(defrule R
+  ?d &lt;- (D (A 1))
+  =&gt;
+  (modify ?d (B 3)))</pre>
+            
+</div>
+
+            
+<p> Without the "slot-specific" declaration, this rule would
+                enter an endless loop, because it modifies a fact matched on the
+                LHS in such a way that the modified fact will still match. With
+                the declaration, it can simply fire once. This behavior is
+                actually what many new users expect as the default, so the <tt>slot-specific</tt>
+                declaration probably ought to be used most of the time.
+                </p>
+
+
+
+<p>The <tt>from-class</tt> declaration lets you derive a template from
+a Java class. By default, only JavaBeans properties generate slots. But if you
+include the optional <tt>(include-variables TRUE)</tt> declaration in
+your template, then Jess will also create slots corresponding to the
+public instance variables of the class.</p>
+
+            
+<p>Other declarations are described in <a href="memory.html">this chapter.</a>
+</p>
+
+	    
+<p>The <tt>backchain-reactive</tt> and <tt>slot-specific</tt> declarations are inherited by child templates.
+	    </p>
+
+
+	
+</dd>
+      
+</dl>
+  
+</div>
+</body>
+
+</html>

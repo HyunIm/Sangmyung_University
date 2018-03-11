@@ -1,0 +1,416 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - The Rete Algorithm</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="functions.html">The Jess Function List</a>
+</li>
+  
+<li>
+<a href="constructs.html">Jess Constructs</a>
+</li>
+  
+<li>
+<a href="api.html">Jess's Java APIs</a>
+</li>
+  
+<li id="selected">
+<a href="rete.html">The Rete Algorithm</a>
+</li>
+  
+<li>
+<a href="references.html">For More Information...</a>
+</li>
+  
+<li>
+<a href="release_notes.html">Release Notes</a>
+</li>
+  
+<li>
+<a href="changes.html">Change History</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>19.
+        The Rete Algorithm</h2>
+
+
+
+<a name="disclaimer">
+<h3>19.1. Disclaimer</h3>
+</a>
+The information in this Section is provided for the
+curious reader. An understanding of the Rete algorithm may be helpful in
+planning rule-based systems; an understanding of Jess's implementation probably
+will not. Feel free to skip this section and come back to it some other
+time. You should not take advantage of many of the Java classes mentioned
+in this section. They are internal implementation details and any Java
+code you write which uses them may well break each time a new version of
+Jess is released.
+
+
+<a name="problem">
+<h3>19.2. The Problem</h3>
+</a>
+
+<p></p>Jess is a rule engine. In the simplest terms, this
+means that Jess's purpose it to continuously apply a set of if-then statements
+(<i>rules</i>) to a set of data (the <i>working memory</i>). You define the rules
+that make up your own particular rule-based system. Jess rules look something
+like this:
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(defrule library-rule-1
+    (book (name ?X) (status late) (borrower ?Y))
+    (borrower (name ?Y) (address ?Z))
+   =&gt;
+    (send-late-notice ?X ?Y ?Z))</pre>
+
+</div>
+
+This rule might be translated into pseudo-English as follows:
+
+<div class="example">
+<pre>
+Library rule #1:
+If
+  a late book exists, with name X, borrowed by someone named Y
+and
+  that borrower's address is known to be Z
+then
+  send a late notice to Y at Z about the book X.
+</pre>
+</div>
+
+The book and borrower entities would be found on the working
+    memory. The working memory is therefore a kind of database of bits of factual knowledge about
+the world. The attributes (called <i>slots</i>) that things like books
+and borrowers are allowed to have are defined in statements called <tt>deftemplates</tt>.
+Actions like <tt>send-late-notice</tt> can be defined in user-written functions
+in the Jess language (<tt>deffunction</tt>s) or in Java (<tt>Userfunction</tt>s)
+For more information about rule syntax refer to the
+<a href="rules.html">chapter "Making your own Rules."</a>
+
+
+<p></p>The typical rule-based program has a fixed set of rules while the
+    working memory
+changes continuously. However, it is an empirical fact that, in most rule-based
+programs, much of the working memory is also fairly fixed from one rule operation
+to the next. Athough new facts arrive and old ones are removed at all times,
+the percentage of facts that change per unit time is generally fairly small.
+For this reason, the obvious implementation for the rule engine
+is very inefficient. This obvious implementation would be to keep a list
+of the rules and continuously cycle through the list, checking each one's
+left-hand-side (LHS) against the working memory and executing the right-hand-side
+(RHS) of any rules that apply. This is inefficient because most of the
+tests made on each cycle will have the same results as on the previous
+iteration. However, since the working memory is stable, most of the tests will
+be repeated. You might call this the <i>rules finding facts</i> approach
+and its computational complexity is of the order of O(RF^P), where R is
+the number of rules, P is the average number of patterns per rule LHS,
+and F is the number of facts on the working memory. This escalates
+dramatically as the number of patterns per rule increases.
+
+
+    <a name="solution">
+<h3>19.3. The Solution</h3>
+</a>
+
+    
+<p></p>Jess instead uses a very efficient method known as the Rete (Latin
+for <i>net</i>) algorithm. The classic paper on the Rete algorithm
+<i>("Rete: A Fast Algorithm for the Many Pattern/ Many Object Pattern
+Match Problem", Charles L. Forgy, Artificial Intelligence 19 (1982),
+17-37)</i> became the basis for a whole generation of fast rule
+engines: OPS5, its descendant ART, CLIPS, and of course Jess. In the
+Rete algorithm, the inefficiency described above is alleviated
+(conceptually) by remembering past test results across iterations of
+the rule loop. Only new facts are tested against any rule
+LHSs. Additionally, as will be described below, new facts are tested
+against only the rule LHSs to which they are most likely to be
+relevant. As a result, the computational complexity per iteration
+drops to something more like O(RFP), or linear in the size of working
+memory. Our discussion of the Rete algorithm is necessarily brief. The
+interested reader is referred to the Forgy paper or to <i>Giarratano
+and Riley, "Expert Systems: Principles and Programming", Second
+Edition, PWS Publishing (Boston, 1993)</i> for a more detailed
+treatment.
+
+<p></p>The Rete algorithm is implemented by building a network of nodes, each
+of which represents one or more tests found on a rule LHS. Facts that are
+being added to or removed from the working memory are processed by this network
+of nodes. At the bottom of the network are nodes representing individual
+rules. When a set of facts filters all the way down to the bottom of the
+network, it has passed all the tests on the LHS of a particular rule and
+this set becomes an <i>activation</i>. The associated rule may have its
+RHS executed (<i>fired</i>) if the activation is not invalidated first
+by the removal of one or more facts from its activation set.
+
+<p></p>Within the network itself there are broadly two kinds of nodes: one-input
+and two-input nodes. One-input nodes perform tests on individual facts,
+while two-input nodes perform tests across facts and perform the grouping
+function. Subtypes of these two classes of node are also used and there
+are also auxilliary types such as the terminal nodes mentioned above.
+
+<p></p>An example is often useful at this point. The following rules:
+<div class="example">
+<pre>(defrule example-2      (defrule example-3
+    (x)                     (x)
+    (y)                     (y)
+    (z)                     =&gt; )
+    =&gt; )</pre>
+</div>
+might be compiled into the following network:
+
+<p>
+<img src="rete1.png"></p>
+
+The nodes marked <tt>x?</tt>, etc., test if a fact contains the given data,
+while the nodes marked <tt>+</tt> remember all facts and fire whenever
+they've received data from both their left and right inputs. To run the
+network, Jess presents new facts to each node at the top of the network
+as they added to the working memory. Each node takes input from the top and
+sends its output downwards. A single input node generally receives a fact
+from above, applies a test to it, and, if the test passes, sends the fact
+downward to the next node. If the test fails, the one-input nodes simply
+do nothing. The two-input nodes have to integrate facts from their left
+and right inputs, and in support of this, their behavior must be more complex.
+First, note that any facts that reach the top of a two-input node could
+potentially contribute to an activation: they pass all tests that can be
+applied to single facts. The two input nodes therefore must remember all
+facts that are presented to them, and attempt to group facts arriving on
+their left inputs with facts arriving on their right inputs to make up
+complete activation sets. A two-input node therefore has a <i>left memory</i>
+and a <i>right memory</i>. It is here in these memories that the inefficiency
+described above is avoided. A convenient distinction is to divide the network
+into two logical components: the single-input nodes comprise the <i>pattern
+network</i>, while the two-input nodes make up the <i>join network</i>.
+
+    
+    <a name="optimization">
+<h3>19.4. Optimizations</h3>
+</a>
+
+<p></p>There are two simple optimizations that can make Rete even better, The
+first is to share nodes in the pattern network. In the network above, there
+are five nodes across the top, although only three are distinct. We can
+modify the network to share these nodes across the two rules (the arrows
+coming out of the top of the <tt>x?</tt> and <tt>y?</tt> nodes are outputs):
+
+<p>
+<img src="rete2.png"></p>
+
+But that's not all the redundancy in the original network. Now we see that
+there is one join node that is performing exactly the same function (integrating
+x,y pairs) in both rules, and we can share that also:
+
+<p>
+<img src="rete3.png"></p>
+
+The pattern and join networks are collectively only half the size they
+were originally. This kind of sharing comes up very frequently in real
+systems and is a significant performance booster!
+
+<p></p>You can see the amount of sharing in a Jess network by using the <tt>watch
+compilations</tt> command. When a rule is compiled and this command has
+been previously executed, Jess prints a string of characters something
+like this, which is the actual output from compiling rule example-2, above:
+<div class="example">
+<pre>  example-2: +1+1+1+1+1+1+2+2+t</pre>
+</div>
+Each time <tt>+1</tt> appears in this string, a new one-input node is created.
+<tt>+2</tt> indicates a new two-input node. Now watch what happens when
+we compile example-3:
+<div class="example">
+<pre>  example-3: =1=1=1=1=2+t</pre>
+</div>
+Here we see that <tt>=1</tt> is printed whenever a pre-existing one-input
+node is shared; <tt>=2</tt> is printed when a two-input node is shared.
+<tt>+t </tt>represents the terminal nodes being created. (Note that the
+number of single-input nodes is larger than expected. Jess creates separate
+nodes that test for the head of each pattern and its length, rather than
+doing both of these tests in one node, as we implicitly do in our graphical
+example.) No new nodes are created for rule example-3. Jess shares existing
+nodes very efficiently in this case.
+
+    
+    <a name="implementation">
+<h3>19.5. Implementation</h3>
+</a>
+
+<p></p>Jess's Rete implementation is very literal. Different types of network
+nodes are represented by various subclasses of the Java class <tt>jess.Node</tt>:
+<tt>Node1</tt>, <tt>Node2</tt>, <tt>NodeNot2</tt>, <tt>NodeJoin</tt>, and
+<tt>NodeTerm</tt>. The <tt>Node1</tt> class is further specialized because
+it contains a <i>command</i> member which causes it to act differently
+depending on the tests or functions it needs to perform. For example, there
+are specializations of <tt>Node1</tt> which test the first field (called
+the <i>head</i>) of a fact, test the number of fields of a fact, test single
+slots within a fact, and compare two slots within a fact. There are further
+variations which participate in the handling of multifields and multislots.
+The Jess language code is parsed by the class <tt>jess.Jesp</tt>, while
+the actual network is assembled by code in the class <tt>jess.ReteCompiler</tt>.
+The execution of the network is handled by the class <tt>Rete</tt>. The
+<tt>jess.Main</tt> class itself is really just a small demonstration driver
+for the jess package, in which all of the interesting work is done.
+
+<table ncols="2" border="0">
+
+<tr>
+
+<td>
+
+<p></p>The <a href="functions.html#view"><tt>view</tt></a> command is a graphical viewer for the Rete
+network itself; I have used this as a debugging tool for Jess, but it
+may have educational value for others, and it may help you to design
+more efficient systems of rules in Jess.  Issuing the <a href="functions.html#view"><tt>view</tt></a>
+command after entering the rules example-2 and example-3 produces a
+very good facsimile of the drawing (although it correctly shows the
+larger number of one-input nodes). The various nodes are color-coded
+according to their roles in the network; <tt>Node1</tt> nodes are red;
+<tt>Node2</tt> nodes are green; <tt>NodeNot2</tt> nodes are yellow;
+and <tt>Defrule</tt> nodes are blue. The orange node in the figure is
+a "right-to-left adapter" node; one of these is always used to connect the first
+pattern on a rule's LHS to the network. Passing the mouse over a node
+displays information about the node and the tests it contains;
+double-clicking on a node brings up a dialog box containing the same
+information (for join nodes, the memory contents are also displayed,
+while for <tt>Defrule</tt> nodes, a pretty-print representation of
+the rule is shown). See the description of the <a href="functions.html#view"><tt>view</tt></a> function
+for important information before
+using it.
+</td>
+<td>
+<img src="net.gif">
+</td>
+
+</tr>
+
+</table>
+    
+    
+<a name="efficiency">
+<h3>19.6. Efficiency of rule-based systems</h3>
+</a>
+
+        
+<p>Jess's rule engine uses an improved form of a well-known algorithm
+            called <a href="rete.html">Rete</a> (Latin for "net") to match rules
+            against the working memory. Jess is actually faster than some popular
+            rule engines written in C, especially on large problems, where
+            performance is dominated by algorithm quality.
+        </p>
+<p>
+        Note that Rete is an algorithm that explicitly trades space for speed,
+        so Jess' memory usage is not inconsiderable. Jess does contain some
+        commands which will allow you to sacrifice some performance to
+        decrease memory usage. Nevertheless, Jess' memory usage is not
+        ridiculous, and moderate-sized programs will fit easily into Java's
+        default 16M heap.
+    </p>
+
+        
+<p>The single biggest determinant of Jess performance is the number of <i>partial
+            matches</i> generated by your rules. You should always try to obey the
+            following (sometimes contradictory) guidelines while writing your rules:</p>
+        
+<ul>
+            
+<li>
+                Put the <i>most specific</i> patterns near the top of each rule's
+                LHS.</li>
+
+            
+<li>
+                Put the patterns that will match the <i>fewest facts</i> near the top
+                of each rule's LHS.</li>
+
+            
+<li>
+                Put the <i>most transient</i> patterns (those that will match facts that
+                are frequently retracted and asserted) near the bottom of a LHS.</li>
+        
+</ul>
+
+        
+<p>You can use the <a href="functions.html#view"><tt>view</tt></a> command to find out how
+            many partial matches your rules generate. See this chapter on
+            <a href="rete.html">How Jess Works</a> for more details.</p>
+
+        
+<a name="hotspot">
+<h4>19.6.1. Sun's HotSpot Virtual Machine</h4>
+</a>
+
+            Because Jess is a memory-intensive application, its performance is
+            sensitive to the behavior of the Java garbage collector. Recent JVMs
+            from Sun feature an advanced Java runtime called HotSpot which
+            includes a flexible, configurable garbage collection
+            subsystem. Excellent articles on GC performance tuning are available
+            <a href="http://java.sun.com/developer/TechTips/2000/tt1222.html#tip2">
+                at Sun's web site.</a> Although every Jess rule base is different,
+            in general, Jess will benefit if the heap size and the object nursery
+            size are each set larger than the default. For example, on my machine,
+            Jess' performance on the Miranker <i>manners</i> benchmark with 90
+            guests is improved by 25% by increasing the initial heap size and
+            nursery size to 32 and 16 megabytes, respectively, from their defaults
+            of 16 meg and 640K. You can do this using
+
+            <div class="example">
+<pre>
+java -XX:NewSize=16m -Xms32m -Xmx32m jess.Main <i>&lt;scriptfile&gt;</i>
+            
+</pre>
+</div>
+
+            Note that the object nursery is a subset of the Java heap set aside
+            for recently-allocated objects; the total heap size in this example is
+            32M, not 48M.
+
+        
+    
+</div>
+</body>
+
+</html>

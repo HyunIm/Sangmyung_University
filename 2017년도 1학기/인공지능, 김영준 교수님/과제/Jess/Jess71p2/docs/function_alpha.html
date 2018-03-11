@@ -1,0 +1,328 @@
+<HEAD><TITLE>Jess, the Rule Engine for the Java Platform - Functions by Name</TITLE>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+</HEAD>
+<BODY>
+<div id='navbar'>
+<a href='http://www.jessrules.com/jess'>
+<img class='logo' src='jess.gif' alt='[Jess]'/></a>
+<div id='navcontainer'>
+<ul id='navlist'>
+<li><a href='index.html'>Introduction</a></li>
+<li><a href='basics.html'>The Jess Language</a></li>
+<li><a href='architecture.html'>Jess Application Programming</a></li>
+<li><a href='functions.html'>Reference</a></li>
+<ul id='navsublist'>
+  <li id='selected'><a href='functions.html'>The Jess Function List</a></li>
+  <li ><a href='constructs.html'>Jess Constructs</a></li>
+  <li ><a href='api.html'>Jess's Java APIs</a></li>
+  <li ><a href='rete.html'>The Rete Algorithm</a></li>
+  <li ><a href='references.html'>For More Information...</a></li>
+  <li ><a href='release_notes.html'>Release Notes</a></li>
+  <li ><a href='changes.html'>Change History</a></li>
+</ul>
+</ul>
+</div>
+</div>
+<div class='toc'><H2>Alphabetical Function Index</H2>
+<table>
+<tr>
+<td><a href="functions.html#*">*</a></td>
+<td><a href="functions.html#**">**</a></td>
+<td><a href="functions.html#+">+</a></td>
+<td><a href="functions.html#++">++</a></td>
+<td><a href="functions.html#-">-</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#--">--</a></td>
+<td><a href="functions.html#/">/</a></td>
+<td><a href="functions.html#<"><</a></td>
+<td><a href="functions.html#<="><=</a></td>
+<td><a href="functions.html#<>"><></a></td>
+</tr>
+<tr>
+<td><a href="functions.html#=">=</a></td>
+<td><a href="functions.html#>">></a></td>
+<td><a href="functions.html#>=">>=</a></td>
+<td><a href="functions.html#abs">abs</a></td>
+<td><a href="functions.html#add">add</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#agenda">agenda</a></td>
+<td><a href="functions.html#and">and</a></td>
+<td><a href="functions.html#apply">apply</a></td>
+<td><a href="functions.html#as-list">as-list</a></td>
+<td><a href="functions.html#asc">asc</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#assert">assert</a></td>
+<td><a href="functions.html#assert-string">assert-string</a></td>
+<td><a href="functions.html#bag">bag</a></td>
+<td><a href="functions.html#batch">batch</a></td>
+<td><a href="functions.html#bind">bind</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#bit-and">bit-and</a></td>
+<td><a href="functions.html#bit-not">bit-not</a></td>
+<td><a href="functions.html#bit-or">bit-or</a></td>
+<td><a href="functions.html#bload">bload</a></td>
+<td><a href="functions.html#break">break</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#bsave">bsave</a></td>
+<td><a href="functions.html#build">build</a></td>
+<td><a href="functions.html#call">call</a></td>
+<td><a href="functions.html#call-on-engine">call-on-engine</a></td>
+<td><a href="functions.html#clear">clear</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#clear-focus-stack">clear-focus-stack</a></td>
+<td><a href="functions.html#clear-storage">clear-storage</a></td>
+<td><a href="functions.html#close">close</a></td>
+<td><a href="functions.html#complement$">complement$</a></td>
+<td><a href="functions.html#context">context</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#continue">continue</a></td>
+<td><a href="functions.html#count-query-results">count-query-results</a></td>
+<td><a href="functions.html#create$">create$</a></td>
+<td><a href="functions.html#defadvice">defadvice</a></td>
+<td><a href="functions.html#defclass">defclass</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#definstance">definstance</a></td>
+<td><a href="functions.html#delete$">delete$</a></td>
+<td><a href="functions.html#dependencies">dependencies</a></td>
+<td><a href="functions.html#dependents">dependents</a></td>
+<td><a href="functions.html#div">div</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#do-backward-chaining">do-backward-chaining</a></td>
+<td><a href="functions.html#duplicate">duplicate</a></td>
+<td><a href="functions.html#e">e</a></td>
+<td><a href="functions.html#engine">engine</a></td>
+<td><a href="functions.html#eq">eq</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#eq*">eq*</a></td>
+<td><a href="functions.html#eval">eval</a></td>
+<td><a href="functions.html#evenp">evenp</a></td>
+<td><a href="functions.html#exit">exit</a></td>
+<td><a href="functions.html#exp">exp</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#explode$">explode$</a></td>
+<td><a href="functions.html#external-addressp">external-addressp</a></td>
+<td><a href="functions.html#fact-id">fact-id</a></td>
+<td><a href="functions.html#fact-slot-value">fact-slot-value</a></td>
+<td><a href="functions.html#facts">facts</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#fetch">fetch</a></td>
+<td><a href="functions.html#filter">filter</a></td>
+<td><a href="functions.html#first$">first$</a></td>
+<td><a href="functions.html#float">float</a></td>
+<td><a href="functions.html#floatp">floatp</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#focus">focus</a></td>
+<td><a href="functions.html#for">for</a></td>
+<td><a href="functions.html#foreach">foreach</a></td>
+<td><a href="functions.html#format">format</a></td>
+<td><a href="functions.html#gensym*">gensym*</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#get">get</a></td>
+<td><a href="functions.html#get-current-module">get-current-module</a></td>
+<td><a href="functions.html#get-focus">get-focus</a></td>
+<td><a href="functions.html#get-focus-stack">get-focus-stack</a></td>
+<td><a href="functions.html#get-member">get-member</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#get-multithreaded-io">get-multithreaded-io</a></td>
+<td><a href="functions.html#get-reset-globals">get-reset-globals</a></td>
+<td><a href="functions.html#get-salience-evaluation">get-salience-evaluation</a></td>
+<td><a href="functions.html#get-strategy">get-strategy</a></td>
+<td><a href="functions.html#halt">halt</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#help">help</a></td>
+<td><a href="functions.html#if">if</a></td>
+<td><a href="functions.html#implement">implement</a></td>
+<td><a href="functions.html#implode$">implode$</a></td>
+<td><a href="functions.html#import">import</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#insert$">insert$</a></td>
+<td><a href="functions.html#instanceof">instanceof</a></td>
+<td><a href="functions.html#integer">integer</a></td>
+<td><a href="functions.html#integerp">integerp</a></td>
+<td><a href="functions.html#intersection$">intersection$</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#java-objectp">java-objectp</a></td>
+<td><a href="functions.html#jess-type">jess-type</a></td>
+<td><a href="functions.html#jess-version-number">jess-version-number</a></td>
+<td><a href="functions.html#jess-version-string">jess-version-string</a></td>
+<td><a href="functions.html#lambda">lambda</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#length$">length$</a></td>
+<td><a href="functions.html#lexemep">lexemep</a></td>
+<td><a href="functions.html#list">list</a></td>
+<td><a href="functions.html#list-deftemplates">list-deftemplates</a></td>
+<td><a href="functions.html#list-focus-stack">list-focus-stack</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#list-function$">list-function$</a></td>
+<td><a href="functions.html#listp">listp</a></td>
+<td><a href="functions.html#load-facts">load-facts</a></td>
+<td><a href="functions.html#load-function">load-function</a></td>
+<td><a href="functions.html#load-package">load-package</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#log">log</a></td>
+<td><a href="functions.html#log10">log10</a></td>
+<td><a href="functions.html#long">long</a></td>
+<td><a href="functions.html#longp">longp</a></td>
+<td><a href="functions.html#lowcase">lowcase</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#map">map</a></td>
+<td><a href="functions.html#matches">matches</a></td>
+<td><a href="functions.html#max">max</a></td>
+<td><a href="functions.html#member$">member$</a></td>
+<td><a href="functions.html#min">min</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#mod">mod</a></td>
+<td><a href="functions.html#modify">modify</a></td>
+<td><a href="functions.html#multifieldp">multifieldp</a></td>
+<td><a href="functions.html#neq">neq</a></td>
+<td><a href="functions.html#new">new</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#not">not</a></td>
+<td><a href="functions.html#nth$">nth$</a></td>
+<td><a href="functions.html#numberp">numberp</a></td>
+<td><a href="functions.html#oddp">oddp</a></td>
+<td><a href="functions.html#open">open</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#or">or</a></td>
+<td><a href="functions.html#pi">pi</a></td>
+<td><a href="functions.html#pop-focus">pop-focus</a></td>
+<td><a href="functions.html#ppdeffacts">ppdeffacts</a></td>
+<td><a href="functions.html#ppdeffunction">ppdeffunction</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#ppdefglobal">ppdefglobal</a></td>
+<td><a href="functions.html#ppdefquery">ppdefquery</a></td>
+<td><a href="functions.html#ppdefrule">ppdefrule</a></td>
+<td><a href="functions.html#ppdeftemplate">ppdeftemplate</a></td>
+<td><a href="functions.html#printout">printout</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#progn">progn</a></td>
+<td><a href="functions.html#provide">provide</a></td>
+<td><a href="functions.html#random">random</a></td>
+<td><a href="functions.html#read">read</a></td>
+<td><a href="functions.html#readline">readline</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#regexp">regexp</a></td>
+<td><a href="functions.html#remove">remove</a></td>
+<td><a href="functions.html#replace$">replace$</a></td>
+<td><a href="functions.html#require">require</a></td>
+<td><a href="functions.html#require*">require*</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#reset">reset</a></td>
+<td><a href="functions.html#rest$">rest$</a></td>
+<td><a href="functions.html#retract">retract</a></td>
+<td><a href="functions.html#retract-string">retract-string</a></td>
+<td><a href="functions.html#return">return</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#round">round</a></td>
+<td><a href="functions.html#rules">rules</a></td>
+<td><a href="functions.html#run">run</a></td>
+<td><a href="functions.html#run-query">run-query</a></td>
+<td><a href="functions.html#run-query*">run-query*</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#run-until-halt">run-until-halt</a></td>
+<td><a href="functions.html#save-facts">save-facts</a></td>
+<td><a href="functions.html#save-facts-xml">save-facts-xml</a></td>
+<td><a href="functions.html#set">set</a></td>
+<td><a href="functions.html#set-current-module">set-current-module</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#set-factory">set-factory</a></td>
+<td><a href="functions.html#set-member">set-member</a></td>
+<td><a href="functions.html#set-multithreaded-io">set-multithreaded-io</a></td>
+<td><a href="functions.html#set-node-index-hash">set-node-index-hash</a></td>
+<td><a href="functions.html#set-reset-globals">set-reset-globals</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#set-salience-evaluation">set-salience-evaluation</a></td>
+<td><a href="functions.html#set-strategy">set-strategy</a></td>
+<td><a href="functions.html#set-value-class">set-value-class</a></td>
+<td><a href="functions.html#set-watch-router">set-watch-router</a></td>
+<td><a href="functions.html#setgen">setgen</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#show-deffacts">show-deffacts</a></td>
+<td><a href="functions.html#show-deftemplates">show-deftemplates</a></td>
+<td><a href="functions.html#show-jess-listeners">show-jess-listeners</a></td>
+<td><a href="functions.html#socket">socket</a></td>
+<td><a href="functions.html#sqrt">sqrt</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#store">store</a></td>
+<td><a href="functions.html#str-cat">str-cat</a></td>
+<td><a href="functions.html#str-compare">str-compare</a></td>
+<td><a href="functions.html#str-index">str-index</a></td>
+<td><a href="functions.html#str-length">str-length</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#stringp">stringp</a></td>
+<td><a href="functions.html#sub-string">sub-string</a></td>
+<td><a href="functions.html#subseq$">subseq$</a></td>
+<td><a href="functions.html#subsetp">subsetp</a></td>
+<td><a href="functions.html#sym-cat">sym-cat</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#symbolp">symbolp</a></td>
+<td><a href="functions.html#synchronized">synchronized</a></td>
+<td><a href="functions.html#system">system</a></td>
+<td><a href="functions.html#throw">throw</a></td>
+<td><a href="functions.html#time">time</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#try">try</a></td>
+<td><a href="functions.html#undefadvice">undefadvice</a></td>
+<td><a href="functions.html#undeffacts">undeffacts</a></td>
+<td><a href="functions.html#undefinstance">undefinstance</a></td>
+<td><a href="functions.html#undefrule">undefrule</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#union$">union$</a></td>
+<td><a href="functions.html#unwatch">unwatch</a></td>
+<td><a href="functions.html#upcase">upcase</a></td>
+<td><a href="functions.html#update">update</a></td>
+<td><a href="functions.html#view">view</a></td>
+</tr>
+<tr>
+<td><a href="functions.html#watch">watch</a></td>
+<td><a href="functions.html#while">while</a></td>
+</tr>
+</table>
+<p>
+</div>
+<p>
+<i>
+<a href="index.html">Back to index</a>
+</i>
+</p>
+</div>
+</BODY>

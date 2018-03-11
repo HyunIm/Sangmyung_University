@@ -1,0 +1,597 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Jess Language Basics</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li id="selected">
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li>
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li>
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li>
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li>
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li>
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>3.
+        Jess Language Basics</h2>
+
+    
+<p>Most of the time, you'll write Jess rules in the <i>Jess rule language</i>.
+    If you've never used Lisp, the Jess rule language may look a bit odd at first, but
+        it doesn't take long to learn. The payoff is that it's very expressive, and can implement complex
+        logical relationships with very little code.
+    </p>
+
+    
+<p>In this chapter, we'll look at the basic syntax of the Jess language. In subsequent chapters,
+    we'll learn how to define high-level concepts like <i>facts</i> and <i>rules,</i> but here,
+        we'll just be looking at the nuts and bolts.</p>
+
+    
+<p>In this language guide, I'll use an extremely informal notation to describe
+syntax. Basically strings in &lt;angle-brackets&gt; are some kind of data
+that must be supplied; things in [square brackets] are optional,
+things ending with <tt>+</tt> can appear one or more times, and things
+ending with <tt>*</tt> can appear zero or more times. In general, input to Jess is free-format.
+    Newlines are generally not significant and are treated as whitespace; exceptions will be
+noted.</p>
+
+
+
+<a name="symbols">
+<h3>3.1. Symbols</h3>
+</a>
+
+The symbol is a core concept of the Jess language. Symbols are very
+much like identifiers in other languages. A Jess symbol can contain letters,
+digits, and the following punctuation: <tt>$*=+/&lt;&gt;_?#.</tt> . A symbol
+may not begin with a digit; it may begin with some punctuation marks (some
+have special meanings as operators when they appear at the start of a
+symbol).
+<p></p>
+Jess symbols are case sensitive: <tt>foo</tt>, <tt>FOO</tt> and
+<tt>Foo</tt> are all different symbols.
+<p></p>
+The best symbols consist of letters, digits, underscores, and dashes;
+dashes are traditional word separators. The following are all valid symbols:
+
+<div class="example">
+<pre>
+foo first-value contestant#1 _abc
+</pre>
+</div>
+
+
+<p>There are three "magic" symbols that Jess interprets specially:
+<tt>nil</tt>, which is somewhat akin to Java's <tt>null</tt> value;
+and <tt>TRUE</tt> and <tt>FALSE</tt>, which are Jess' boolean values.</p>
+
+
+
+
+<a name="numbers">
+<h3>3.2. Numbers</h3>
+</a>
+Jess uses the Java functions
+    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Integer.html#parseInt(java.lang.String)"><tt>parseInt(java.lang.String)</tt></a>,
+    <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Long.html#parseLong(java.lang.String)"><tt>parseLong(java.lang.String)</tt></a>,
+and
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Double.html#parseDouble(java.lang.String)"><tt>parseDouble(java.lang.String)</tt></a>
+to parse integer, long, and floating point numbers, respectively. See the
+          documentation for those methods for a precise syntax
+          description. The following are all valid numbers:
+<div class="example">
+<pre>
+3 4. 5.643 5654L 6.0E4 1D
+</pre>
+</div>
+
+
+
+<a name="strings">
+<h3>3.3. Strings</h3>
+</a>
+
+Character strings in Jess are denoted using double quotes
+(<tt>"</tt>).  Backslashes (<tt>\</tt>) can be used to
+escape embedded quote symbols.  Note that Jess strings are unlike Java
+strings in several important ways. First, no "escape sequences" are
+recognized. You cannot embed a newline in a string using
+"<tt>\n</tt>", for example. On the other hand, real newlines are
+allowed inside double-quoted strings; they become part of the string.
+The following are all valid strings:
+
+<div class="example">
+<pre>
+"foo" "Hello, World" "\"Nonsense,\" he said firmly." "Hello,
+There"
+</pre>
+</div>
+
+The last string is equivalent to the Java string "Hello,\nThere".
+
+<a name="lists">
+<h3>3.4. Lists</h3>
+</a>
+
+Another fundamental unit of syntax in Jess is the list. A list always consists
+of an enclosing set of parentheses and zero or more symbols, numbers, strings,
+or other lists. The following are valid lists:
+<div class="example">
+<pre>
+(+ 3 2) (a b c) ("Hello, World") () (deftemplate foo (slot bar))
+</pre>
+</div>
+The first element of a list (the <i>car</i> of the list in Lisp parlance)
+is often called the list's <i>head</i> in Jess.
+
+
+<a name="comments">
+<h3>3.5. Comments</h3>
+</a>
+
+Jess supports two kinds of programmer's comments: Lisp-style line comments and
+        C-style block comments. Line comments begin with a semicolon (<tt>;</tt>) and extend
+to the end of the line of text. Here is an example of a line comment:
+<div class="example">
+<pre>
+; This is a list
+(a b c)
+</pre>
+</div>
+
+Block comments work as they do in C: they start with the two
+        characters "/*" and end with "*/". Block comments don't nest.
+
+
+<div class="example">
+<pre>
+/*
+   Here is an example of a list (commented out):
+   (a b c)
+*/
+</pre>
+</div>
+
+Comments can appear anywhere in a Jess program, including inside
+      constructs like templates and rules.
+
+
+
+
+<a name="functions">
+<h3>3.6. Calling functions</h3>
+</a>
+
+
+<p>As in Lisp, all code in Jess (<a href="#control_flow">control structures</a>,
+    <a href="#variables">assignments</a>,
+procedure calls) takes the form of a function call. There are no "operators";
+    <i>everything</i> is a function call. However, some functions have names that look like
+    Java operators, and in these cases, they operate much like their Java counterparts.
+</p>
+
+<p>Function calls in Jess are simply <a href="#lists">lists</a>. Function calls use a prefix
+notation; a list whose head is a
+symbol that is the name of an existing function can be a function call.
+For example, an expression that uses the <a href="functions.html#+"><tt>+</tt></a> function to add the
+numbers <tt>2</tt> and <tt>3</tt> would be written <tt>(+ 2 3)</tt>. When
+evaluated, the value of this expression is the number <tt>5</tt> (not a
+list containing the single element <tt>5</tt>!). In general, expressions
+are recognized as such and evaluated in context when appropriate. You can
+type expressions at the <tt>Jess&gt;</tt> prompt. Jess evaluates the expression
+and prints the result:</p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(+ 2 3)</pre>
+
+<pre>
+<i>5</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(+ (+ 2 3) (* 3 3))</pre>
+
+<pre>
+<i>14</i>
+</pre>
+
+</div>
+Note that you can nest function calls; the outer function is
+responsible for evaluating the inner function calls.
+<p></p>
+Jess comes with a large number of built-in functions that do
+everything from math, program control and string manipulations, to
+giving you access to Java APIs. You can also define your own functions either
+    <a href="deffunctions.html">in the Jess language</a> or <a href="extending.html">in Java.</a>
+
+
+<p></p>
+
+One of the most commonly used functions is
+<a href="functions.html#printout"><tt>printout</tt></a>, which
+is used to send text to Jess's
+standard output, or to a file. A complete explanation will have to
+wait, but for now, all you need to know is contained in the following
+example:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(printout t "The answer is " 42 "!" crlf)</pre>
+
+<pre>
+<i>The answer is 42!</i>
+</pre>
+
+</div>
+
+Another useful function is <a href="functions.html#batch"><tt>batch</tt></a>, which evaluates a
+file of Jess code. To run the Jess source file
+<tt>examples/jess/hello.clp</tt> you can enter
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(batch "examples/jess/hello.clp")</pre>
+
+<pre>
+<i>Hello, world!</i>
+</pre>
+
+</div>
+
+
+<p>
+Each of these functions (along with all the others) is described more
+thoroughly in the <a href="functions.html">Jess function guide.</a>
+</p>
+
+
+
+<a name="variables">
+<h3>3.7. Variables</h3>
+</a>
+Programming variables in Jess are identifiers that begin with the question mark
+(<tt>?</tt>) character. The question mark is part of the variable's name.
+    The name can contain any combination of letters, numbers, dash (-), underscore(_),
+    colon (:) or asterisk (*) characters. Variable names may <i>not</i> contain a period (.) .
+<p></p>
+A variable can refer to a single symbol, number, or string, or it can
+      refer to a <a href="#lists">list.</a>
+
+<p></p>
+ You can assign a value to to a variable using the
+<a href="functions.html#bind"><tt>bind</tt></a> function:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?x "The value")</pre>
+
+<pre>
+<i>"The value"</i>
+</pre>
+
+</div>
+
+
+Variables need not (and cannot) be declared before their first use (except
+for special variables called <a href="#defglobals">defglobals</a>).
+<p></p>
+To see the value of a variable at the <tt>Jess&gt;</tt> prompt, you can
+simply type the variable's name.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?a 123)</pre>
+
+<pre>
+<i>123</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?a</pre>
+
+<pre>
+<i>123</i>
+</pre>
+
+</div>
+
+
+<a name="dotted_variables">
+<h4>3.7.1. Dotted variables</h4>
+</a>
+    
+<p>New in Jess 7.1 are <i>dotted variables.</i> A dotted variable looks like <tt>?x.y</tt>. Jess always interprets
+        this as referring to the slot <tt>y</tt> of the fact in variable <tt>?x</tt>. You can use dotted variables
+        in any procedural code, but they won't generally work in the pattern matching parts of a rule.</p>
+    
+<p>Reading the value of a dotted variable results in a call to <a href="functions.html#fact-slot-value"><tt>fact-slot-value</tt></a>, while using
+        <a href="functions.html#bind"><tt>bind</tt></a> to set such a variable will result  in a call to <a href="functions.html#modify"><tt>modify</tt></a>. Dotted variables are
+        a great convenience and can make a lot of Jess code read more clearly.
+    </p>
+
+
+
+
+<a name="defglobals">
+<h4>3.7.2. Global variables (or defglobals)</h4>
+</a>
+
+Any variables you create at the <tt>Jess&gt;</tt> prompt, or at the "top level" of
+any Jess language program, are cleared whenever the <a href="functions.html#reset"><tt>reset</tt></a>
+command is issued. This makes them somewhat transient; they are fine
+for scratch variables but are not persistent global variables in the
+normal sense of the word. To create global variables that are not
+destroyed by <a href="functions.html#reset"><tt>reset</tt></a>, you can use the <tt>defglobal</tt>
+construct.
+
+<div class="example">
+<pre>
+(defglobal [?&lt;global-name&gt; = &lt;value&gt;]+)
+</pre>
+</div>
+
+Global variable names must begin and end with an asterisk. Valid
+global variable names look like
+
+<div class="example">
+<pre>
+?*a*    ?*all-values*    ?*counter*
+</pre>
+</div>
+
+When a global variable is created, it is initialized to the given
+value. When the <a href="functions.html#reset"><tt>reset</tt></a> command is subsequently issued, the
+variable <i>may</i> be reset to this same value, depending on the
+current setting of the <tt>reset-globals</tt> property. There is a
+function named <a href="functions.html#set-reset-globals"><tt>set-reset-globals</tt></a> that you can use to set this
+property. An example will help.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*x* = 3)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?*x*</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?*x* 4)</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?*x*</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?*x*</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?*x* 4)</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(set-reset-globals nil)</pre>
+
+<pre>
+<i>FALSE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?*x*</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+</div>
+
+You can read about the <a href="functions.html#set-reset-globals"><tt>set-reset-globals</tt></a> and the accompanying
+<a href="functions.html#get-reset-globals"><tt>get-reset-globals</tt></a> function in the <a href="functions.html">Jess function guide.</a>
+
+
+
+
+
+<a name="control_flow">
+<h3>3.8. Control flow</h3>
+</a>
+    
+<p>
+        In Java, control flow -- branching and looping, exception handling, etc -- is handled by special
+        syntax and keywords like <tt>if</tt>, <tt>while</tt>, <tt>for</tt>, and <tt>try</tt>. In Jess,
+        as we said before, everything is a function call, and control flow is no exception. Therefore, Jess
+        includes functions named <a href="functions.html#if"><tt>if</tt></a>, <a href="functions.html#while"><tt>while</tt></a>, <a href="functions.html#for"><tt>for</tt></a>, and <a href="functions.html#try"><tt>try</tt></a>,
+        along with others like <a href="functions.html#foreach"><tt>foreach</tt></a>. Each of these functions works similarly to the Java construct
+        of the same name. 
+    </p>
+
+
+<a name="while">
+<h4>3.8.1. A simple loop</h4>
+</a>
+For example, a Jess "while" loop looks like this:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?i 3)</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(while (&gt; ?i 0)
+          (printout t ?i crlf)
+          (-- ?i))</pre>
+
+<pre>
+<i>3
+2
+1
+FALSE</i>
+</pre>
+
+</div>
+
+    
+<p>
+        The first argument to <a href="functions.html#while"><tt>while</tt></a> is a boolean expression. The while function evaluates its first argument and,
+        if it is true, evaluates all its other arguments. It repeats this procedure until the first argument evaluates
+        to <tt>FALSE</tt>; a while loop always returns FALSE.
+    </p>
+
+    
+<p>
+      There are several other looping functions built into Jess; see
+      the descriptions of <a href="functions.html#for"><tt>for</tt></a> and <a href="functions.html#foreach"><tt>foreach</tt></a> in the <a href="functions.html">Jess
+      function index.</a> There is also a <a href="functions.html#break"><tt>break</tt></a>
+      function that can be used to abort loops as well as return early
+      from the right-hand-side of a rule.
+    </p>
+
+
+<a name="if">
+<h4>3.8.2. Decisions and branching</h4>
+</a>
+
+    
+<p>
+        The <a href="functions.html#if"><tt>if</tt></a> function looks like this:
+    </p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?x 1)</pre>
+
+<pre>
+<i>1</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(if (&gt; ?x 100) then
+          (printout t "X is big" crlf)
+       elif (&gt; ?x 50) then
+              (printout t "X is medium" crlf)
+       else
+          (printout t "X is small" crlf))
+</pre>
+
+<pre>
+<i>X is small</i>
+</pre>
+
+</div>
+    
+<p>
+     Again, the first argument is a Boolean expression, and the second is always the symbol <tt>then</tt>. If the expression
+        is not <tt>FALSE</tt>, <tt>if</tt> will execute the remaining arguments up until it sees of of the the (optional) symbols
+        <tt>elif</tt> or <tt>else</tt>. If there are one or more<tt>elif</tt>s, then their Boolean expressions control whether their
+        actions will be executed instead.
+        If <tt>else</tt> appears, then any arguments following it are evaluated if all the Boolean expressions are <tt>FALSE</tt>.
+    </p>
+
+
+
+
+</div>
+</body>
+
+</html>

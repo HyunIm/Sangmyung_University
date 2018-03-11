@@ -1,0 +1,36 @@
+        -----------------------------------------------------
+             Jess, the Rule Engine for the Java Platform
+                (C) 2008 Sandia National Laboratories
+        -----------------------------------------------------
+
+Congratulations on downloading a distribution of Jess. You'll find a
+file lib/jess.jar in this distribution -- that's Jess. We've included
+two scripts that you can run to get a Jess command prompt: one for
+Windows, and one for UNIX. They're both in the bin/ directory. Run the
+one that's appropriate for your system, and you should see something
+like this
+
+   C:\Jess71p2> bin\jess.bat
+
+   Jess, the Rule Engine for the Java Platform
+   Copyright (C) 2008 Sandia Corporation
+   Jess Version 7.1p2 11/5/08
+   
+   Jess>
+
+That's the Jess prompt. Try evaluating a prefix math expression like
+"(+ 2 2)". Don't forget those parentheses!
+
+Now get started by having a look at the manual: open docs/index.html
+in your favorite web browser. As this is a development version of
+Jess, be sure to checkout docs/release_notes.html for late-breaking
+news.
+
+The directory "examples/jess" contains some tiny example programs
+written in the Jess rule language, and "examples/xml" contains some of
+the same examples written in XML. The Jess manual includes
+instructions on using these samples.
+
+Jess is copyrighted software; please read the file LICENSE for details.
+
+Questions or comments? Write to us at ejfried@sandia.gov. 

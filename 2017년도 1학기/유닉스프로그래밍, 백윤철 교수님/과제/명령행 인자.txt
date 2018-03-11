@@ -1,0 +1,50 @@
+/***
+ * 201511054 Lim Hyun
+ * 2017 - 03 - 09
+ * Unix Programming
+*/
+
+#include <stdio.h>
+#include <stdlib.h> // atoi function
+#include <string.h> // strchr function
+
+int main(int argc, char *argv[])
+{
+    // number 3
+    int i;
+    char *ptr;
+    
+    for (i = 1; i < argc; i++)
+    {
+        printf("argv[%d] : %s\n", i, argv[i]);
+        ptr = strchr(argv[i], '-');
+        *ptr = ' ';
+        printf("%s\n", argv[i]);
+    }
+    
+    return 0;
+    
+    // number 2
+    /**
+    int i;
+    int sum = 0;
+    
+    for (i = 0; i < argc; i++)
+        sum += atoi(argv[i]);
+    printf("%d\n", sum);
+    
+    return 0;
+    */
+    
+    
+    // number 1
+    /**
+    int n;
+    
+    printf("argc = %d\n", argc);
+    for (n = 0; n < argc; n++)
+        printf("argv[%d] = %s\n", n, argv[n]);
+
+    return 0;
+    */
+}

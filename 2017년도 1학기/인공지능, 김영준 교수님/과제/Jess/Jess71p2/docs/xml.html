@@ -1,0 +1,490 @@
+<html>
+    
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Jess and XML</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li id="selected">
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>14.
+        Jess and XML</h2>
+
+   
+<a name="intro">
+<h3>14.1. Introduction</h3>
+</a>
+
+    
+<p>Jess now supports an XML-based rule language. Rather than adopting an
+    evolving standard like RuleML, Jess's XML rule language (<i>JessML</i>)
+    was designed to be close in structure to the Jess language
+    itself. JessML is a hybrid imperative/declarative language, just
+    like the Jess language itself. That means you can not only write
+    rules in it, but define and call functions as well. Anything you
+    can do in the Jess language, you can do in JessML too.</p>
+
+    
+<p>Transformation between JessML and RuleML and other XML
+    rule languages should be simple using XSLT.
+            </p>
+
+   
+<p>JessML code is quite verbose. Remember, though, that it's
+    intended to be easy for machines, not humans, to work with.
+            </p>
+
+    
+    
+<a name="syntax">
+<h3>14.2. The JessML Language</h3>
+</a>
+        
+<p>
+            Jess comes with an XML schema for JessML; it's provided as the file <tt>JessML1_0.xsd</tt> in the
+            <tt>lib</tt> subdirectory of the Jess distribution. The schema as written accepts all well-formed JessML code, but
+            does not reject all invalid code; it does not include all the semantics of the JessML language (for example,
+            the requirement that a template be defined before it is used in a pattern.) The JessML namespace URI
+            is <tt>http://www.jessrules.com/JessML/1.0</tt> and should be included in all JessML documents. A well-formed JessML document
+            should therefore be of the form
+        </p>
+        
+<div class="example">
+<pre>
+&lt;?xml version='1.0' encoding='US-ASCII'?&gt;
+&lt;rulebase xmlns='http://www.jessrules.com/JessML/1.0'&gt;
+...
+&lt;/rulebase&gt;
+        </pre>
+</div>
+        
+<a name="rulebase">
+<h4>14.2.1. The rulebase Element</h4>
+</a>
+            The top-level element in an executable JessML file is the <i>rulebase</i> element. A
+            rulebase element can contain any other JessML elements in any order.
+        
+        <a name="names">
+<h4>14.2.2. Names</h4>
+</a>
+        Many constructs -- rules, templates, modules, functions -- have a name. In JessML, names are
+        represented by a
+            <i>name</i> element. A name element contains the text of the name, optionally including
+        a module name:
+
+            <ul>
+                
+<li>PLANNING::store-plan-data</li>
+                
+<li>MAIN::animal</li>
+                
+<li>make-pair</li>
+            
+</ul>
+
+        
+        
+<a name="values">
+<h4>14.2.3. Values</h4>
+</a>
+        Just as in Jess, simple data items in JessML are called
+            <i>values</i>.
+        A JessML value consists of a type attribute and the data itself. The type attribute
+        can contain one of the type names in the
+            <a href="api/jess/RU.html">jess.RU</a> class.
+        Here are a few examples of valid values:
+            <ul>
+                
+<li>&lt;value type="SYMBOL"&gt;nil&lt;/value&gt;</li>
+                
+<li>&lt;value type="INTEGER"&gt;1&lt;/value&gt;</li>
+                
+<li>&lt;value type="STRING"&gt;A String&lt;/value&gt;</li>
+            
+</ul>
+        
+
+        
+<a name="funcalls">
+<h4>14.2.4. Function calls</h4>
+</a>
+        The actions of rules, some of their tests and the bodies of deffunctions are made up of
+            <i>funcalls</i>,
+        short for "function calls." A JessML
+            <i>funcall</i> tag contains a
+            <a href="#names">name</a> element and
+        a series of
+            <a href="#values">value</a> elements as the arguments. The Jess function call "(+ ?x 1)" looks
+        like this in JessML:
+
+            <div class="example">
+<pre>
+&lt;funcall&gt;
+  &lt;name&gt;+&lt;/name&gt;
+  &lt;value type="VARIABLE"&gt;x&lt;/value&gt;
+  &lt;value type="INTEGER"&gt;1&lt;/value&gt;
+&lt;/funcall&gt;
+            </pre>
+</div>
+
+            
+<a name="specials">
+<h5>14.2.4.1. Special functions</h5>
+</a>
+            A few special functions have slightly different syntax.
+            The
+                <a href="functions.html#modify"><tt>modify</tt></a> and
+                <a href="functions.html#duplicate"><tt>duplicate</tt></a> functions
+            each accept a single value plus one or more
+                <a href="#slots">slot</a> elements as arguments, while the <a href="functions.html#assert"><tt>assert</tt></a>
+                function accepts one or more fact elements.
+            
+        
+
+        <a name="slots">
+<h4>14.2.5. Slots</h4>
+</a>
+            A <i>slot</i> in JessML is just the same as it is in Jess: it's a list (usually a two-element list, but
+            sometimes longer) with a symbol as the head. In JessML, a slot element always starts with a
+            <a href="#names">name</a> element, and contains one or more <a href="#values">value</a> elements;
+            for example,
+
+        <div class="example">
+<pre>
+&lt;slot&gt;
+    &lt;name&gt;location&lt;/name&gt;
+    &lt;value type="SYMBOL"&gt;nil&lt;/value&gt;
+&lt;/slot&gt;
+        </pre>
+</div>
+        
+
+        
+<a name="templates">
+<h4>14.2.6. Templates</h4>
+</a>
+            
+<p>You can define a template in the JessML language using the <i>template</i> element. A template element
+            contains a <a href="#names">name</a> element followed by any number of <a href="#slots">elements</a>.
+            The value elements of the slots are interpreted as default values.</p>
+
+
+<div class="example">
+<pre>
+&lt;template&gt;
+    &lt;name&gt;monkey&lt;/name&gt;
+    &lt;slot&gt;
+        &lt;name&gt;species&lt;/name&gt;
+        &lt;value type="SYMBOL"&gt;rhesus&lt;/value&gt;
+    &lt;/slot&gt;
+&lt;/template&gt;
+</pre>
+</div>
+
+            
+<p>You can also automatically define a template based on a Java class using a <i>from-class</i> property, like this:</p>
+
+<div class="example">
+<pre>
+&lt;template&gt;
+  &lt;name&gt;MAIN::button&lt;/name&gt;
+  &lt;properties&gt;
+    &lt;property&gt;
+      &lt;name&gt;from-class&lt;/name&gt;
+      &lt;value type="SYMBOL"&gt;java.awt.Button&lt;/value&gt;&lt;/property&gt;
+  &lt;/properties&gt;
+&lt;/template&gt;
+</pre>
+</div>
+        
+        
+<a name="rules">
+<h4>14.2.7. Rules</h4>
+</a>
+            
+<p>A rule contains a <a href="#names">name</a> element, a <i>lhs</i> element, and a <i>rhs</i> element.
+            The rhs element contains a collection of <a href="#funcalls">funcall</a> elements representing the rule's
+            actions. The lhs element contains groups and patterns, which are somewhat complex, and will be discussed in
+            the following sections. A simple rule might look like this (this rule prints "Fired!" for each "MAIN::button" fact
+            that exists:)</p>
+
+<div class="example">
+<pre>
+&lt;rule&gt;
+    &lt;name&gt;MAIN::myrule&lt;/name&gt;
+    &lt;lhs&gt;
+        &lt;group&gt;
+            &lt;name&gt;and&lt;/name&gt;
+            &lt;pattern&gt;
+                &lt;name&gt;MAIN::button&lt;/name&gt;
+            &lt;/pattern&gt;
+        &lt;/group&gt;
+    &lt;/lhs&gt;
+    &lt;rhs&gt;
+        &lt;funcall&gt;
+            &lt;name&gt;printout&lt;/name&gt;
+            &lt;value type="SYMBOL"&gt;t&lt;/value&gt;
+            &lt;value type="STRING"&gt;Fired!&lt;/value&gt;
+            &lt;value type="SYMBOL"&gt;crlf&lt;/value&gt;
+        &lt;/funcall&gt;
+    &lt;/rhs&gt;
+&lt;/rule&gt;
+
+</pre>
+</div>
+
+<a name="groups">
+<h5>14.2.7.1. Groups</h5>
+</a>
+A <i>group</i> element represents one of Jess's grouping conditional elements: <tt>and</tt>, <tt>or</tt>, or
+<tt>not</tt>. Every rule has an "and" group enclosing all of its patterns, as in the example rule above.
+A group always contains a <a href="#names">name</a> element followed by any combination of nested groups
+or <i>pattern</i> elements.
+
+
+            <a name="patterns">
+<h5>14.2.7.2. Patterns</h5>
+</a>
+    A  pattern element represents a single pattern in a rule. It consists of a <a href="#names">name</a> element,
+    an optional <i>binding</i> element, and any number of <a href="#slots">slot</a> elements. The values of the slots
+    should consist of <i>test</i> elements (described below.)
+
+            <a name="bindings">
+<h5>14.2.7.3. Pattern bindings</h5>
+</a>
+              
+<p>You can use a binding element to bind a variable to the fact that matches a pattern. The text of the
+                binding element is simply the name of the variable to use.</p>
+            
+            
+<a name="tests">
+<h5>14.2.7.4. Tests</h5>
+</a>
+                
+<p>A test element represents a single test in a pattern. A test can either be <i>discriminating</i> or
+                    <i>nondiscriminating.</i> A discriminating test is one that sometimes matches and sometimes doesn't. A
+                    nondiscriminating test is one that always matches; generally this refers to tests that merely bind
+                    a variable to the contents of a slot. There's no difference in the syntax between these two types of test.
+                </p>
+                
+<p>
+                    A test element contains a <i>type</i> element, an optional <i>conjunction</i> element, and either a
+                    <a href="#values">value</a> element or a <a href="#funcalls">funcall</a> element.
+                    The type element's body is either "eq" or "neq", corresponding
+                    to a positive or negative test. The conjunction element's body can be either "and" or "or", and it is
+                    can used only in the second and later tests on a slot. Finally, the value element represents the test
+                    itself. If it's a constant, the contents of the slot will be compared to it for equality or inequality,
+                    according to the contents of the type element. If the value is a variable, and if that variable has not been
+                    bound to a slot, the variable is bound to the current slot. Otherwise, the variable is compared to
+                    the contents of the slot. Finally, if there is a <a href="#funcalls">funcall</a> element, the function is
+                    evaluated and the test passes if the result is true (for an "eq" test) or false (for a "neq" test.)
+                </p>
+            
+
+        
+
+        
+<a name="fact_files">
+<h4>14.2.8. Fact files</h4>
+</a>
+            
+<p>The <a href="functions.html#save-facts-xml"><tt>save-facts-xml</tt></a> function writes an XML-formatted file
+                containing only Jess facts. The <a href="functions.html#load-facts"><tt>load-facts</tt></a> function knows how to
+            read those files; the facts contained in the file will be immediately asserted.
+                Any deftemplates needed must have been previously defined or an error will occur.
+                You can create this kind of file yourself, as well. Such a file should
+            be a complete, well-formed XML file containing an XML declaration and a <tt>fact-list</tt>
+                root element. Inside the document should be nothing but <tt>fact</tt>
+                elements, each representing a single Jess fact.
+            </p>
+        
+
+        
+<a name="writing">
+<h3>14.3. Writing Constructs in JessML</h3>
+</a>
+
+    
+<p>You can translate a file of Jess language code into XML using
+    Jess's <a href="api/jess/xml/XMLPrinter.html"><tt>jess.xml.XMLPrinter</tt></a> class; this is a good way to learn how
+    Jess and JessML correspond. You can use this tool from the command line
+    like this:</p>
+
+            
+<div class="example">
+<pre>
+java -classpath jess.jar jess.xml.XMLPrinter myfile.clp &gt; myfile.xml
+            </pre>
+</div>
+    
+<p>The file "myfile.xml" will be a complete translation of all the code in "myfile.clp",
+        including templates, rules, deffunctions, and top-level function calls.
+    </p>
+    
+<p>
+        The <tt>XMLPrinter</tt> class and its companion <a href="api/jess/xml/XMLVisitor.html"><tt>jess.xml.XMLVisitor</tt></a> can also be used to
+        translate Jess code into XML programatically. You could use XMLPrinter to translate a file of
+        Java code like this:
+
+    </p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.xml.XMLPrinter;
+import jess.JessException;
+import java.io.*;
+public class ExXMLPrinter {
+    public static void main(String[] args) throws JessException, IOException {
+        FileReader fr = new FileReader(args[0]);
+        XMLPrinter printer = new XMLPrinter(new PrintWriter(System.out, true));
+        try {
+            printer.printFrontMatter();
+            printer.translateToXML(fr);
+            printer.printBackMatter();
+        } finally {
+            printer.close();
+        }
+    }
+}
+
+</pre>
+</div>
+
+     
+<p>
+         To translate individual constructs and other Jess objects that you've already read
+         into Jess, you can use the <tt>XMLVisitor</tt> class. To write a single Jess object as XML, you
+         create an <tt>XMLVisitor</tt> instance, passing the object as the constructor argument; any of the
+         library classes that implement <a href="api/jess/Visitable.html"><tt>jess.Visitable</tt></a> will do. Then you can just call
+         <a href="api/jess/xml/XMLVisitor.html#toString()"><tt><tt>jess.xml.XMLVisitor.</tt>toString()</tt></a> on this instance to get the XML version.
+     </p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.xml.*;
+import jess.*;
+import java.io.*;
+public class ExXMLVisitor {
+    public static void main(String[] argv) throws JessException {        
+        Rete engine = new Rete();
+        engine.eval("(defrule hello =&gt; )");
+        XMLVisitor visitor = new XMLVisitor(engine.findDefrule("hello"));
+        System.out.println(visitor);
+    }
+}
+
+</pre>
+</div>
+
+
+
+
+     
+<p>
+      Jess comes with an XML Schema which you can use to validate the
+      XML you write; it's the file <tt>JessML1_0.xsd</tt> in
+      the <tt>lib</tt> subdirectory. Jess won't actually validate your
+      code against this schema, as the standard JDK XML parser is a
+      non-validating parser. To validate your code you'll need a
+      validating parser like Apache Xerces.
+    </p>
+
+        
+
+        
+<a name="parsing">
+<h3>14.4. Parsing JessML</h3>
+</a>
+            
+<p>
+                In general, anywhere you can use a file full of Jess language code, you can also use a JessML file.
+                For example, the file you provide as a command-line argument to <a href="api/jess/Main.html"><tt>jess.Main</tt></a> can be
+                a JessML file.
+            </p>
+            
+<p>The standard <a href="functions.html#batch"><tt>batch</tt></a> function can read JessML code as well as Jess language
+            code. It decides what kind of file it is looking at by looking for the "&lt;?xml" characters that
+            should begin a well-formed XML file. <a href="functions.html#require"><tt>require</tt></a>, which uses batch internally,
+            will work with JessML as well.</p>
+            
+<p>You can get a little bit more control of the process by using the classes
+                <a href="api/jess/xml/JessSAXParser.html">JessSAXParser</a>
+              or
+                <a href="api/jess/xml/JessSAXHandler.html">JessSAXHandler</a>
+            directly. JessSAXParser will parse a JessML document from an InputSource, installing the
+            results into a <a href="api/jess/Rete.html">Rete</a> object you provide. JessSAXHandler
+            is a SAX event handler that you can use with your own parser.</p>
+        
+
+    
+</div>
+</body>
+
+</html>

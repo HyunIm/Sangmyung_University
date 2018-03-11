@@ -1,0 +1,1709 @@
+<html>
+
+    
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Change History</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="functions.html">The Jess Function List</a>
+</li>
+  
+<li>
+<a href="constructs.html">Jess Constructs</a>
+</li>
+  
+<li>
+<a href="api.html">Jess's Java APIs</a>
+</li>
+  
+<li>
+<a href="rete.html">The Rete Algorithm</a>
+</li>
+  
+<li>
+<a href="references.html">For More Information...</a>
+</li>
+  
+<li>
+<a href="release_notes.html">Release Notes</a>
+</li>
+  
+<li id="selected">
+<a href="changes.html">Change History</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>22.
+        Change History</h2>
+        
+<dl>
+            
+<dt>
+              Version 7.1p2 (November 5th, 2008): </dt>
+            
+<dd>
+              QueryResult distinguishes between "no results" and
+              "before first result" states (thanks Bob Kirby). Fixed a
+              slot-specific bug and a no-loop bug (thanks Neal Wyse.)
+              Fixed a problem with salience evaluation in peered
+              engines (thanks George Williamson).
+            </dd>
+            
+<dt>
+              Version 7.1p1 (August 6th, 2008): </dt>
+            
+<dd>
+              Small documentation fixes; added Rete.setMemberChar()
+              method; fix bug in overriding default slot values in
+              extending templates.
+              </dd>
+            
+<dt>
+                Version 7.1 (July 8th, 2008): </dt>
+            
+<dd>
+              Some small documentation fixes; avoid an erroneous
+              error message (thanks Bob Kirby); a better error message
+              for pretty-printing a Java function (thanks Wolfgang Laun);
+            </dd>
+            
+<dt>
+                Version 7.1RC1 (June 2nd, 2008): </dt>
+            
+<dd>
+	      Exceptions include source file names. Exceptions from
+	      "batch" include the line number in the batch file, not
+	      the caller. ValueFactory is public and
+	      documented. "&lt;&gt;" behaves properly for more than 2
+	      arguments (thanks Henrique Lopes Cardoso). Added uniform
+	      methods for removing all types of constructs. Jess can
+	      understand that "&lt;Fact-6&gt;" is a reference to the
+	      fact with ID 6, in many contexts. HashCodeComputer is
+	      public. JessDE warns when rules, queries, deffunctions
+	      are redefined. Modules can be declared
+	      "auto-focus". "call" will invoke a static method on a
+	      named class in preference to a method of
+	      java.lang.String if the target is an
+	      RU.SYMBOL. RU.valueToObject will convert a LIST to an
+	      Object as an Object[]. Rete uses system property to find
+	      scriptlib. Template properties (backchain-reactive,
+	      slot-specific) are inherited. clear() doesn't touch
+	      event handlers, mask, or watch state. Parser handles
+	      dotted vars in direct LHS tests. "get" fetches slot values from
+          Fact objects. "(read)" and "(explode$)" handle nested variables.
+	    </dd>
+
+            
+<dt>
+                Version 7.1b3 (April 2nd, 2008): </dt>
+            
+<dd>
+            Line numbers in JessDE problem markers are one-based
+            (thanks Win Carus). Reject "if" without "then" in all
+            cases (thanks Michael Atighetchi). JessDE understands
+            Eclipse projects that store files outside the
+            workspace. The "(add)" function respects logical
+            dependencies (thanks Lorie Ingraham). Fixed a bug with
+            slot-specific and multiple modifies (thanks Florian
+            Fischer). The static constraint checker will
+	    ignore variables as slot values (thanks Wolfgang Laun.)
+            </dd>
+
+            
+<dt>
+                Version 7.1b2 (February 20th, 2008): </dt>
+            
+<dd>
+	      Added "continue" (thanks Win Carus). get/set delegate to
+              get-member/set-member on failure. Fixed set-strategy
+              bug (thanks Neal Wyse). FactIdValue doesn't cache fact
+              id (thanks Art Griesser). no-loop is thread-specific
+              (thanks Yixi Chen). Added Rete.createPeer() method
+              (thanks John Adair.)
+	    </dd>
+            
+<dt>
+                Version 7.1b1 (November 16th, 2007): </dt>
+            
+<dd>
+       
+               Fix bug attempting to resolve blank variables (thanks
+               Bob Kirby.) Optization: cull rule binding table at
+               compile time.  Allow 'test' CE inside 'logical' (thanks
+               Denis Berthier). Deprecate Activation.isInactive() (has
+               returned only 'false' for several releases.) Fixed bug
+               wherein activations of deleted rules could persist
+               (thanks Florian Fischer). "batch" can accept a
+               charset. Fix bug with "slot-specific" and "not"
+               (Fischer.) Dot notation for Bean properties of Java objects.
+               Added "Rete.hasActivations()". Fix concurrency issues with
+               peered Retes during "clear()."
+
+            </dd>
+            
+<dt>
+                Version 7.0p2 (October 21st, 2007): </dt>
+            
+<dd>
+	      Fix agenda bug (thanks Brian Rogosky).
+            </dd>
+            
+<dt>
+                Version 7.1a3 (October 3rd, 2007): </dt>
+            
+<dd>
+               Keyed storage bsaved/bloaded (thanks Henrique Lopes
+               Cardoso.) Don't obfuscate ClassResearcher.Property in
+               trial version (thanks Wolfgang Laun). DEFMODULE
+               events. Dot notation in Java patterns. Fix bug in
+               redefining templates which extend other templates. Fix
+               logical bug (thanks Aaron Novstrup). Fix agenda bug
+               (thanks Brian Rogosky.) Fix and/not bug (thanks Florian
+               Fischer and Bob Kirby). Fold "test" CEs into preceding
+               pattern. Translate many 'eq', 'neq' funcalls into direct
+               matches.
+            </dd>
+            
+<dt>
+                Version 7.1a2 (July 19th, 2007): </dt>
+            
+<dd>
+               Fix bug using "!=" and "&lt;&gt;" in compound infix
+               expressions (thanks Richard Long.) Fix bug in
+               run-query* with 'or' CE (thanks Robert Kirby.)
+               Implement "allowed-values" slot qualifier. "return" at
+               prompt now acts like "break" (thanks Wolfgang
+               Laun). Lots of documentation fixes (Laun). Fixed a race
+               with definstances in "reset". Faster startup: no AWT
+               classes loaded by default. Fixed an issue with
+               waitForActivations (thanks Chad Loder.) Fix an
+               incremental reset bug with "not" (thanks Florian
+               Fischer.) Fix bug in resolving redefined Userfunctions (thanks
+               Henrique Lopes Cardoso). Queries work with peering
+               (thanks Chad Loder.) Add Rete.listDeffunctions() method
+               (Laun). "call" knows about lambdas.
+            </dd>
+
+            
+<dt>
+                Version 7.1a1 (May 14th, 2007): </dt>
+            
+<dd>
+                Can pass the STRING "nil" to a Java method (thanks Win
+                Carus). Added "elif" to "if" function. ValueFactory
+                class with pooling for symbols. Fixed incremental
+                reset bug (thanks Rand Waltzman). jess/RegexpMatch is
+                Serializable (thanks Shyamal Pandya). Did a general sweep for
+                concurrency issues. Fix JessML docs (thanks Henrique Lopes
+                Cardoso.) Peering of Rete objects. Added "break" function.
+
+            </dd>
+
+            
+<dt>
+                Version 7.0p1 (December 21st, 2006): </dt>
+            
+<dd>
+                New commands in JessDE: select construct, pretty-print
+                construct. Portable Mac keybindings. "Java patterns"
+                (infix test patterns) can use grouping via
+                parentheses. Multiline comments and strings don't
+                disturb JessDE formatting or damage repairer. JessDE
+                Rete view shows all OR branches, and node colors in
+                trial version (thanks Mark Proctor). "watch rules"
+                output goes to watch router (thanks Helge Hartmann.)
+                Repeated negated unifications in a multifield are kept
+                (thanks Gary Riley).
+            </dd>
+            
+<dt>
+                Version 7.0 (November 1st, 2006): </dt>
+            
+<dd>
+             Fixed a race condition in module switching (thanks Scott
+             Krasnigor). Fixed an issue with matching defglobals in
+             "not" conditional elements (thanks Joshua
+             Undesser). Fixed RuntimeException on parsing a bad rule
+             (thanks James Lefeu).
+            </dd>
+            
+<dt>
+                Version 7.0RC3 (October 12th, 2006): </dt>
+            
+<dd>
+             Eclipse 3.1 support.
+            </dd>
+
+            
+<dt>
+                Version 7.0RC2 (October 10th, 2006): </dt>
+            
+<dd>
+             Improve documentation for bload/bsave (thanks Henrique
+             Lopez Cardoso). Fix Rete.removeUserfunction()
+             (Cardoso). Add FilteringIterator, documentation, ByModule
+             filter, fix (facts) documentation (thanks Christoph
+             Bussler). Fix performance issue in Context. Manual
+             includes "pricing engine" domain code. Fix agenda
+             ordering issue (thanks Heinrich Flaig). ppdeftemplate
+             doesn't print slots for from-class templates. Fix three
+             accumulate bugs (thanks Neal Wyse and Phil Varner). Fix
+             debugger protocol issues on Windows. Fix debugger error
+             when displaying slot contents of retracted fact. Fix debugger
+             classpath issues on Windows.
+            </dd>
+            
+<dt>
+                Version 7.0RC1 (September 5th, 2006): </dt>
+            
+<dd>
+              Fix NPE using defgobals with 'or' connectives (thanks
+              Howard Greenblatt). Reject nested parens early (thanks
+              Yuping He). backchain-reactive declaration works for
+              ordered templates (He). Token.getTime() and
+              Token.getTotalTime() are now public. Don't need to put
+              jess.jar on build path of Jess projects. "Open file..."
+              works. RuleExecutionSets in JSR-94 driver are cloned for
+              each RuleSession. Fix problem debugging files starting
+              with blank lines. save-facts-xml/load-facts for XML
+              (thanks Stacy Lovell). New "remove" function retracts
+              all facts from a given template. XMLPrinter can now be
+              used programmatically. "batch" in JessDE uses classpath
+              properly. Added package versioning. lowcase, upcase
+              return symbol for symbol arguments. XML schema included.
+              Various small JessML changes. Fix ClassCastException in
+              jess.Multimap.remove() (thanks Neal Wyse) 'type' qualifier for
+              multislots (Greenblatt). Better error message for wrong toplevel
+              XML element. Add "as-list" function.
+            </dd>
+            
+<dt>
+                Version 7.0b7 (May 11th, 2006): </dt>
+            
+<dd>
+              Boolean comparison operators work on
+              Comparables. Support for braces in editor. Enormous
+              improvements in editor "content assist" features. Undo
+              removes both characters of autoinserted
+              parentheses. Added context help for completion
+              proposals. Fixed bug in modifying multifield facts
+              (thanks Brian Zhou). JessML includes docstrings for all
+              constructs (thanks Erich Oliphant). JessML now has
+              imperative features. 36% of application test suite now
+              runs in XML mode. Can specify an XML file as argument on
+              command line. Fix error switching to Debug Perspective.
+            </dd>
+            
+<dt>
+                Version 7.0b6 (March 13th, 2006): </dt>
+            
+<dd>
+               Fix bug in (logical) when modifying working memory from
+               nested scopes (thanks Yuri Gribov). Added "add"
+               function. Added "Java patterns." Deprecated
+               executeCommand() in favor of eval(). <i>Massive</i>
+               manual rewrites. Another logical/slot-specific bug
+               fixed (thanks Shan Ming Woo.) Rete member in
+               ClassSource transient (thanks Jonathan Sewall.)
+               Overloaded updateObject() accepting property name (for
+               Lakshmi Vempati). Fix synchronization of "undefinstance
+               *" (thanks Abdul Quddoos Khan). Slight change to "accumulate"
+                semantics (thanks Shan Ming Woo.) Overloaded "add()"
+               methods in ValueVector.
+            </dd>
+
+            
+<dt>
+                Version 7.0b5 (January 5th, 2006): </dt>
+            
+<dd>
+                Don't "wrap" external JessExceptions in another
+                JessException. Fix a logical/slot-specific interaction
+                (thanks Shan Ming Woo). QueryResult gives better error
+                messages for undefined variable parameters or for
+                calling getXXX() before next(). Pretty-print
+                zero-length multislot patterns correctly (thanks
+                Jonathan Sewall). (map) handles multi-argument
+                functions (thanks Yuri Gribov.) (watch) accepts
+                multiple arguments. Bug in handling multiple
+                multifields in slot-specific templates fixed (thanks
+                Howard Greenblatt). QueryResult has full
+                Javadoc. Added "ppdefrule *". Static imports handle
+                overloaded methods. Fixed incremental reset for
+                accumulate (thanks Roger Studner). Defadvice for
+                nested function calls (thanks Ivan Op de Beeck.)
+                undeffacts function added. JessDE parses functions for
+                rule salience values (Gribov). XMLPrinter handles "or"
+                conditional element properly. Reparsing bug with
+                "accumulate" in the JessDE fixed (thanks Jason
+                Morris.) "modify" now once again modifies multiple
+                slots simultaneously. "max" and "min" return their
+                arguments using their original data types. Debugger
+                now correctly steps though router I/O statements.
+            </dd>
+            
+<dt>
+                Version 7.0b4 (November 1st, 2005): </dt>
+            
+<dd>
+                Fix slot-specific behavior for "null" property names
+                in change events (thanks Shan Ming Woo). Fix SAX parse
+                error for facts with no slots (thanks Wang Dong.)
+                Fixed definstance name resolution across modules
+                (Woo). New "map", "filter", and "list" functions for
+                functional programming. Run configurations are reused
+                in Eclipse. Can pass command-line arguments from
+                Eclipse Run dialog. Defglobals show up in JessDE
+                debugger. Spaces in path names won't confuse jess.bat
+                (thanks Eric Schubert.) Fix deadlock in debugger when
+                stepping over (read) and (readline) calls (thanks Jim
+                Goodwin.)  "Start suspended" checkbox in debugger. Can
+                specify jess.Main alternate in launch
+                configuration. Tiny font in manual navbar fixed. New
+                URL for Jikes in manual. New "quick start" section in
+                manual, and a new simplified engine API as described
+                therein: mark(), resetToMark(), add(), addAll(),
+                getObjects().
+            </dd>
+            
+<dt>
+                Version 7.0b3 (September 15th, 2005): </dt>
+            
+<dd>
+              Continued work on manual and javadocs. JSR94 driver
+              available in demo jar. (help) gives help on constructs
+              and is generally more helpful. list-functions$ doesn't
+              list static imports. Deprecate the term "external
+              address" in favor of "Java object", and deprecate all
+              names based on this term. Add the "auto" qualifier for
+              definstance, and change the default behavior to
+              "auto". Swing versions of Canvas,
+              TextAreaWriter. Debugger handles spaces in path
+              names. Reverse ill-considered "optimization" in NodeNot2
+              (thanks Yuri Gribov).
+            </dd>
+            
+<dt>
+                Version 7.0b2 (August 11th, 2005): </dt>
+            
+<dd>
+              Fix interactions between code folding and auto-paren
+              insertion (thanks Howard Greenblatt). Format in editor
+              no longer appends a blank line to document. Lots of work
+              on the manual and Javadocs. Fix a memory leak in
+              TokenTree (thanks Steven Goncalo.) min and max work with
+              LONG (thanks Shan Ming Woo.) Static imports! Fix for
+              accumulate bug (Woo, again.) Definstance uses
+              template resolution procedure as assert (Woo). Fixed an
+              erroneous report of variable used before definition
+              (thanks Bill Robinson).
+            </dd>
+
+            
+<dt>
+                Version 7.0b1 (July 11th, 2005): </dt>
+            
+<dd>
+              JessDE editor has preference to turn on line
+              numbering. Fixed another leak in (logical). Close
+              "backdoor" for putting lists in single slots (thanks
+              Timothy Redmond.) Better error messages for constructor
+              failures. Per-slot logical dependencies. Defclass
+              templates get proper slot types. Fix pretty-printing of
+              slot types and error-reporting for non-symbolic slot
+              types (thanks Howard Greenblatt.) XML representation for
+              defclasses. All-new JSR94 driver. "Folding" in JessDE
+              editor. Editor deals with bad build path (thanks Howard
+              Greenblatt).  Defclass names now properly "modular."
+              Fixed problem unifying negated variables in nested
+              groups (thanks Neal Wyse.) Undefrule removes activations
+              regardless of current module (Neal Wyse.) Editor doesn't
+              warn about recursive deffunction calls. Public member
+              variables as slots. "div" handles multiple arguments
+              (thanks Shan Ming Woo.)
+            </dd>
+            
+<dt>
+                Version 7.0a6 (March 23rd, 2005): </dt>
+            
+<dd>
+              Fix incorrect error message in set/get-member
+              functions. () syntax for empty list. Fix bug in
+              compiling logical dependencies on backward-chaining
+              triggers (thanks Timothy Redmond). Fix JDK version
+              detection (thanks Bob Hablutzel.) New functions: "++",
+              "--", "for". Debugger can both "step into" and "step
+              over" (thanks Mitch Christensen). "require" and
+              "provide". Default values for multislots parsed better
+              (thanks Travis Nelson.) "Toggle comment" works
+              better. Can map keys to JessDE editor commands. Editor
+              recognizes set-current-module.  Fix bug in JessDE editor
+              autoedit strategy, inserting at end of all-comment
+              buffer (Mitch Christensen.) Lots of new "quick fixes."
+              Smarter completion processing. "Agenda" view in
+              debugger. Source location always returns source files,
+              never files in /bin (Mitch Christensen).
+            </dd>
+
+            
+<dt>
+                Version 7.0a5 (February 2nd, 2005): </dt>
+            
+<dd>
+              New Rete network view in JessDE. Fixed problems
+              inserting at end of document in JessDE editor. Improved
+              autoformatting in JessDE editor. External Eclipse
+              projects work fully. Runtime class loading errors
+              reported as error markers. Improved content
+              assist. Document change in "batch" behavior (thanks Jeff
+              Pierce). Some better error messages. set-watch-router
+              command (thanks G. Williams.) New "value object"
+              facility; large speedups in Java-object-matching
+              performance are possible. Slight improvement in
+              auto-parenthesis insertion (thanks M. Christensen.)
+              Added initial "quick fix" implementation to
+              editor. Better error reporting for non-numeric arguments
+              to match functions (thanks M. Christensen.)
+            </dd>
+            
+<dt>
+                Version 7.0a4 (December 7th, 2004): </dt>
+            
+<dd>
+              Fixed infinite loop with outline view of empty file in
+              JessDE. JessDE can find Java classes in more
+              places. JessDE reports warnings on bad arguments to more
+              functions. Content assist works for functions called at
+              top level.
+            </dd>
+            
+<dt>
+                Version 7.0a3 (November 30th, 2004): </dt>
+            
+<dd>
+              Fixed test CE in user-defined modules (thanks Sven
+              Siorpaes). Fix NPE in modify. Fixed "Not a Not a list"
+              error messages (thanks Joseph Tappero). Added multiline
+              comments (for Ross Judson.) Added -debug switch to
+              jess.Main. jess.Main no longer stops on the first error
+              in a file. Fixed extra-newline problem in reading
+              erroneous input interactively (thanks Maxim
+              Tretyak). Eclipse debugger now included, based on new
+              debug mode in jess.Main. Fix overeager query analyser
+              (thanks W. Robinson.) Vastly improved editor
+              performance. Editor finds classes in other projects and
+              outside workspace. No more duplicate "Source" menu in
+              JessDE (thanks Jason Morris.) Editor checks
+              load-function calls. Fixed NPE when modifying Fact with
+              non-negative not in working memory (thanks Adam
+              Velardo.) Fixed NPE when extending a nonexistent
+              deftemplate (thanks Rodolfo Martin). "Run as..." in
+              Eclipse. Better parsing of
+              doubles. jess.Context.setVariable only sets values
+              locally. Editor uses Rete import table to resolve classes.
+            </dd>
+
+
+            
+<dt>
+                Version 7.0a2 (October 8th, 2004): </dt>
+            
+<dd>
+              Problem calling some Java methods fixed (thanks Alan
+              Moore.) Fix function index in manual (Jason Morris.)
+              More documentation. Fixed spurious error reporting of
+              variable use in defquery (William N. Robinson). Jess 7
+              works under JDK 1.3 (Alan Moore). Parser clearly reports
+              misused constructs (Mong-Thao La). JessDE editor
+              responds to resource changes (Howard Greenblatt). JessDE
+              editor uses project build path for class loading (Mitch
+              Christensen). Functions that list things in a module
+              tell you what module they've been applied to. Fixed bug
+              in slot-specific (thanks Dan Malka). fact-slot-value
+              calls Fact.getIcon first. Merge readline fix from
+              6.1p6.
+            </dd>
+            
+<dt>
+                Version 7.0a1 (September 17th, 2004): </dt>
+            
+<dd>
+               Unify "batch" and "batch-xml". Lots of improvements to
+               manual (thanks Win Carus.) Funcall.toString() is more
+               forgiving about arguments to "modify". (thanks Chris
+               Huang.) Folded in changes from 6.1p7. Report undefined
+               variables used in predicate constraints (thanks Mitch
+               Christensen.) Fixed backward chaining triggers inside
+               logical CE (thanks Steffen Luypaert). Parser responds
+               sooner to erroneous input. Slot names in "modify" and
+               "duplicate" can be variables. Faster reflective method
+               calls, especially for member functions of
+               java.lang.String. Better pretty-printing. Help command.
+               fact-slot-value moved from scriptlib to Java. "ordered"
+               declaration for deftemplates.
+            </dd>
+            
+<dt>
+                Version 7.0pre-a1 (March 1st, 2004): </dt>
+            
+<dd>
+                Remove deprecated methods. Added "no-loop" rule
+                declaration. Added "slot-specific", "from-class", and
+                "backchain-reactive" template declarations. Added
+                "regex" function, and regex matching using
+                "/xxx/". Added -stacktrace switch to main. Better
+                error messages! LONG is now a first-class type. Better
+                handling for Java objects with mutable
+                hashCodes. 20-40% performance boost for Java object
+                manipulation. "forall" conditional element
+                added. "accumulate" conditional element added. XML
+                parser now supported. Public API for rule creation!
+                Subrules now no longer user-visisble, except through
+                getNext() and getConditionalElements(). Began manual
+                rewrite.
+            </dd>
+
+            
+<dt>
+                Version 6.1p8 (June 7th, 2004):</dt>
+            
+<dd>
+                Fixed undefrule leaving behind activations (thanks
+                Neil Wyse).
+            </dd>
+            
+<dt>
+                Version 6.1p7 (May 7th, 2004):</dt>
+            
+<dd>
+                Fixed deadlock problem (thanks Paul Kaib). Better
+                performance with huge numbers of templates (thanks
+                Travis Nelson.) Fix NPE when parsing empty (not)
+                patterns. Fix PrettyPrinter bug with (not) and
+                pattern bindings.
+            </dd>
+            
+<dt>
+                Version 6.1p6 (September 4th, 2003):</dt>
+            
+<dd>
+                Fixed two incremental reset problems (thanks Kevin
+                Kusy and Xiaocheng Luan.) str-cat was evaluating the
+                first argument twice (thanks Neal Wyse.) Fixed bug
+                using  '|' constraint on unbound slots inside
+                (logical) (thanks 'Ray'). (readline) now works better
+                in immediate mode.  Fixed query name resolution issue
+                (thanks Felix Bachmann).  "crlf" translates to 0x0D0A
+                on Windows (thanks Morten Lind.)
+           </dd>
+            
+<dt>
+                Version 6.1p5 (September 4th, 2003):</dt>
+            
+<dd>
+                Jess now works as a standard extension, including
+                loading user classes (thanks Ted Neward). Fixed a
+                potential stack overflow in
+                FactList.processPendingFacts() (thanks Ray Mekert.)
+                Error messages from jess.awt.Canvas.paint() are
+                flushed (thanks Isilyn Cabarrubias).
+           </dd>
+            
+<dt>
+                Version 6.1p4 (July 8th, 2003): </dt>
+            
+<dd>
+                Fix a problem with variable binding (thanks Kevin
+                Kusy.)
+           </dd>
+            
+<dt>
+                Version 6.1p3 (June 26th, 2003): </dt>
+            
+<dd>
+                Fix a problem with side-effects executing multiple times
+                while resolving overloaded methods (thanks Chad
+                Loder.) Fix an incremental reset bug (thanks Maxim
+                Tretyak.) Binary version works with Java 1.2.2 and above.
+           </dd>
+            
+<dt>
+                Version 6.1p2 (May 21th, 2003): </dt>
+            
+<dd>
+                Fix a problem with clearing defglobals (thanks Bob
+                Orchard.) (reset) removes all top-level variables,
+                even "fake defglobals." Some improved error
+                reporting. Public Test1.getMultiSlotIndex() method.
+            </dd>
+            
+<dt>
+                Version 6.1p1 (May 6th, 2003): </dt>
+            
+<dd>
+                Fix a problem with pretty-printing of defqueries. Fix
+                a (not) CE bug (thanks Olga Medvedeva). Don't call
+                run(0) from run-defquery (thanks Glenn Williams.)
+            </dd>
+            
+<dt>
+                Version 6.1 (April 9th, 2003): </dt>
+            
+<dd>
+                No nontrivial changes.
+            </dd>
+            
+<dt>
+                Version 6.1RC1 (March 24th, 2003): </dt>
+            
+<dd>
+                Fixed another leak and another deadlock in "logical"
+                (thanks Glenn Williams.) Reflection machinery now
+                tries more aggressively to convert between floats and
+                RU.FLOATs, ints and RU.INTEGERs, etc, in both
+                directions. assert-string just returns FALSE on
+                duplicate fact (thanks Thomas Diesler.) Better system
+                for renaming variables in nested NOTs. Fix a race condition
+                in JessEventSupport (thanks Chad Loder.)
+                Added listDefclasses, etc. Fixed "breadth" conflict
+                resolution strategy.
+            </dd>
+            
+<dt>
+                Version 6.1b3 (February 28th, 2003): </dt>
+            
+<dd>
+                Most of the Rete "listXXX" methods lock and copy to prevent
+                ConcurrentModificationExceptions. Fix problem with
+                triply nested (not) (thanks Alan Moore.) Fix a race
+                condition with modify and run-until-halt (Mr. Moore,
+                again.)  "unique" CE is now a no-op. Deadlocks, memory leaks,
+                and other issues with the "logical" CE repaired (many thanks to
+                Travis Nelson and Glenn Williams.)
+
+            </dd>
+
+            
+<dt>
+                Version 6.1b2 (February 14th, 2003): </dt>
+
+            
+<dd>
+                Proper handling for "OR" CE's deeply nested inside
+                NOTs. Nested, negated "test" CEs now work properly. Add
+                "getThisActivation" and "getThisRuleName" to Rete (thanks
+                Richard Kasperowski.) Can test fact bindings against
+                previously defined variables. Simple public ConditionalElement
+                class. "exists" handled by parser.
+            </dd>
+
+            
+<dt>
+                Version 6.1b1 (January 28th, 2003): </dt>
+
+            
+<dd>
+                Code cleanup: remove unused return value from
+                callNodeLeft/Right, add Context argument to
+                callNodeLeft/Right, and remove ThreadLocal Rete.s_engines and
+                static Rete.getEngine() method. When any fact, shadow or not,
+                is modified, either from Jess, from the Java API, or from a
+                Bean event, a single FACT | MODIFIED event will be
+                generated. Many of the built-in package classes are no longer
+                public. Added Rete.updateObject and (update). Added Rete.modify().
+                Added Rete.watch(), unwatch(). (watch facts) reports modify again.
+                max-background-rules declaration added to defquery.
+                Javadoc coverage improved. Fixed ppdeftemplate handling of
+                default-dynamic (thanks Ross Judson.)
+            </dd>
+
+            
+<dt>
+                Version 6.1a5 (January 15th, 2003): </dt>
+
+            
+<dd>
+                Fixed a bug with direct matching of fact bindings (thanks
+                Morten Vigel). Fixed a typo in Node1TNEV1 (Ralph Grove.) Added
+                "synchronized" and "get-strategy" functions. Calling
+                "set-strategy" now changes the default strategy for new
+                modules. Fixed a deadlock in defquery (thanks Chad Loder.)
+                Public interface "Test" renamed to "TestBase." Fixed bug in
+                pretty-printing of deftemplates.  Performance is back up to 6.0
+                equivalent.
+            </dd>
+
+            
+<dt>
+                Version 6.1a4 (August 30th, 2002): </dt>
+
+            
+<dd>
+                Fixed a 6.1a3 bug where negated patterns could trigger backward
+                chaining. "eval" and "build" can use variables from the calling
+                context. Clarify and extend "app object" mechanism; Jess can be
+                installed as a standard extension. Partially ameliorate
+                performance regression from 6.1a3.
+            </dd>
+
+            
+<dt>
+                Version 6.1a3 (July 23rd, 2002): </dt>
+
+            
+<dd>
+                Fixed a bug in save-facts (thanks Scott Trackman). Fixed
+                deadlock problem in retract/undefinstance (thanks Blaine
+                Bell.)  Mihai Barbuceanu helped modernize the "bag"
+                command. Various API enhancements. New Rete constructor with
+                "app-object" argument. Massive refactoring of rule compiler to
+                handle arbitrarily nested AND and NOT CEs in a new, simpler
+                way; universal quantifiers are now handled correctly. Fixed a
+                bug with the logical CE when adding new rules to a running
+                system. Undefinstanced, nonserializable Beans now no longer
+                prevent Rete serialization (thanks James Gallogly and Alan
+                Moore.)
+            </dd>
+
+            
+<dt>
+                Version 6.1a2 (May 22st, 2002): </dt>
+
+            
+<dd>
+                Fixed early return bug in try/catch/finally (thanks Chad
+                Loder). (modify) now immediately modifies shadow fact for
+                static definstances. A shadow fact can tell you the category
+                of definstance it belongs to. New version of
+                <tt>format</tt>
+                function now has a %n conversion specifier, and also fixed an
+                infinite loop when formatting floating-point
+                zeroes. Refactoring in logical -- should not be user visible.
+            </dd>
+
+            
+<dt>
+                Version 6.1a1 (April 3rd, 2002): </dt>
+
+            
+<dd>
+                Class import table now public. "view" cmmand improved, and
+                bugs fixed. Activations now have individual salience
+                values. Many methods in jess.Context now
+                public. Rete.retract() now calls undefinstance() if
+                needed. Rete.undefinstance() returns shadow fact. Matching
+                against defglobal works (thanks Simon Hamilton.) (logical) bug
+                fixed (thanks Blaine Bell.) Fixed a bug executing tests in
+                Node2 (thanks Ed Katz.) Fixed a bug with inadvertent changes
+                to current module (thanks John Callahan.) Fixed an (exists)
+                bug and an '|'-constraint bug (thanks Jack Kerkhof).
+
+            </dd>
+
+            
+<dt>
+                Version 6.0 (December 7th, 2001): </dt>
+
+            
+<dd>
+                defclass and definstance now accept defclass names qualified
+                wih module names (thanks Juraj Frivolt.) ppdefrule and friends
+                don't throw if the argument is bad (thanks Mikael Rundqvist.)
+                Release notes and porting info added to docs. Other small
+                patches.
+            </dd>
+            
+<dt>
+                Version 6.0b3 (November 2nd, 2001): </dt>
+
+            
+<dd>
+                nth$ returns nil instead of throwing exceptions (thanks Seung
+                Lee.) Deffunction has public API for fetching arguments and
+                actions (thanks Scott Kaplan, Henrik Eriksson). If
+                pattern-matches during (modify) throws an exception, the
+                modified fact no longer disappears from the fact-list (thanks
+                Mihai Barbuceanu.) If pattern-matches during addDefrule throw,
+                rule is still added to rulebase (thanks Mikael
+                Rundqvist). Fixed rounding bug in format function (thanks Mike
+                Isenberg). Fixed issue with variable renaming when an 'and' CE
+                was nested in a 'not' CE (thanks Drew Van Duren). Can omit the
+                functor 'call' even if the Java object is the return value of
+                a function call. retract, assert, and duplicate will once
+                again accept an integer as their first argument -- the fact-id
+                function is no longer necessary (although it can still be
+                used.) You can put pattern bindings inside of grouping
+                CEs. (undefinstance *) now works as advertised (thanks Jason
+                Smith). Remove "modify-n" rewrite optimization, so pattern
+                binding to (or) CEs works.
+
+            </dd>
+            
+<dt>
+                Version 6.0b2 (October 3rd, 2001): </dt>
+
+            
+<dd>
+                Can redefine a defclass with identical definition (thanks Ian de
+                Beer). Single-stepping rule execution was losing activations
+                (thanks Simon Blackwell.) Fix a bug preventing FuzzyJess from
+                working with non-Fuzzy multifields (thanks Bob Orchard.)
+                explode$ can deal with embedded comments (thanks Simon
+                Blackwell.) (logical) can handle nested (not) and (exists).
+
+            </dd>
+
+            
+<dt>
+                Version 6.0b1 (September 13th, 2001): </dt>
+
+            
+<dd>
+                Fixed a bug in compiling rules with function calls inside of (not
+                (and)) constructs (thanks Thomas Gentsch). Broadcast DEFINSTANCE and
+                DEFCLASS events (ibid.) and RUN and HALT events. defmodules, focus
+                stack, etc., implemented. (clear) doesn't delete Java Userfunctions
+                (thanks Glenn Tarbox.) Rename SerializablePropertyDescriptor to
+                SerializablePD so the class name isn't too long for the Mac filesystem
+                (thanks Matt Bishop). (rules), (facts), others, now in Java, not
+                scriptlib. Redefining a deftemplate throws an exception, unless the
+                definitions are identical. Added "duplicate" function. sym-cat and
+                str-cat call toString() on JAVA_OBJECT arguments (thanks Chad
+                Loder.) Many other bug fixes and cleanups.
+
+            </dd>
+
+            
+<dt>
+                Version 6.0a8 (July 19th, 2001): </dt>
+
+            
+<dd>
+                Docstrings for deftemplates properly parsed (thanks Simon Hamilton.)
+                Several features broken in binary-only distribution (view, ppdefrule,
+                etc) are now fixed. JessEvents of type USERFUNCTION_CALLED now include
+                the Userfunction as the user object, not the FunctionHolder (thanks
+                Chad Loder.)
+            </dd>
+
+            
+<dt>
+                Version 6.0a7 (June 1st, 2001): </dt>
+
+            
+<dd>
+                New pretty-print architecture which shows how things are actually
+                represented; based on new Visitor interface. ppdefX functions now
+                return, rather than print, their results.  show-jess-listeners works
+                again. Simplify how negated patterns are parsed. JAR file not an
+                executable JAR anymore. Fix Thread problem with runUntilHalt, deadlock
+                in propertyChange (thanks Charles May.) deffunctions accepting only a
+                wildcard can now be called with no arguments (thanks Thomas Gentsch.)
+                No more erroneous undefined variable message (Gentsch.) The minus (-)
+                function works if one or more arguments are atoms, just as the
+                other binary math functions do (thanks Pau Ortega.) The first arg to
+                (modify) can be a funcall. (return) from (try) or (catch) block no
+                longer skips second and subsequent expressions in (finally) block
+                (thanks Chad Loder.) Deadlock in one form of Java assert() (Loder.)
+                (or), (and), and (not) CEs can be nested in structures of arbitrary
+                complexity.
+            </dd>
+
+            
+<dt>
+                Version 6.0a6 (May 3rd, 2001): </dt>
+
+            
+<dd>
+                There are no more "optional" functions. Fact.getTime() is public
+                (thanks Alan Moore.) Lots of small improvements to manual. Fix a bug
+                in pattern-matching fact-ids (thanks Matthew Johnson.) Slightly
+                different rules for loading batch files from jars; now they must omit
+                the package-dir name. The "logical" CE is supported.
+            </dd>
+
+            
+<dt>
+                Version 6.0a5 (March 12th, 2001): </dt>
+
+            
+<dd>
+                Fixed a serious bug in "modify" (thanks Bob Orchard.) Some
+                documentation cleanup. runQuery method returns Iterator.
+            </dd>
+
+            
+<dt>
+                Version 6.0a4 (March 8th, 2001): </dt>
+
+            
+<dd>"Watch" listeners were not being cleared. Use a priority queue for
+                agenda -- modest performance improvement for most applications, big
+                improvement for conflict-resolution-limited apps. Strategy interface
+                vastly simplified, rewrote built-in strategies. FactList.ppFacts(),
+                and hence (save-facts), rewritten to write directly to a Writer,
+                greatly decreasing memory usage. Quit button removed from Console
+                (thanks Andrew Marshall.) Calling a native function that returns a
+                wrapper type (Integer, Float, etc) now gives an JAVA_OBJECT
+                holding the wrapper object, instead of unwrapping the
+                data. Incompatible changes to improve FuzzyJess performance and fix
+                possible bug; a new version of FuzzyJess will be required to work with
+                Jess 6.0a4. Fact-duplication concept eliminated -- fact duplication is
+                never allowed. Fact list stored on a HashMap, not a Vector; Now
+                finding is fast, enumerating is slow. For the time being, Jess 6.0XX
+                now requires Java 2.</dd>
+
+            
+<dt>
+                Version 6.0a3 (January 25th, 2001): </dt>
+            
+<dd>
+                Bload and bsave now work much better, using real, complete
+                serialization. Serializing/deserializing Rete saves and restores
+                everything except the I/O router tables. Rete loads scriptlib itself,
+                so you don't need to do it yourself anymore. Lots of refactoring --
+                Rete now exports more useful functions, but delegates their
+                implementations; for example, there are public defclass(),
+                definstance(), and undefinstance() methods. A small bug in Tokenizer
+                fixed (thanks Norman Ghyra.) Methods added to support Thomas
+                Barnekow's JessX Jess extensions. </dd>
+
+            
+<dt>
+                Version 6.0a2 (July 20th, 2000): </dt>
+            
+<dd>
+                Defqueries can now backwards-chain to get results. run-until-halt now
+                clears halt flag first. finally in (try) (thanks Thomas
+                Barnekow). Many typos in manual fixed (thanks Michael Futtersack.)
+                (or) and (and) CEs, and general nesting of CEs now operational (thanks
+                to Mariusz Nowostawski and Jack Kerkhof for test cases,) although code
+                still needs refactoring and (and) and (or) won't work correctly inside
+                of (not). waitForActivations() could block even if activations were
+                available; now fixed (thanks Thomas Barnekow). Added some "LISP
+                compatibility functions:" progn, apply. Fixed off-by-one error in
+                line-numbers in error reports. Vastly improved efficiency of
+                multifield matching (thanks to Sebastian Varges for noticing a problem
+                with the old implementation.) Deactivate activations earlier in the
+                rule-firing process, to remove a bit of redundant processing (thanks
+                David Bruce.).
+            </dd>
+
+            
+<dt>
+                Version 6.0a1 (April 25th, 2000): </dt>
+            
+<dd>
+                Fact-id's are now simply references to Fact objects. Use the supplied
+                fact-id function to create a fact-id value from an integer. Many
+                memory-usage reductions; no more extra Vectors in Rete network
+                classes. Several code-shrinking refactorizations. Rete class no longer
+                delivers events to listeners registered by a handler for the same
+                event (thanks Alex Karasulu.) Fact-ids no longer change on
+                modify. (batch) now works on a .clp files in a .jar file from an
+                applet (thanks Javier Torres).
+            </dd>
+
+            
+<dt>
+                Version 5.2 (June 30th, 2000): </dt>
+            
+<dd>
+                Bug fix release. waitForActivations() could block even if activations
+                were available; now fixed (thanks Thomas Barnekow).
+            </dd>
+
+            
+<dt>
+                Version 5.1 (April 24th, 2000): </dt>
+            
+<dd>
+                Bug fix release. Fixed two bugs in backwards chaining (thanks Ashraf
+                Afifi.) Also, a regression repaired: pattern bindings couldn't be
+                matched as they could in Jess 4, and now they can again.
+            </dd>
+
+            
+<dt>
+                Version 5.0 (January 28th, 2000): </dt>
+            
+<dd>
+                Added new function cross-reference section to the manual (thanks to
+                Roger Firestone for the idea.) parseDeftemplate now handles comments
+                in child templates (thanks Richard Long.) TextAreaWriter (and hence
+                Console and ConsoleApplet) prunes the oldest characters from its
+                TextArea to prevent the Win32 freeze problem.
+            </dd>
+            
+<dt>
+                Version 5.0b4 (January 5th, 2000): </dt>
+            
+<dd>
+                Fixed broken fact-slot-value function. Some support for new RU.LONG
+                type. Added (run-until-halt), runUntilHalt(), activationSemaphore,
+                etc. (unique) CE no longer prevents partial matches from being
+                retracted, only from being propagated (thanks Vicken Kasparian.)
+                Nested nots and (exists) CE added. Unmatched variables can appear in
+                function calls within defqueries (thanks Michal
+                Fadljevic). Bsave/bload now works with defclasses (thanks Russ
+                Milliken.) ReflectFunctions cache result of BeanInfo.getPropertyDescriptors().
+            </dd>
+            
+<dt>
+                Version 5.0b3 (November 30th, 1999): </dt>
+            
+<dd>
+                Support for reworked version of Bob Orchard's fuzzy logic
+                extensions. When multiple activations of one rule were due to
+                different multifield matches of the same set of facts, retracting one
+                fact would cause only one activation to be removed. This is now fixed
+                (thanks, Al Davis.) Share function-call-containing join nodes; thanks
+                George Rudolph for the reminder. Fixed UnWatch class for buggy JDK 1.x
+                compilers. Can match directly on defglobals now. ReflectFunctions
+                cache result of Class.getMethods().
+            </dd>
+            
+<dt>
+                Version 5.0b2 (November 8th, 1999): </dt>
+            
+<dd>
+                Several bugs in run-query and parseDefquery fixed (thanks Alex
+                Karasulu). (watch) handlers flush stdout (thanks David Young.) Fix
+                bare return-value constraints in multislots (thanks Dave Barnett.)
+                Problem with returning parameters from deffunctions, and missing
+                resolveValue calls in BagFunctions fixed (thanks Bruce Douglas.)
+                assert() and retract() call processPendingFacts() directly (thanks
+                Thomas Barnekow.) Multislot matching "optimization" fixed (thanks
+                Robert Gaimari.) Deffacts allows global variables in fact slots
+                (thanks Michael Coen.) Try harder to coerce all multifield entries to
+                same type when converting to Java array (thanks Ralph Grove.) Fix
+                a synchronization problem (thanks Javier Maria Torres Ramon.)
+            </dd>
+
+            
+<dt>
+                Version 5.0b1 (September 21st, 1999): </dt>
+            
+<dd>
+                jess.Console works again (thanks Lakshmi Vempati). Compiles with buggy
+                JDK 1.1.x compiler. bload/bsave preserves listeners (i.e., deffacts work).
+                Did away with Successor class (simplified Rete network, reduced memory
+                usage.) Fixed bug where redefined rules with shared nodes wouldn't
+                reset. Specialized Value subclasses now explicitly override
+                numericValue(). Yet another pesky "not" bug (thanks Vadim Zaliva.) All
+                facts/definstances inherit, ultimately, from "__fact". In Rete
+                network, callNodeRight() takes Fact, not token; right memories store
+                Facts, too (fewer allocations, less memory!) Return-value constraint
+                was erroneously requiring bound variable; thanks Dave Kirby. Miroslav Madecki
+                reported a "ghost fact" bug; fixing it improved Jess's "manners"
+                benchmark performace by another 25% (!)  "system" returns a Process
+                object (thanks Alan Moore). (open) uses a 10-character buffer - large file
+                I/O speedup (thanks Norman Gyhra).
+            </dd>
+
+            
+<dt>
+                Version 5.0a6 (July 8th, 1999): </dt>
+            
+<dd>
+                insert$, replace$ behave as documented w.r.t argument types (thanks
+                Emmanuel Pierre). Typo: agenda wasn't being cleared on reset (thanks
+                Bob Orchard.) Removed some redundant checks in network (more
+                speedups!) Final multivar argument to deffunction now properly handles
+                passed-in multifields; thanks Ning Zhong. Added "import". Fixed bug in
+                using variable as salience value; thanks David Young. Bug in special
+                code for calling public methods of package-private classes; thanks
+                Cheruku Srini. Bug in member$ fixed (thanks David Young again.) Bug in
+                retracting facts which are multifield pattern-matched on rule LHS
+                fixed (thanks Yang Xiao). All classes serializable again (thanks
+                Michael Friedrich). Several small optimizations related to
+                fact-duplication (thanks Osvaldo Pinali Doederlein.) JessEvents
+                working again, with event mask. Bitwise arithmetic functions
+                added. Fixed some more multifield matching strangeness (thanks
+                Benjamin Good). Added "|" (or) connective constraint.
+
+            </dd>
+
+            
+<dt>
+                Version 5.0a5 (May 20th, 1999): </dt>
+
+            
+<dd>
+                Drastic changes to the way Funcalls are executed (much simplification
+                and speedup!) Fixed "corrupted negcnt" when retracting definstance
+                facts (thanks Abel Martinez.) Much improved agenda management,
+                including time tags. Smart indexing based on tested values. New
+                heuristics for eliminating redundant tests. (store foo nil) now
+                removes value of foo (thanks Kathy Lee Simunich for the suggestion.)
+                (system) command now pipes program output to console (thanks Fang Liu
+                for idea). (undefinstance *) now removes all definstances (thanks Mike
+                Lucero for idea). Multiple defglobal references on rule LHS no longer
+                broken (thanks Jacek Gwizdka for report.) Many upgrades to
+                JessException class (thanks Kenny Macleod). Some Value constructors
+                no longer have the redundant second argument. get/set-fact-duplication
+                (thanks to Osvaldo Pinali Doederlein for the idea.) Bob Orchard
+                figured out how to get rid of the extra EOFs in jess.ConsolePanel.
+                Console and ConsoleApplet can now read a file and continue, as they
+                used to. Backwards chaining now more general; one goal can trigger
+                multiple rules, both in parallel and in chains. ViewFunctions and
+                ReflectFunctions moved into jess package, many more classes now
+                package-private. jess.reflect package renamed jess.awt; TextReader,
+                TextAreaWriter moved into it. "throw" command added (thanks Eric
+                Eslinger).
+
+            </dd>
+
+            
+<dt>
+                Version 5.0a4 (March 18th, 1999): </dt>
+
+            
+<dd>
+                Call removePropertyChangeListener on undefinstance (thanks to Dan
+                Larner.) Added defadvice. Three buglets, thanks to Bob Orchard:
+                defglobals can now refer to other Defglobals in their definitions;
+                (bind) and (foreach) are now pickier about arguments; undefined
+                variables now universally evaluate as 'nil'. Applet security problems
+                fixed (thanks S.S. Ozsariyildiz). Problem with matching and otherwise
+                dealing with zero-length multislots and array bean properties fixed;
+                null array values are converted into zero-length arrays (thanks
+                Miroslav Madecki.) (call) does much better error reporting. Passing
+                Strings to functions accepting Objects now works (J. P. van
+                Werkhoven.)
+
+            </dd>
+
+            
+<dt>
+                Version 5.0a3 (February 12th, 1999): </dt>
+
+            
+<dd>
+                Token(Token) changes UPDATE to ADD. Hashcode used in TokenTree
+                modifiable. (clear) now fully clears deffacts. Many general
+                speedups. TokenTree hash factor can now be set globally and per-rule.
+                Functional Accelerator class exists for math functions. (modify)
+                funcalls print out correctly. get-var removed (no longer needed.)
+                Nonsychronization error in jess.Retract.call() led to Corrupted
+                Negcnt; fixed (reported by Dan Larner). Other corrupted negcnt error
+                due to duplicated tokens fixed. definstances can be static or
+                dynamic. jess.Pattern is public; several methods added or made public
+                to support rule editors. Defrule.toString works for all cases. Console
+                class now uses Main to do business. .jessrc file now named
+                scriptlib.clp and found using Class.getResource(). (batch) can use
+                getResource() to find scripts, so they can live in .jar files. Batch
+                now an intrinsic. Rewrote some multifield functions to better handle
+                JAVA_OBJECT objects; added hashCode() to jess.Value. (facts) and
+                (rules) now in scriptlib, not Java. Much improved public interface for
+                Deftemplate, Fact classes.
+
+            </dd>
+
+            
+<dt>
+                Version 5.0a2 (December 15th, 1998): </dt>
+
+            
+<dd>
+                m_sortcode in Token no longer a blank final to work around JDK 1.1.6/7a
+                javac bug. Makefile no longer mentions unbundled files. Backward
+                chaining works again (was broken in 5.0a1)
+
+            </dd>
+
+            
+<dt>
+                Version 5.0a1 (December 9th, 1998): </dt>
+
+            
+<dd>
+                All 16-bit (Reader/Writer) text I/O - some user code changes required.
+                Serialization (crude version). Inheritance for deftemplates,
+                defclasses. jess.Main reads $HOME/.jessrc at startup if it exists. No
+                more ReteDisplay, Resetable, or Clearable interfaces: instead, use
+                jess.JessListener and jess.JessEvent. (view) uses JessListener instead of
+                Observer/Observable; rewritten to provide movable nodes, per-node
+                debug code.  jess.reflect.JessListener class renamed to
+                jess.reflect.JessAWTListener. Bean-itized many function names (name()
+                -&gt; getName()), breaking lots of user code, I'm afraid. (run)
+                returns number of rules fired. Ordered facts now stored as unordered
+                with one multislot named __data. Backwards chaining added. Bload and
+                Bsave added.
+
+            </dd>
+
+            
+<dt>
+                Version 4.5 (April 15th, 1999): </dt>
+
+            
+<dd>
+                Fixed "corrupted negcnt" when retracting definstance facts (thanks
+                Abel Martinez.)
+
+            </dd>
+
+
+            
+<dt>
+                Version 4.4 (March 18th, 1999): </dt>
+
+            
+<dd>
+                Token(Token) changes UPDATE to ADD. (clear) not truly clearing
+                deffacts (thanks to Rob Jefson). Passing Strings to Java methods
+                expecting Object now works. Call removePropertyChangeListener in
+                undefinstance.
+
+            </dd>
+
+            
+<dt>
+                Version 4.3 (December 1st, 1998):</dt>
+
+            
+<dd>
+                Fixed redundant default-value processing, which was leading to odd
+                problems with definstances with null slot values (thanks to
+                S.S. Ozsariyildiz). Removed intern()s from Tokenizer (faster
+                compilation). Fixed NIL/nil ambiguity in ReflectFunctions (thanks
+                Andreas Rasmussen.)
+            </dd>
+
+            
+<dt>
+                Version 4.2 (November 12th, 1998):</dt>
+
+            
+<dd>
+                Fixed 'Corrupted negcnt' bug (thanks to Todd Bowers). (if ... then)
+                function now throws an exception if atom 'then' is missing. Version string
+                in 4.1 final was inadvertently left at 4.1b6. Added section to README
+                explaining rule LHS semantics a bit better. Rete.findFactByID() is now
+                public. Fix for very tricky 'phantom fact' problem reported by Steve
+                Bucuvalas. Java method calls on Jess Strings now work for all Strings,
+                not just alphanumeric ones. "animals" example modified to work with
+                transitional gensym implementation.
+            </dd>
+
+            
+<dt>
+                Version 4.1 (September 15th, 1998):</dt>
+
+            
+<dd>
+                Some minor bug fixes; code to allow you to leave off the '$' on a
+                multivar after its first use, as in CLIPS.
+            </dd>
+
+            
+<dt>
+                Version 4.1b6:</dt>
+
+            
+<dd>
+                Allow named variables in (not) CEs as long as they're not used in
+                subsequent CEs. Fix a bug that was causing (return) to not work if
+                inside a (foreach) inside a deffunction. Recursive deffunctions now
+                work again. Jess works around a bug in some versions of Java that was
+                preventing the atom '-' from parsing. Rete.listDefglobals() no longer
+                lists duplicates of redefined defglobals (Karl Mueller found this
+                one.) ReteDisplay.fireRule() is now called as appropriate. Accessing
+                pattern-binding variables on rule LHSs works again (Karl again.)
+                (reset) wasn't clearing all activations (thanks Al Davis);
+                fixed. Funcall.toString() puts parens around the ValueVector version.
+            </dd>
+
+            
+<dt>
+                Version 4.1b5:</dt>
+
+            
+<dd>
+                Just remove some debug code and extra files inadvertently shipped with 4.1b4.
+            </dd>
+
+            
+<dt>
+                Version 4.1b4:</dt>
+
+            
+<dd>
+                addUserfunction, addDeffunction, etc collapsed into one
+                addUserfunction routine in Rete class; same with
+                findUserfunction. RU.getAtom() and RU.putAtom are gone!
+                Userfunction.name() now returns String. ControlStructure
+                interface used to clean up handling of such things. ReteCompiler uses
+                Hashtables of Bindings instead of int[][] for vartables. Added
+                default-dynamic deftemplate slot qualifier. Added
+                set-/get-reset-globals, and changed the default defglobal reset
+                behaviour. Added dynamic rule salience. Removed arbitrary limit of 32
+                slots for ordered facts and 32 tests per slot for all facts. "unique"
+                CE (15-30% speed increase for many problems!) Various documentation
+                improvements (many thanks to Win Carus.) Better error reporting
+                (addContext() call in JessException.) Malformed calls to 'eval' or
+                'build' or 'executeCommand' no longer go into an infinite loop on
+                EOF. Added "store" and "fetch". Added "external-addressp". Rearranged
+                Test1, Test2 classes into an inheritance hierarchy with a virtual
+                doTest method, allowing for alternate implementations (undocumented
+                java-test functionality included). Value class will do more type
+                conversions automatically. Final multifield argument of a deffunction
+                now acts as a wildcard, as in CLIPS (thanks David Young.)
+            </dd>
+
+            
+<dt>
+                Version 4.1b3</dt>
+
+            
+<dd>
+                Problem with calling public methods of package-private classes from Jess
+                fixed thanks to Lars Rasmusson's explanation. OutOfMemoryError
+                while parsing file containing unbalanced open parens fixed. Line breaks
+                in double-quoted strings no longer need to be (but can be) escaped. Two
+                fixes thanks to Andreas Rasmusson: gensym* returns a symbol as
+                documented, not a string; and a propertyChangeEvent for a bogus
+                property no longer causes Jess to retract a definstance without
+                updating it. Many of the synchronized methods in the Rete class
+                no longer are synchronized; instead they use either synchronized blocks
+                keyed to affected members or simply depend on the internal synchronization
+                of Hashtables. read and readline explicitly act differently
+                for console-like and file-like streams. ConsoleDisplay gets a
+                Clear Window button.</dd>
+
+            
+<dt>
+                Version 4.1b2</dt>
+
+            
+<dd> Bug in character-escape lexing fixed thanks to Josiah
+                Poon. Parser-related bug in explode$ fixed thanks to Andrew
+                X. Comas. eval, build, executeCommand()
+                again properly return the result of last expression, not
+                EOF. min, max take arbitrary # of
+                arguments. implode$ now works; it apparently never really
+                did. printout puts parens around multifields
+                again. str-compare documentation
+                corrected. undefinstance now removes the fact representing an
+                object as well as deactivating matching. Wrote large regression test
+                suite (not included in distribution). Bug in multiple simultaneous
+                Rete.run() calls in separate threads fixed thanks to Andreas
+                Rasmusson. Selectable conflict resolution strategies (only depth and
+                breadth supported now) and user-definable strategies. The try
+                command is added.</dd>
+
+            
+<dt>
+                Version 4.1b1</dt>
+
+            
+<dd> Much better lexer (no more StreamTokenizer). Input
+                buffering problems with JDK 1.1.2-1.1.4 fixed. Bug in (test)
+                CE fixed. Can call run on rule RHS. Bug in incremental update
+                fixed. Separate command-line, applet, and GUI console driver classes
+                (Quiz* classes broken up, renamed to
+                Console*). read and readline should work
+                exactly as in CLIPS. Manual describes more about how to write Java
+                main(). Bug in definstance that was preventing use
+                of subclasses of a defclassed class is fixed.</dd>
+
+            
+<dt>
+                Version 4.0</dt>
+
+            
+<dd>
+                BeanInfo support. quiz.html embeds only one QuizDisplay
+                applet. Pumps demo works again (sorry). Conflict resolution strategy
+                now should be exactly the same as CLIPS's default.</dd>
+
+            
+<dt>
+                Version 4.0b4</dt>
+
+            
+<dd>
+                Extensive manual rewrite, adding lots of Java/Jess interoperation info.
+                Allow standard CLIPS deffunction docstrings. Thanks to Jack Fitch, Dave
+                Carlson and Alex Jacobson, property names for reflected Java Beans now
+                use standard capitalization transform. Better error reporting, especially
+                during parsing and from the command line. set and get
+                renamed to set-member and get-member. set and
+                get are now functions that read and write Bean
+                properties. ppdefrule
+                properly handles quoted strings in function calls. executeCommand
+                and friends reuse a single parser. Thanks to Karl Mueller for
+                Rete.retractString. Taught batch to read
+                applet-based data files. eval now handles non-sexps. Better
+                mechanism for synchronizing streams. QuizDisplay
+                is an applet as well as an application. run accepts an argument,
+                the maximum number of rules to fire. Fixed bug in modify when
+                new slot value was a zero-length multifield. Fixed ReteCompiler
+                bug where MTELN nodes were not consistently generated for zero-length
+                multifield matches. Thanks to Sidney Bailin, fixed problem with accessing
+                defglobals and variables bound to pattern indexes on rule LHSs. Added
+                get-var function. Added
+                undefinstance. modify and retract now
+                handle definstance facts specially. Fixed some doPPPattern
+                bugs (Dave Carlson again!).</dd>
+
+            
+<dt>
+                Version 4.0b3</dt>
+
+            
+<dd>
+                Added jess.reflect package containing new, call,
+                set, and get. Added JessListener and its subclasses.
+                added engine. Changed printing of external-addresses to include
+                Java class name. Changed parser to accept variable names as Funcall heads
+                (call is substitued, resulting in a runtime error if call
+                is not installed). and and or functions now accept any
+                values as arguments, not only funcalls. Added foreach control
+                structure. Command prompt doesn't print NIL return values. Fixed
+                another not bug (thanks to Sidney Bailin). Added matching of Java
+                objects on rule LHSs: definstance, defclass. TokenTree
+                now uses sortcode % 101 as hash key, not the sortcode
+                itself. All global classes moved into jess package. Jess
+                class renamed Main.</dd>
+
+            
+<dt>
+                Version 4.0b2</dt>
+
+            
+<dd>
+                Cleaned up router/parser interactions. Jess will now read only one construct
+                on a line of input (just like CLIPS). All Jess output now goes through
+                WSTDOUT router, not through ReteDisplay.stdout(). Fixed
+                bug whereby second and later references to subfields of multifields on
+                the LHS of a rule would resolve to the whole multifield. modify
+                can now properly handle multislots. format handles trailing spaces.
+                Finally, parsing of integers: 2 is an RU.INTEGER, while
+                2.0 is an RU.FLOAT. Added eval and
+                list-function$.</dd>
+
+            
+<dt>
+                Version 4.0b1</dt>
+
+            
+<dd>
+                Code reformat. Major performance enhancements (Value and Funcall
+                recycling; Fastfunction interface; Rete memories are now btrees; RU.CLEAR
+                tokens). test CE. Return-value constraints. ppdefrule
+                thanks to Rajaram Ganeshan. Blank variables in not CEs. system
+                blocks by default. readline fixed. build supported. logic for
+                predicate functions in Rete network now precisely the same as for CLIPS.
+                QuizDisplay demo. while and if accept boolean
+                variables. Implied returns from if and while functions.
+                Added explode$. Added I/O routers: open, close.
+                Added format. Added bag.</dd>
+
+            
+<dt>
+                Version 3.2</dt>
+
+            
+<dd>
+                system and integer Userfunction classes renamed (Win95
+                filename capitalization problem!). Broken delete$, insert$,
+                replace$ fixed. view command added. Big if/then in Funcall
+                class finally removed in favor of separate implementation classes for intrinsics,
+                leading to a modest speed increase. Documentation vastly expanded! Added
+                catch for ArrayOutOfBoundsException in command-line interface;
+                no more crash on wrong number of arguments. Broken evenp, oddp
+                fixed. str-cat, sym-cat made more general. Broken sub-string
+                fixed. Big switch in Node1 class replaced by separate classes,
+                leading to a very modest speed increase.</dd>
+
+            
+<dt>
+                Version 3.1</dt>
+
+            
+<dd>
+                Added the assert-string and batch commands. Two bug fixes
+                in multislot code (thanks to Nancy Flaherty). Added undefrule
+                and the ability to redefine rules. Added the system function,
+                although it doesn't work very well under Java. Public function engine()
+                in jess.Context class allows you to do fancier things in Userfunctions.
+                Added the non-standard load-package and load-function
+                functions. Many new contributed functions packaged with Jess for doing
+                math, handling multifields, and other neat stuff thanks to Win Carus. Added
+                time (1 second resolution).</dd>
+
+            
+<dt>
+                Version 3.0</dt>
+
+            
+<dd>
+                A few code changes to accomodate Microsoft's Java compiler; Jess now compiles
+                unchanged with JVC thanks to Mike Finnegan. Added member$ multifield
+                function. Added clear intrinsic thanks to Karl Mueller. Introduced
+                a new way of handling not patterns which I think finally guarantees
+                there are no more not-related bugs remaining! load-facts, which
+                has been non-functional throughout the beta period, is working again. Documentation
+                now explains unzipping and compiling a little better. Modified the way
+                fact-id's are handled so that you can write (retract 3) to retract
+                fact #3.</dd>
+
+            
+<dt>
+                Version 3.0b2</dt>
+
+            
+<dd>
+                Lots of bug reports and improvement suggestions from the field - thanks
+                folks! All the reported bugs in the multifield implementation, and some
+                residual odd behavior in the not CE, have been fixed. The exit
+                command has been added. A command prompt has been added. The #
+                character can now be used in symbols. The access levels on some methods
+                in the Rete class have been opened up; Rete is no longer
+                final. nth$ is now 1-based, as it is in CLIPS. The if
+                and while constructs now fire on not FALSE instead of
+                TRUE. The str-index function has been fixed and added.
+                Probably a few more things I'm forgetting here. Thanks for the input. Particular
+                thanks to Nancy Flaherty, Joszef Toth, Karl Mueller, Duane Steward, and
+                Michelle Dunn for reporting bugs fixed in this version; sorry if I left
+                anyone out.</dd>
+
+            
+<dt>
+                Version 3.0b1</dt>
+
+            
+<dd>
+                First public release of Jess 3.0.</dd>
+
+            
+<dt>
+                Version 3.0a3</dt>
+
+            
+<dd>
+                UserPackage interface. Lots of new example UserFunctions for multifields,
+                string, and predicates.</dd>
+
+            
+<dt>
+                Version 3.0a2</dt>
+
+            
+<dd>
+                Multislots! Also important bug fix: under certain circumstances, the Rete
+                network compilation could fail 1) if (not()) CEs occurred on the
+                LHS of a rule, 2) new variables were introduced in that rule's patterns
+                listed after the (not()) CEs, and 3) these latter variables were
+                tested (i.e., in a predicate constraint) on the LHS of the rule.</dd>
+
+            
+<dt>
+                Version 3.0a1</dt>
+
+            
+<dd>
+                Incremental reset. Watch activations. gc() in LostDisplay,
+                NullDisplay. Multifields! All the Rete engine classes are now
+                in a package named jess. Many classes and methods that should
+                not be manipulated by clients are now package-private.</dd>
+
+            
+<dt>
+                Version 2.2.1</dt>
+
+            
+<dd>
+                Ken Bertapelle found another bug, which has been squashed, in the pattern
+                network.</dd>
+
+            
+<dt>
+                Version 2.2</dt>
+
+            
+<dd>
+                Jess 2.2 adds a few new function calls (load-facts, save-facts)
+                and fixes a serious bug (thanks to Ken Bertapelle for pointing it out!)
+                which caused Jess to crash when predicate constraints were used in a certain
+                way. Another bug fix corrected the fact that retract only retracted
+                the first of a list of facts. Jess used to give a truly inscrutable error
+                message if a variable was first used in a not CE (a syntax error); the
+                current error message is much easier to understand. I also clarified a
+                few points in the documentation.</dd>
+
+            
+<dt>
+                Version 2.1</dt>
+
+            
+<dd>
+                Jess 2.1 is *much* faster than version 2.0. The Monkey example runs in
+                about half the time as under Jess 2.0, and for some inputs, the speed has
+                increased by an order of magnitude! This is probably the last big speed
+                increase I'll get. For Java/Rete weenies, this speed increase came from
+                banishing the use of java.lang.Vector in Tokens and in two-input node memories.
+                Jess is now within a believable interpreted Java/C++ speed ratio range
+                of about 30:1. Jess 2.1 now includes rule salience. It also implements
+                a few additional intrinsic functions: gensym*, mod, readline.
+                Jess 2.1 fixes a bug in the way predicate constraints were parsed under
+                some conditions by Jess 2.0. The parser now reports line numbers when it
+                encounters an error.</dd>
+
+            
+<dt>
+                Version 2.0</dt>
+
+            
+<dd>
+                Jess 2.0 is intrinsically about 30% faster than version 1.0. The internal
+                data structures changed quite a bit. The Rete network now shares nodes
+                in the Join network instead of just in the pattern network. The current
+                data structures should allow for continued improvement.</dd>
+        
+</dl>
+    
+</div>
+</body>
+
+</html>

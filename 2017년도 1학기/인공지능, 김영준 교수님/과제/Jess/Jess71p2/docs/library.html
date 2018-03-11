@@ -1,0 +1,1581 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Introduction to Programming with Jess in Java</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li id="selected">
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>10.
+        Introduction to Programming with Jess in Java</h2>
+
+There are two main ways in which Java code can be used with Jess: Java
+can be used to extend Jess, and the Jess library can be used from
+Java. The material in this section is relevant to both of these
+endeavors. Refer to the <a href="api/index.html">API documentation</a>
+for the complete story on these classes.
+
+<blockquote>
+
+<i>Note:</i> the code samples herein are necessarily not complete Java
+programs. In general, all excerpted code would need to appear inside a
+try block, inside a Java method, inside a Java class, to compile; and
+all Java source files are expected to include the <tt>"import
+jess.*;"</tt> declaration. Sometimes examples build on previous ones;
+this is usually clear from context. Such compound examples will need
+to be assembled into one method before compiling.
+</blockquote>
+
+
+
+
+
+<a name="jess.Rete">
+<h3>10.1. The jess.Rete class</h3>
+</a>
+
+The <tt>jess.Rete</tt> class is the rule engine itself. Each
+<tt>jess.Rete</tt> object has its own working memory, agenda, rules,
+etc. To embed Jess in a Java application, you'll simply need to create
+one or more <tt>jess.Rete</tt> objects and manipulate them
+appropriately. We'll cover this in more detail in the section on <a href="embedding.html">embedding Jess in Java applications.</a> Here I
+will cover some general features of the <tt>jess.Rete</tt> class.
+
+<a name="equivalents">
+<h4>10.1.1. Equivalents for common Jess functions</h4>
+</a>
+
+Several of the most commonly used Jess functions are wrappers for
+methods in the <tt>jess.Rete</tt> class. Examples are <tt>run()</tt>,
+<tt>run(int)</tt>, <tt>reset(),</tt> <tt>clear(),</tt>
+<tt>assertFact(Fact),</tt> <tt>retract(Fact)</tt>, <tt>retract(int),
+and </tt><tt>halt()</tt>. You can call these from Java just as you
+would from Jess.
+
+
+<a name="executing">
+<h4>10.1.2. Executing other Jess commands</h4>
+</a>
+
+You can use the <tt>Rete</tt> class's
+<a href="api/jess/Rete.html#eval(java.lang.String)"><tt><tt>jess.Rete.</tt>eval(java.lang.String)</tt></a> method to easily execute, from
+Java, any Jess function call or construct definition that can be
+represented as a parseable String. For example,
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExSquare {
+  public static void main(String[] unused) {
+    try {
+        Rete r = new Rete();
+        r.eval("(deffunction square (?n) (return (* ?n ?n)))");
+        Value v = r.eval("(square 3)");
+
+        // Prints '9'
+        System.out.println(v.intValue(r.getGlobalContext()));
+    } catch (JessException ex) {
+        System.err.println(ex);
+    }
+  }
+}
+<b>C:\&gt;</b> java ExSquare
+<pre>
+<i>9</i>
+</pre>
+
+</pre>
+</div>
+
+
+<tt>eval()</tt> returns the <tt>jess.Value</tt> object
+returned by the command.
+Commands executed via <tt>eval()</tt> may refer to Jess variables;
+they will be interpreted in the <i>global context</i>. In general, only
+<a href="basics.html#defglobals">defglobals</a> can be used in this way.
+<p></p> Note that you may only pass one function call or construct at a
+time to <tt>eval().</tt>
+
+<a name="optional_commands">
+<h5>10.1.2.1. Optional commands</h5>
+</a>
+
+Note that when you create a Rete object from Java, it will already
+contain definitions for all of the functions that
+come with Jess. There are no longer any "optional" commands.
+
+
+
+
+<a name="scriptlib">
+<h4>10.1.3. The script library</h4>
+</a>
+
+Some of Jess's commands are defined in Jess language code, in the file
+<tt>jess/scriptlib.clp</tt>. Each <tt>Rete</tt> object will load this
+script library when it is created and again if (clear) is called. In
+previous versions of Jess you had to do this yourself; this is no
+longer necessary.
+
+
+
+<a name="constructs">
+<h4>10.1.4. Methods for adding, finding and listing constructs</h4>
+</a>
+
+The easiest (and still encouraged) way to define
+templates, <tt>defglobals,</tt> and other constructs is to
+use Jess language code and let Jess parse the textual
+definition. However, many of these constructs are represented by
+public classes in the Jess library, and if you wish, you can construct
+your own instances of these in Java code and add them to an engine
+explicitly. This is currently possible for most, but not all, Jess
+constructs. Right now the <tt>jess.Defrule</tt> class does not expose
+enough public methods to properly create one outside of the
+<tt>jess</tt> package. This is deliberate, as this API is likely to
+change again in the near future. For information about the classes
+mentioned here (<tt>jess.Deftemplate</tt>, <tt>jess.Defglobal</tt>,
+etc) see the <a href="api/index.html">API documentation.</a>
+
+<p></p> 
+
+
+<p>These <tt>jess.Rete</tt> methods let you add constructs to the
+engine:
+
+<ul>
+  
+<li> 
+<tt>public void addDeffacts(Deffacts)</tt>
+</li>
+  
+<li> 
+<tt>public void addDefglobal(Defglobal)</tt>
+</li>
+  
+<li> 
+<tt>public void addDefmodule(Defmodule)</tt>
+</li>
+  
+<li> 
+<tt>public void addDefrule(Defrule)</tt>
+</li>
+  
+<li> 
+<tt>public void addDeftemplate(Deftemplate)</tt>
+</li>
+  
+<li> 
+<tt>public void addUserfunction(Userfunction)</tt>
+</li>
+  
+<li> 
+<tt>public void addUserpackage(Userpackage)</tt>
+</li>
+
+</ul>
+
+</p>
+
+
+<p>
+These methods return individual constructs from within the engine,
+generally by name:
+
+<ul>
+  
+<li> 
+<tt>public Defglobal findDeffacts(String)</tt>
+</li>
+  
+<li> 
+<tt>public Defglobal findDefglobal(String)</tt>
+</li>
+  
+<li> 
+<tt>public Defrule findDefrule(String)</tt>
+</li>
+  
+<li> 
+<tt>public Deftemplate findDeftemplate(String)</tt>
+</li>
+  
+<li> 
+<tt>public Userfunction findUserfunction(String)</tt>
+</li>
+
+</ul>
+
+</p>
+
+
+<p>These methods return <tt>java.util.Iterator</tt>s of various data
+structures in the engine:
+<ul>
+  
+<li> 
+<tt>public Iterator listActivations()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listDeffacts()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listDeffunctions()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listDefglobals()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listDefrules()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listDeftemplates()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listFacts()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listFunctions()</tt>
+</li>
+  
+<li> 
+<tt>public Iterator listModules()</tt>
+</li>
+
+</ul>
+
+Note that the utility class <a href="api/jess/FilteringIterator.html"><tt>jess.FilteringIterator</tt></a> is
+very convenient for use together with these methods. Together with a
+<a href="api/jess/Filter.html"><tt>jess.Filter</tt></a> implementation, this class lets
+you create an Iterator that silently discards objects that don't match
+some criteria. So, for example, you could use the built-in filter
+<a href="api/jess/Filter.ByModule.html"><tt>jess.Filter$ByModule</tt></a> to iterate over only the facts in
+a given module: 
+</p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+import java.util.*;
+
+public class ExFilter {
+    public static void main(String[] argv) throws JessException {
+        // Run a Jess program...
+        Rete engine = new Rete();
+        engine.batch("somecode.clp");
+        
+        // ... now retrieve only the facts in a module named RESULTS
+        Iterator it = new FilteringIterator(engine.listFacts(),
+                                            new Filter.ByModule("RESULTS"));
+    }
+}
+
+</pre>
+</div>
+
+
+
+
+<a name="routers">
+<h4>10.1.5. I/O Routers</h4>
+</a>
+
+
+<p>Several Jess functions like <a href="functions.html#printout"><tt>printout</tt></a>, <a href="functions.html#format"><tt>format</tt></a>, <a href="functions.html#read"><tt>read</tt></a>, and <a href="functions.html#readline"><tt>readline</tt></a>
+take an <i>I/O router name</i> as an argument, while other functions
+like <a href="functions.html#open"><tt>open</tt></a> return an I/O router name. An I/O router
+name is just a symbolic name for a Java <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Writer.html"><tt>java.io.Writer</tt></a> and/or a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Reader.html"><tt>java.io.Reader</tt></a>. Each <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> instance keeps
+separate tables of input routers and output routers, so that both a
+Reader and a Writer can be registered under the same name in each rule
+engine. When you call, for example, <a href="functions.html#printout"><tt>printout</tt></a>, Jess uses
+the first argument to look up the appropriate Writer in that table,
+and that's where the output will go.</p>
+
+
+<p>The most commonly used router is <tt>t</tt>, which is used as Jess'
+standard input and output. Jess also has a built-in router named
+<tt>WSTDOUT</tt> for printing user messages internally -- for example,
+the Jess&gt; prompt and the output of commands like <a href="functions.html#facts"><tt>facts</tt></a>
+and <a href="functions.html#ppdefrule"><tt>ppdefrule</tt></a>. The <a href="functions.html#read"><tt>read</tt></a> and <a href="functions.html#readline"><tt>readline</tt></a> commands take input from the <tt>t</tt> router by
+default. Output from the <a href="functions.html#watch"><tt>watch</tt></a> function goes to the
+<tt>WSTDOUT</tt> router by default, but you can make it go to any
+other router using the <a href="api/jess/Rete.html#setWatchRouter(java.lang.String)"><tt><tt>jess.Rete.</tt>setWatchRouter(java.lang.String)</tt></a> method.
+</p>
+
+<p>
+As startup, Jess's standard routers are connected to Java's standard
+streams, so that output goes to the command-line window. This is
+perfect for command-line programs, but of course not acceptable for
+GUI-based applications. To remedy this, Jess lets you connect the
+<tt>t</tt> router (or any other router) to any Java <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Reader.html"><tt>java.io.Reader</tt></a> and <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Writer.html"><tt>java.io.Writer</tt></a> objects you
+choose. In fact, you can not only redirect the built-in routers, but
+you can add routers of your own, in much the same way that the <a href="functions.html#open"><tt>open</tt></a> command creates a new router that reads from a file.
+</p>
+
+<p>
+These functions in the Rete class let you manipulate the router list:
+</p>
+
+<ul>
+  
+<li> 
+<tt>public void addInputRouter(String s, Reader is, boolean consoleLike)</tt>
+</li>
+  
+<li> 
+<tt>public void addOutputRouter(String s, Writer os)</tt>
+</li>
+  
+<li> 
+<tt>public Reader getInputMode(String s)</tt>
+</li>
+  
+<li> 
+<tt>public Reader getInputRouter(String s)</tt>
+</li>
+  
+<li> 
+<tt>public Writer getOutputRouter(String s)</tt>
+</li>
+  
+<li> 
+<tt>public void removeInputRouter(String s)</tt>
+</li>
+  
+<li> 
+<tt>public void removeOutputRouter(String s)</tt>
+</li>
+  
+<li> 
+<tt>public void setWatchRouter(String s)</tt>
+</li>
+
+
+</ul>
+
+
+<p>The words "input" and "output" are from the perspective of the Jess
+library itself; i.e., Jess reads from input routers and writes to
+output routers.</p>
+
+
+<p>
+Note that you can use the same name for an input router and an output
+router (the <tt>t</tt> router is like that.) Note also that although
+these functions accept and return generic <tt>Reader</tt> and
+<tt>Writer</tt> objects, Jess internally uses <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/PrintWriter.html"><tt>java.io.PrintWriter</tt></a> and <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/BufferedReader.html"><tt>java.io.BufferedReader</tt></a>. If you pass in other types, Jess will
+construct one of these preferred classes to "wrap" the object you pass
+in.</p>
+
+
+<p>
+When Jess starts up, there are three output routers and one input router
+defined: the <tt>t</tt> router, which reads and writes from the
+standard input and output; the <tt>WSTDOUT</tt> router, which Jess
+uses for all prompts, diagnostic outputs, and other displays; and the
+<tt>WSTDERR</tt> router, which Jess uses to print stack traces and
+error messages. By default, <tt>t</tt> is connected to
+<tt>System.in</tt> and <tt>System.out</tt>, and both <tt>WSTDOUT</tt>
+and <tt>WSTDERR</tt> are connected to <tt>System.out</tt> (neither is
+connected to <tt>System.err.</tt>) You can reroute these inputs and
+outputs simply by changing the Readers and Writers they are attached
+to using the above functions. You can use any kind of streams you can
+dream up: network streams, file streams, etc.</p>
+
+
+<p>
+The <tt>boolean</tt> argument <tt>consoleLike</tt> to the
+<tt>addInputRouter</tt> method specifies whether the stream should be
+treated like the standard input or like a file. The difference is that
+on console-like streams, a <a href="functions.html#read"><tt>read</tt></a> call consumes an entire line
+of input, but only the first token is returned; while on file-like
+streams, only the characters that make up each token are consumed on
+any one call. That means, for instance, that a <a href="functions.html#read"><tt>read</tt></a> followed
+by a <a href="functions.html#readline"><tt>readline</tt></a> will consume two lines of text from a
+console-like stream, but only one from a file-like stream, given that
+the first line is of non-zero length.</p>
+
+
+<p>The <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> class has two more handy
+router-related methods: <tt>getOutStream()</tt> and
+<tt>getErrStream()</tt>, both of which return a
+<tt>java.io.PrintWriter</tt> object. <tt>getOutStream()</tt> returns a
+stream that goes to the same place as the current setting of
+<tt>WSTDOUT</tt>; <tt>getErrStream()</tt> does the same for
+<tt>WSTDERR</tt>.</p>
+
+
+
+
+<a name="reader">
+<h4>10.1.6. TextAreaWriter, JTextAreaWriter and TextReader</h4>
+</a>
+
+Jess ships with three utility classes that can be very useful when building
+GUIs for Jess: the <a href="api/jess/awt/TextAreaWriter.html"><tt>jess.awt.TextAreaWriter</tt></a>, <a href="api/jess/swing/JTextAreaWriter.html"><tt>jess.swing.JTextAreaWriter</tt></a> and
+<a href="api/jess/awt/TextReader.html"><tt>jess.awt.TextReader</tt></a> classes. All three can serve as adapters
+between Jess and graphical input/output widgets. The <tt>TextAreaWriter</tt>
+class is, as the name implies, a Java <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Writer.html"><tt>java.io.Writer</tt></a>
+ that sends any data
+written to it to a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/TextArea.html"><tt>java.awt.TextArea</tt></a>. This lets you place
+Jess's output in a scrolling window on your GUI. The
+<a href="api/jess/Console.html"><tt>jess.Console</tt></a> and <a href="api/jess/ConsoleApplet.html"><tt>jess.ConsoleApplet</tt></a> Jess GUIs use
+these classes. To use <tt>TextAreaWriter</tt> simply call
+<tt>addOutputRouter()</tt>, passing in an instance of this class:
+
+
+<div class="javacode">
+<pre>
+
+import java.awt.TextArea;
+import jess.awt.*;
+import jess.*;
+public class ExTAW {
+  public static void main(String[] unused) throws JessException {
+     TextArea ta = new TextArea(20, 80);
+     TextAreaWriter taw = new TextAreaWriter(ta);
+
+     Rete r = new Rete();
+     r.addOutputRouter("t", taw);
+     r.addOutputRouter("WSTDOUT", taw);
+     r.addOutputRouter("WSTDERR", taw);
+     // Do something interesting, then...
+     System.exit(0);
+  }
+}
+<b>C:\&gt;</b> java ExTAW
+</pre>
+</div>
+
+Now the output of the <tt>printout</tt> command, for example, will go
+into a scrolling window (of course, you need to display the
+<tt>TextArea</tt> on the screen somehow!) Study
+<tt>jess/ConsolePanel.java</tt>  and <tt>jess/Console.java</tt> to see
+a complete example of this. <tt>JTextAreaWriter</tt> works the same
+way, but using a Swing <a href="http://java.sun.com/j2se/1.4.2/docs/api/javax/swing/JTextArea.html"><tt>javax.swing.JTextArea</tt></a> instead.
+
+<p></p>
+<tt>jess.awt.TextReader</tt> is similar, but it is a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Reader.html"><tt>java.io.Reader</tt></a>
+instead. It is actually quite similar to <tt>java.io.StringReader</tt>,
+except that you can continually add new text to the end of the stream (using
+the <tt>appendText()</tt> method). It is intended that you create a
+<tt>jess.awt.TextReader</tt>, install it as an input router, and then
+(in an AWT event handler, somewhere) append new input to the stream whenever
+it becomes available. See the same <tt>jess/Console*</tt> files for a complete
+usage example for this class as well.
+
+
+
+
+
+
+<a name="jess.JessException">
+<h3>10.2. The jess.JessException class</h3>
+</a>
+
+      The <tt>jess.JessException</tt> exception type is the only kind
+      of exception thrown by any functions in the Jess
+      library. <tt>jess.JessException</tt> is rather complex, as
+      exception classes go. An instance of this class can contain a
+      wealth of information about an error that occurred in
+      Jess. Besides the typical error message, a
+      <tt>jess.JessException</tt> may be able to tell you the name of
+      the routine in which the error occurred, the name of the Jess
+      constructs that were on the exceution stack, the relevant text
+      and line number of the executing Jess language program, and the
+      Java exception that triggered the error (if any.) See the the
+      <a href="api/jess/JessException.html">API
+      documentation</a> for details.
+      <p></p>
+      One of the most important pieces of advice for working with the Jess
+      library is that in your catch clauses for JessException, <i>display the
+        exception object</i>. Print it to System.out, or convert to a String
+      and display it in a dialog box. The exceptions are there to help you
+      by telling when something goes wrong; don't ignore them.
+
+      <p></p> Another important tip: the JessException class has a method
+      <tt>getCause</tt> which returns non-null when a particular
+      JessException is a wrapper for another kind of exception. For
+      example, if you use the Jess function <tt>call</tt> to call a
+      function that throws an exception, then <tt>call</tt> will throw
+      a JessException, and calling JessException.getCause() will
+      return the real exception that was thrown. Your JessException
+      handlers should always check getCause(); if your handler
+      simply displays a thrown exception, then it should display the
+      return value of getCause(), too. <tt>getCause()</tt> replaces
+      the now deprecated <tt>getNextException()</tt>.
+
+
+
+
+<a name="jess.Value">
+<h3>10.3. The jess.Value class</h3>
+</a>
+
+The class <tt>jess.Value</tt> is probably the one you'll use the most
+in working with Jess. A <tt>Value</tt> is a self-describing data
+object. Every datum in Jess is contained in one. Once it is
+constructed, a <tt>Value</tt>'s type and contents cannot be
+changed; it is <i>immutable.</i> <tt>Value</tt> supports a
+<tt>type()</tt> function, which returns one of these type constants
+(defined in the class <tt>jess.RU</tt> (RU = "Rete Utilities")):
+
+<div class="example">
+<pre>
+final public static int NONE             =      0; // an empty value (not NIL)
+final public static int SYMBOL           =      1; // a symbol
+final public static int STRING           =      2; // a string
+final public static int INTEGER          =      4; // an integer
+final public static int VARIABLE         =      8; // a variable
+final public static int FACT             =     16; // a jess.Fact object
+final public static int FLOAT            =     32; // a double float
+final public static int FUNCALL          =     64; // a function call
+final public static int LIST             =    512; // a list
+final public static int DESCRIPTOR       =   1024; // (internal use)
+final public static int JAVA_OBJECT      =   2048; // a Java object
+final public static int INTARRAY         =   4096; // (internal use)
+final public static int MULTIVARIABLE    =   8192; // a multifield
+final public static int SLOT             =  16384; // (internal use)
+final public static int MULTISLOT        =  32768; // (internal use)
+final public static int LONG             =  65536; // a Java long
+final public static int LAMBDA           = 131072; // a lambda expression
+</pre>
+</div>
+
+Please always use the names, not the literal values, as the latter
+are subject to change without notice.
+<p></p>
+
+    
+<p>
+<tt>Value</tt> objects can be constructed by specifying the data and
+(usually) the type. Each overloaded constructor assures that the given
+data and the given type are compatible. Note that for each
+constructor, more than one value of the <tt>type</tt> parameter may be
+acceptable. The available constructors are:
+
+<div class="example">
+<pre>
+public Value(Object o)
+public Value(String s, int type) throws JessException
+public Value(Value v)
+public Value(ValueVector f, int type) throws JessException
+public Value(double d, int type) throws JessException
+public Value(int value, int type) throws JessException
+public Value(boolean b)
+</pre>
+</div>
+       
+</p>
+
+    
+<a name="ValueFactory">
+<h4>10.3.1. ValueFactory</h4>
+</a>
+        
+<p>Alternatively, you can use the <a href="api/jess/ValueFactory.html"><tt>jess.ValueFactory</tt></a> class to obtain Value objects.
+        This is a good idea because ValueFactory caches many of the values you obtain through it, leading to
+        a sometimes drastic reduction in memory use due to sharing. You can get a ValueFactory object
+        using the <a href="api/jess/Rete.html#getValueFactory()"><tt><tt>jess.Rete.</tt>getValueFactory()</tt></a> method:  </p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExValueFactory {
+  public static void main(String[] unused) throws JessException {
+    Rete engine = new Rete();
+    ValueFactory f = engine.getValueFactory();
+    Value v1 = f.get("foo", RU.SYMBOL);
+    Value v2 = f.get("foo", RU.SYMBOL);
+
+    // Prints "true"
+    System.out.println(v1 == v2);
+  }
+}
+<b>C:\&gt;</b> java ExValueFactory
+<pre>
+<i>true</i>
+</pre>
+
+</pre>
+</div>
+
+
+
+    
+
+
+
+<tt>Value</tt> supports a number of functions to get the actual data out
+of a <tt>Value</tt>object. These are
+
+<div class="example">
+<pre>
+public Object javaObjectValue(Context c) throws JessException
+public String stringValue(Context c) throws JessException
+public String symbolValue(Context c) throws JessException
+public Fact factValue(Context c) throws JessException
+public Funcall funcallValue(Context c) throws JessException
+public ValueVector listValue(Context c) throws JessException
+public double floatValue(Context c) throws JessException
+public double numericValue(Context c) throws JessException
+public int intValue(Context c) throws JessException
+public long longValue(Context c) throws JessException
+</pre>
+</div>
+
+The class <a href="api/jess/Context.html"><tt>jess.Context</tt></a> is described in the next section. If
+you try to convert random values by creating a Value and retrieving
+it as some other type, you'll generally get a JessException. However, some
+types can be freely interconverted: for example, integers and floats.
+<p></p>
+
+
+<a name="value_subclasses">
+<h4>10.3.2. The subclasses of jess.Value</h4>
+</a>
+
+<a href="api/jess/Value.html"><tt>jess.Value</tt></a> has a number of subclasses:
+<a href="api/jess/Variable.html"><tt>jess.Variable</tt></a>, <a href="api/jess/FuncallValue.html"><tt>jess.FuncallValue</tt></a>,
+<a href="api/jess/FactIDValue.html"><tt>jess.FactIDValue</tt></a>, and
+<a href="api/jess/LongValue.html"><tt>jess.LongValue</tt></a> are the four of
+most interest to the reader. When you wish to create a value to represent a
+variable, a function call, a fact, or a Java long, you must use the
+appropriate subclass.
+
+<blockquote> Note to the design-minded: we should have used a Factory
+pattern here and hidden the subclasses from the programmer. This will
+be introduced in a future version of Jess.  </blockquote>
+
+
+<a name="jess_variable">
+<h5>10.3.2.1. The class jess.Variable</h5>
+</a>
+Use this subclass of Value when you want to create a Value that
+represents a Variable. The one constructor looks like this:
+
+<div class="example">
+<pre>
+public Variable(String s, int type) throws JessException
+</pre>
+</div>
+
+The type must be <tt>RU.VARIABLE</tt> or <tt>RU.MULTIVARIABLE</tt> or
+an exception will be thrown. The String argument is the name of the
+variable, without any leading '?' or '$' characters.
+
+
+
+<a name="jess_funcallvalue">
+<h5>10.3.2.2. The class jess.FuncallValue</h5>
+</a>
+Use this subclass of Value when you want to create a Value that
+represents a function call (for example, when you are creating a
+<tt>jess.Funcall</tt> containing nested function calls.) The one
+constructor looks like this:
+
+<div class="example">
+<pre>
+public FuncallValue(Funcall f) throws JessException
+</pre>
+</div>
+
+
+
+
+<a name="jess_longvalue">
+<h5>10.3.2.3. The class jess.LongValue</h5>
+</a>
+Use this subclass of Value when you want to create a Value that
+represents a Java long. These are mostly used to pass to Java functions
+called via reflection. The one constructor looks like
+
+<div class="example">
+<pre>
+public LongValue(long l) throws JessException
+</pre>
+</div>
+
+
+
+
+<a name="jess_factidvalue">
+<h5>10.3.2.4. The class jess.FactIDValue</h5>
+</a>
+Use this subclass of Value when you want to create a Value that
+represents a fact-id. The one constructor looks like this:
+
+<div class="example">
+<pre>
+public FactIDValue(Fact f) throws JessException
+</pre>
+</div>
+
+In previous versions of Jess, fact-id's were more like integers; now
+they are really references to facts. As such, a fact-id must represent
+a valid <a href="#jess.Fact">jess.Fact</a> object.  Call
+<tt>javaObjectValue(Context)</tt> to get the
+<a href="#jess.Fact">jess.Fact</a> object, and call
+<tt>Fact.getFactId()</tt> to get the fact-id as an integer. This
+latter manipulation will now rarely, if ever, be necessary.
+
+
+
+
+
+
+<a name="resolution">
+<h4>10.3.3. Value resolution</h4>
+</a>
+Some <tt>jess.Value</tt> objects may need to be <i>resolved</i> before
+use. To resolve a <tt>jess.Value</tt> means to interpret it in a
+particular context. <tt>jess.Value</tt> objects can represent both
+static values (symbols, numbers, strings) and dynamic ones (variables,
+function calls). It is the dynamic ones that obviously have to be
+interpreted in context.
+<p></p>
+
+All the <tt>jess.Value</tt> member functions, like
+<tt>intValue()</tt>, that accept a <tt>jess.Context</tt> as an
+argument are <i>self-resolving;</i>  that is, if a <tt>jess.Value</tt>
+object represents a function call, the call will be executed in the
+given <tt>jess.Context</tt>, and the <tt>intValue()</tt> method will
+be called on the result. Therefore, you often don't need to worry
+about resolution as it is done automatically. There are several cases
+where you will, however.
+
+<ul>
+
+<li>
+<i>When interpreting arguments to a function written in Java.</i>
+The parameters passed to a Java Userfunction may themselves represent
+function calls. It may be important, therefore, that these values be
+resolved only once, as these functions may have side-effects (I'm
+tempted to use the computer-science word: these functions may not be
+<i>idempotent.</i> Idempotent functions have no side-effects and thus
+may be called multiple times without harm.) You can accomplish this by
+calling one of the <tt>(x)Value()</tt> methods and storing the return
+value, using this return value instead of the parameter
+itself. Alternatively, you may call <tt>resolveValue()</tt>and store
+the return value in a new <tt>jess.Value</tt> variable, using this
+value as the new parameter. Note that the <tt>type()</tt> method will
+return <tt>RU.VARIABLE</tt> for a <tt>jess.Value</tt> object that
+refers to a variable, regardless of the type of the value the variable
+is bound to. The resolved value will return the proper type.
+<p></p>
+Note that arguments to <tt>deffunctions</tt> are resolved
+automatically, before your Jess language code runs.</li>
+
+
+<li>
+<i>When returning a <tt>jess.Value</tt> object from a function
+written in Java.</i> If you return one of a function's parameters from
+a Java Userfunction, be sure to return the return value of
+<tt>resolveValue()</tt>, not the parameter itself.</li>
+
+
+<li>
+<i>When storing a <tt>jess.Value</tt> object.</i> It is important
+that any values passed out of a particular execution context be
+resolved; for example, before storing a <tt>Value</tt> object in a <tt>Map</tt>,
+<tt>resolveValue()</tt> should always be called on both the key and
+object. </li>
+
+</ul>
+
+
+
+
+<a name="jess.Context">
+<h3>10.4. The jess.Context class</h3>
+</a>
+
+<tt>jess.Context</tt> represents an execution context for the
+evaluation of function calls and the resolution of variables. There
+are very few public member functions in this class, and only a few of
+general importance.
+<p></p>
+You can use <tt>getVariable()</tt> and
+<tt>setVariable()</tt>to get and change the value of a variable from
+Java code, respectively.
+<p></p>
+The function <tt>getEngine()</tt> gives any <tt>Userfunction</tt>
+access to the Rete object in which it is executing.
+<p></p>
+When a <tt>Userfunction</tt> is called, a <tt>jess.Context</tt>
+argument is passed in as the final argument. You should pass this
+<tt>jess.Context</tt> to any <tt>jess.Value.(x)Value()</tt> calls that
+you make.
+
+
+
+
+<a name="jess.ValueVector">
+<h3>10.5. The jess.ValueVector class</h3>
+</a>
+
+
+<p>The <a href="api/jess/ValueVector.html"><tt>jess.ValueVector</tt></a> class is Jess's internal representation
+of a <i>list</i>, and therefore has a central role in programming with
+Jess in Java. The <tt>jess.ValueVector</tt> class itself is used to
+represent generic lists, while specialized subclasses
+are used as function calls (<tt>jess.Funcall</tt>), facts
+(<tt>jess.Fact</tt>), and templates (<tt>Deftemplate</tt>).
+</p>
+
+<p>Working with <tt>ValueVector</tt> itself is simple. Its API is
+reminiscent of <tt>java.util.Vector</tt>. Like that class, it is a
+self-extending array: when new elements are added the
+<tt>ValueVector</tt> grows in size to accomodate them. Here is a bit
+of example Java code in which we create the Jess list
+<tt>(a b c)</tt>. Note that the <tt>add()</tt> method
+    has several overloaded forms that convert primitives into <a href="api/jess/Value.html"><tt>jess.Value</tt></a> objects.
+    The overload used here automatically converts its argument into a Jess symbol.</p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExABC {
+  public static void main(String[] unused) throws JessException {
+    ValueVector vv = new ValueVector();
+    vv.add("a");
+    vv.add("b");
+    vv.add("c");
+
+    // Prints "(a b c)"
+    System.out.println(vv.toStringWithParens());
+  }
+}
+<b>C:\&gt;</b> java ExABC
+<pre>
+<i>(a b c)</i>
+</pre>
+
+</pre>
+</div>
+
+
+<p>The <tt>add()</tt> function returns the <tt>ValueVector</tt> object
+itself, so that <tt>add()</tt> calls can be chained together for convenience:</p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExChain {
+  public static void main(String[] unused) throws JessException {
+    ValueVector vv = new ValueVector();
+    vv.add("a").add("b").add("c");
+    // Prints "(a b c)"
+    System.out.println(vv.toStringWithParens());
+  }
+}
+<b>C:\&gt;</b> java ExChain
+<pre>
+<i>(a b c)</i>
+</pre>
+
+</pre>
+</div>
+
+To pass a list from Java to Jess, you should enclose it in a
+<tt>jess.Value</tt> object of type <tt>RU.LIST</tt>.
+
+
+
+<a name="jess.Funcall">
+<h3>10.6. The jess.Funcall class</h3>
+</a>
+
+<tt>jess.Funcall</tt> is a specialized subclass of
+<tt>ValueVector</tt> that represents a Jess function call. It contains
+the name of the function, an internal pointer to the actual
+<tt>jess.Userfunction</tt> object containing the function code, and
+the arguments to pass to the function.
+<p></p>
+You can call Jess functions using <tt>jess.Funcall</tt> if you prefer,
+rather than using <tt>jess.Rete.executeFunction().</tt> This method
+has less overhead since there is no parsing to be done. This example
+calls Jess's "set-reset-globals" function:
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExResetGlobals {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    Context c = r.getGlobalContext();
+    Funcall f = new Funcall("set-reset-globals", r);
+    f.arg(Funcall.FALSE);
+    Value result = f.execute(c);
+    System.out.println(result);
+  }
+}
+<b>C:\&gt;</b> java ExResetGlobals
+<pre>
+<i>FALSE</i>
+</pre>
+
+</pre>
+</div>
+
+The example shows several styles of using <tt>jess.Funcall</tt>. You
+can chain <tt>add()</tt> calls, but remember that <tt>add()</tt>
+returns <tt>ValueVector,</tt> so you can't call <tt>execute()</tt> on
+the return value of <tt>Funcall.add()</tt> A special method
+<tt>arg()</tt> is provided for this purpose; it does the same thing as
+<tt>add()</tt> but returns the <tt>Funcall</tt> as a <tt>Funcall.</tt>
+
+<p></p>
+The first entry in a <tt>Funcall</tt>'s <tt>ValueVector</tt> is the
+name of the function, even though you don't explicitly set
+it. Changing the first entry will not automatically change the
+function the <tt>Funcall</tt> will call!
+<p></p>
+The <tt>Funcall</tt> class also contains some public static constant
+<tt>Value</tt> member objects that represent the special symbols
+<tt>nil,</tt> <tt>TRUE</tt>, <tt>FALSE,</tt> <tt>EOF,</tt> etc. You
+are encouraged to use these.
+
+
+
+<a name="jess.Fact">
+<h3>10.7. The jess.Fact class</h3>
+</a>
+
+Another interesting subclass of <tt>ValueVector</tt> is
+<tt>jess.Fact,</tt> which, predictably, is how Jess represents
+facts. A <tt>Fact</tt> is stored as a list in which all the entries
+correspond to slots. The head or name of the fact is stored in a
+separate variable (available via the <tt>getName()</tt> method.)
+
+<p></p>
+
+Once you assert a jess.Fact object, you no longer "own" it - it
+becomes part of the Rete object's internal data structures. As such,
+you must not change the values of any of the Fact's slots. If you
+retract the fact, the Fact object is released and you are free to
+alter it as you wish. Alternatively, you can use the
+<a href="api/jess/Rete.html#modify(jess.Fact, java.lang.String, jess.Value)"><tt><tt>jess.Rete.</tt>modify(jess.Fact, java.lang.String, jess.Value)</tt></a>
+method to modify a fact.
+
+<a name="unordered_fact">
+<h4>10.7.1. Constructing an Unordered Fact from Java</h4>
+</a>
+
+In the following example, we create a template and assert an
+unordered fact that uses it.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExPoint {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    r.eval("(deftemplate point \"A 2D point\" (slot x) (slot y))");
+
+    Fact f = new Fact("point", r);
+    f.setSlotValue("x", new Value(37, RU.INTEGER));
+    f.setSlotValue("y", new Value(49, RU.INTEGER));
+    r.assertFact(f);
+
+    r.eval("(facts)");
+  }
+}
+<b>C:\&gt;</b> java ExPoint
+<pre>
+<i>f-0   (MAIN::point (x 37) (y 49))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</pre>
+</div>
+
+
+
+<a name="unordered_fact_multislot">
+<h4>10.7.2. Constructing a Multislot from Java</h4>
+</a>
+
+In this example, the template has a multislot. In Java, a
+multislot is represented by a <tt>Value</tt> of type <tt>RU.LIST</tt>;
+the <tt>Value</tt> object contains a <tt>ValueVector</tt> containing
+the fields of the multislot.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExMulti {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    r.eval("(deftemplate vector \"A named vector\" (slot name) (multislot list))");
+
+    Fact f = new Fact("vector", r);
+    f.setSlotValue("name", new Value("Groceries", RU.SYMBOL));
+    ValueVector vv = new ValueVector();
+    vv.add(new Value("String Beans", RU.STRING));
+    vv.add(new Value("Milk", RU.STRING));
+    vv.add(new Value("Bread", RU.STRING));
+    f.setSlotValue("list", new Value(vv, RU.LIST));
+    r.assertFact(f);
+
+    r.eval("(facts)");
+  }
+}
+<b>C:\&gt;</b> java ExMulti
+<pre>
+<i>f-0   (MAIN::vector (name Groceries) (list "String Beans" "Milk" "Bread"))
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</pre>
+</div>
+
+
+
+<a name="ordered_fact">
+<h4>10.7.3. Constructing an Ordered Fact from Java</h4>
+</a>
+
+An ordered fact is actually represented as an unordered fact with a
+single slot: a multislot named <tt>__data</tt>. You don't need to create a
+template for an ordered fact: one will be created automatically if
+it doesn't already exist.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExOrdered {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+
+    Fact f = new Fact("letters", r);
+    ValueVector vv = new ValueVector();
+    vv.add("a").add("b").add("c");
+    f.setSlotValue("__data", new Value(vv, RU.LIST));
+    r.assertFact(f);
+
+    r.eval("(facts)");
+  }
+}
+<b>C:\&gt;</b> java ExOrdered
+<pre>
+<i>f-0   (MAIN::letters a b c)
+For a total of 1 facts in module MAIN.</i>
+</pre>
+
+</pre>
+</div>
+
+
+
+
+
+
+<a name="jess.Deftemplate">
+<h3>10.8. The jess.Deftemplate class</h3>
+</a>
+
+Yet another interesting subclass of <tt>ValueVector</tt> is
+<tt>jess.Deftemplate,</tt> the purpose of which should be
+obvious. <tt>Deftemplate</tt> has a fairly large interface which
+allows you to set and query the properties of a template's slots.
+<p></p>
+This example is an alternative to the <tt>deftemplate</tt> command in
+the previous example.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExBuildDeftemplate {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    Deftemplate dt = new Deftemplate("point", "A 2D point", r);
+    Value zero = new Value(0, RU.INTEGER);
+    dt.addSlot("x", zero, "NUMBER");
+    dt.addSlot("y", zero, "NUMBER");
+    r.addDeftemplate(dt);
+
+    // Now create and assert Fact
+  }
+}
+
+</pre>
+</div>
+
+
+
+
+
+<a name="jess.Jesp">
+<h3>10.9. Parsing Jess code with jess.Jesp</h3>
+</a>
+
+You can parse Jess language code directly with the class
+<tt>jess.Jesp</tt>. Simply loading the contents of a file (or any
+other data source that can be supplied as a
+<tt>java.io.Reader</tt> is very easy:
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+import java.io.*;
+public class ExReadInFile {
+  public static void main(String[] unused) throws JessException, IOException {
+    Rete engine = new Rete();
+    FileReader file = new FileReader("myfile.clp");
+    try {
+      Jesp parser = new Jesp(file, engine);
+      parser.parse(false);
+    } finally {
+      file.close();
+    }
+  }
+}
+
+</pre>
+</div>
+
+But <tt>jess.Jesp</tt>'s public interface is much richer than that. If
+        you want to, you can parse the file one expression at a time,
+        and have access to the parsed data. The method
+        <tt>parseExpression</tt> returns <tt>java.lang.Object</tt>,
+        and the returned object can either be a <tt>jess.Value</tt> or
+        one of the Jess classes that represent a construct
+        (<tt>jess.Defrule</tt>, <tt>jess.Deftemplate</tt>, etc.) In
+        addition, you can choose to have the parser execute function
+        calls as it parses them, or simply return them to you
+        unexecuted (this is controlled by the second argument to
+        <tt>parseExpression</tt>.
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+import java.io.*;
+public class ExParseExpressions {
+  public static void main(String[] unused) throws JessException, IOException {
+    Rete engine = new Rete();
+    FileReader file = new FileReader("myfile.clp");
+    Context context = engine.getGlobalContext();
+    try {
+      Jesp parser = new Jesp(file, engine);
+      Object result = Funcall.TRUE;
+      while (!result.equals(Funcall.EOF)) {
+        result = parser.parseExpression(context, false);
+        // Here you can use instanceof to determine what sort
+        // of object "result" is, and process it however you want
+      }
+    } finally {
+      file.close();
+    }
+  }
+}
+
+</pre>
+</div>
+
+There are also methods in <tt>jess.Jesp</tt> to control whether
+comments should be returned from <tt>parseExpression</tt>
+or just skipped, methods to fetch various pieces of
+information about the parsing process, and a mechanism for
+controlling whether warnings or just errors should be
+reported.
+
+
+
+
+
+<a name="jess.Token">
+<h3>10.10. The jess.Token class</h3>
+</a>
+
+The <tt>jess.Token</tt> class is used to represent partial matches in
+<a href="rete.html">the Rete network.</a> You'll use it if
+you're writing an Accelerator (not documented here) or perhaps if
+you're working with <a href="queries.html">queries.</a>
+
+<p></p>
+Only a few methods of <tt>jess.Token</tt> are public, and fewer are of
+use to the programmer. <tt>int size()</tt> tells you how
+many <tt>jess.Fact</tt>s are in a given <tt>jess.Token.</tt> The most
+important method is <tt>Fact fact(int)</tt>, which returns the
+<tt>jess.Fact</tt> objects that make up the partial match. Its argument is
+the zero-based index of the <tt>jess.Fact</tt> to retrieve, and must
+be between 0 and the return value of <tt>size().</tt> Each
+<tt>Fact</tt> will correspond to one pattern on a rule or query LHS;
+dummy facts are inserted for <tt>not</tt> and <tt>test</tt> CEs.
+
+
+
+
+<a name="events">
+<h3>10.11. The jess.JessEvent and jess.JessListener classes</h3>
+</a>
+
+<tt>jess.JessEvent</tt> and <tt>jess.JessListener</tt> make up Jess's
+rendition of the standard Java event pattern. By implementing the
+<tt>JessListener</tt> interface, a class can register itself with a
+source of <tt>JessEvent</tt>s, like the <tt>jess.Rete</tt>
+class. <tt>jess.Rete</tt> (potentially) fires events at all critical
+junctures during its execution: when rules fire, when a
+<tt>reset()</tt> or <tt>clear()</tt> call is made, when a fact is
+asserted or retracted, etc. <tt>JessEvent</tt> has a
+<tt>getType()</tt> method to tell you what sort of event you have been
+notified of; the type will be one of the constants in the
+<tt>JessEvent</tt> class.
+<p></p>
+You can control which events a <tt>jess.Rete</tt> object will fire
+using the <tt>setEventMask()</tt> method. The argument is the result
+of logical-OR-ing together some of the constants in the
+<tt>jess.JessEvent</tt> class. By default, the event mask is 0 and no
+events are sent.
+<p></p>
+
+<p>As an example, let's suppose you'd like your program's graphical
+interface to display a running count of the number of facts on the
+fact-list, and the name of the last executed rule.  You've provided a
+static method, <tt>MyGUI.displayCurrentRule(String ruleName),</tt>
+which you would like to have called when a rule fires. You've got a
+pair of methods <tt>MyGUI.incrementFactCount()</tt> and
+<tt>MyGUI.decrementFactCount()</tt> to keep track of facts. And you've got
+one more static method, <tt>MyGUI.clearDisplay()</tt>, to call when Jess is
+cleared or reset. To accomplish this, you simply need to write an
+event handler, install it, and set the event mask properly. Your event
+handler class might look like this.</p>
+
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+
+public class ExMyEventHandler implements JessListener {
+  public void eventHappened(JessEvent je) {
+    int defaultMask = JessEvent.DEFRULE_FIRED | JessEvent.FACT |
+                      JessEvent.RESET | JessEvent.CLEAR;
+    int type = je.getType();
+    switch (type) {
+      case JessEvent.CLEAR:
+      case JessEvent.RESET:
+        // MyGUI.clearDisplay();
+        break;
+
+      case JessEvent.DEFRULE_FIRED:
+        // MyGUI.displayCurrentRule( ((Activation) je.getObject()).getRule().getName());
+        break;
+
+      case JessEvent.FACT | JessEvent.REMOVED:
+        // MyGUI.decrementFactCount();
+        break;
+
+      case JessEvent.FACT:
+        // MyGUI.incrementFactCount();
+        break;
+
+      default:
+        // ignore
+    }
+  }
+}
+
+</pre>
+</div>
+
+Note how the event type constant for fact retracting is composed from
+<tt>FACT | REMOVED.</tt> In general, constants like <tt>DEFRULE,
+DEFTEMPLATE,</tt>  etc,
+refer to the addition of a new construct, while composing these with <tt>REMOVE</tt>
+signifies the removal of the same construct.
+<p></p>
+The <tt>getObject()</tt> method returns ancillary data about the
+event. In general, it is an instance of the type of object the event
+refers to; for <tt>DEFRULE_FIRED</tt> it is a <tt>jess.Activation.</tt>
+
+<p></p>
+To install this listener, you would simply create an instance and call
+<tt>jess.Rete.addEventListener()</tt>, then set the event mask:
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExMask {
+  public static void main(String[] unused) throws JessException {
+    Rete engine = new Rete();
+    engine.addJessListener(new ExMyEventHandler());
+    engine.setEventMask(engine.getEventMask() |
+                        JessEvent.DEFRULE_FIRED | JessEvent.CLEAR |
+                        JessEvent.FACT | JessEvent.RESET );
+  }
+}
+
+</pre>
+</div>
+
+Note that each event handler added will have a negative impact on Jess
+performance so their use should be limited.
+
+<p></p>
+
+There is no way to receive only one of an event / (event |
+<tt>REMOVE</tt>) pair.
+
+<a name="jesseventadapter">
+<h4>10.11.1. Working with events from the Jess language</h4>
+</a>
+
+It's possible to work with the event classes from Jess language code
+as well. To write an event listener, you can use the
+<tt>jess.JessEventAdapter</tt> class. This class works rather like the
+<tt>jess.awt</tt> adapter classes do. Usage is best illustrated with
+an example. Let's say you want to print a message each time a new
+template is defined, and you want to do it from Jess code. Here it
+is:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>;; make code briefer
+(import jess.*)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Here is the event-handling deffunction
+;; It accepts one argument, a JessEvent
+(deffunction display-deftemplate-from-event (?evt)
+  (if (eq (JessEvent.DEFTEMPLATE) (get ?evt type)) then
+      (printout t "New deftemplate: " (call (call ?evt getObject) getName) crlf)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Here we install the above function using a JessEventAdapter
+(call (engine) addJessListener
+(new JessEventAdapter display-deftemplate-from-event (engine)))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Now we add DEFTEMPLATE to the event mask
+(set (engine) eventMask
+(bit-or (get (engine) eventMask) (JessEvent.DEFTEMPLATE)))</pre>
+
+</div>
+
+Now whenever a new template is defined, a message will be
+displayed.
+
+
+
+
+
+<a name="beanprops">
+<h3>10.12. Setting and Reading Java Bean Properties</h3>
+</a>
+As mentioned previously, Java objects can be explicitly pattern-matched
+on the LHS of rules, but only to the extent that they are <i>Java Beans</i>.
+A Java Bean is really just a Java object that has a number of methods that
+obey a simple naming convention for <i>Java Bean properties.</i> A class
+has a Bean property if, for some string <i>X</i> and type <i>T</i> it has
+either or both of:
+<ul>
+
+<li>
+A method named <tt>get<i>X</i></tt> which returns <i>T</i> and accepts
+no arguments; or, if <i>T</i> is boolean, named <tt>is<i>X</i></tt> which
+accepts no arguments;</li>
+
+
+<li>
+A method named <tt>setX</tt> which returns void and accepts a single argument
+of type <i>T</i>.</li>
+
+</ul>
+
+Note that the capitalization is also important: for example, for a method
+named isVisible, the property's name is <i>visible</i>, with a lower-case
+<tt>V</tt>. Only the capitalization of the first letter of the name is
+important. You can conveniently set and get these properties using the
+Jess <tt>set</tt> and <tt>get</tt> methods. Note that many of the trivial
+changes in the Java 1.1 were directed towards making most visible properties
+of objects into Bean properties.
+
+<p></p>
+An example: AWT components have many Bean properties. One is <i>visible</i>,
+the property of being visible on the screen. We can read this property
+in two ways: either by explicitly calling the <tt>isVisible()</tt> method,
+or by querying the Bean property using <tt>get.</tt>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*frame* = (new java.awt.Frame "Frame Demo"))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Directly call 'isVisible', or...
+(printout t (call ?*frame* isVisible) crlf)</pre>
+
+<pre>
+<i>FALSE</i>
+</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; ... equivalently, query the Bean property
+(printout t (get ?*frame* visible) crlf)</pre>
+
+<pre>
+<i>FALSE</i>
+</pre>
+
+</div>
+
+
+
+
+
+
+<a name="prettyprinting">
+<h3>10.13. Formatting Jess Constructs</h3>
+</a>
+The class <tt>jess.PrettyPrinter</tt> can produce a formatted
+    rendering of many Jess objects, including <tt>jess.Defrule</tt>s,
+    <tt>Deffunction</tt>s <tt>jess.Defquery</tt>s, etc -- anything
+    that implements the <tt>jess.Visitable</tt> interface.<p></p>
+    
+<tt>jess.PrettyPrinter</tt> is very simple to use: you just create
+    an instance, passing the object to be rendered as a constructor
+    argument, and then call <tt>toString</tt> to get the formatted
+    result.
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExPretty {
+  public static void main(String[] unused) throws JessException {
+    Rete r = new Rete();
+    r.eval("(defrule myrule (A) =&gt; (printout t \"A\" crlf))");
+    Defrule dr = (Defrule) r.findDefrule("myrule");
+    System.out.println(new PrettyPrinter(dr));
+  }
+}
+<b>C:\&gt;</b> java ExPretty
+<pre>
+<i>
+(defrule MAIN::myrule
+  (A)
+  =&gt;
+  (printout t "A" crlf))
+</i>
+</pre>
+
+</pre>
+</div>
+
+
+
+
+</div>
+</body>
+
+</html>

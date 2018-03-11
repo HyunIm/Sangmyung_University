@@ -1,0 +1,367 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - The JessDE Developer's Environment</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="index.html">Home</a>
+</li>
+  
+<li>
+<a href="table_of_contents.html">Table of Contents</a>
+</li>
+  
+<li>
+<a href="intro.html">Getting Started</a>
+</li>
+  
+<li id="selected">
+<a href="eclipse.html">The JessDE Developer's Environment</a>
+</li>
+
+</ul>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>2.
+        The JessDE Developer's Environment</h2>
+
+    
+<p>Jess 7 includes an Eclipse-based development environment. There
+        is an editor, a debugger, and a Rete network viewer. More
+        components (a rule browser and other tools) will be included
+        in future releases.</p>
+
+
+<a name="installing">
+<h3>2.1. Installing the JessDE</h3>
+</a>
+  
+<p>The Jess Developer's Environment (JessDE) is supplied as a set of
+  plugins for the popular open-source IDE Eclipse; in particular,
+  these are plugins for Eclipse version 3.1 or later.  Note that the
+  JessDE works only with the full "Eclipse SDK" -- the smaller
+  "Platform Runtime Binary" is insufficient.</p>
+
+  
+<p>To install the JessDE, simply exit Eclipse, unzip all the files
+  from Jess71p2/eclipse into the top-level Eclipse
+  installation directory. Confirm that a directory named
+  "plugins/gov.sandia.jess_7.1.0" exists under your Eclipse
+  installation directory, and then restart Eclipse.  </p>
+
+  
+<blockquote>
+  
+<b>IMPORTANT!</b> If you're updating
+  from a previous version of the JessDE, you must launch Eclipse
+  with the "-clean" command-line switch to force it to update the
+  information it caches regarding the JessDE plugins. If you don't do
+  this, many of the JessDE's options may be disabled. You only need
+  to do this once after the installation.
+  </blockquote>
+
+
+<a name="verifying_install">
+<h4>2.1.1. Verifying your installation</h4>
+</a>
+
+
+<p>Under the "Help" menu, choose "about Eclipse SDK". There will
+be a button with the Jess logo on it on the main "About Eclipse SDK"
+window. Press "Plug-in Details". If the JessDE is installed
+properly, you'll find three or four Jess-related plugins in the
+list -- in my copy of Eclipse, they appear near the bottom.</p>
+
+
+<p>Then create a Java project using the "New Project" wizard. Create a
+new file in that project, and name it "hello.clp". It should open in
+the Jess editor, which has a little silver ball with a red "J" as its
+icon. Enter some Jess code, like</p>
+
+
+<div class="example">
+<pre>
+(printout t "Hello, World" crlf)
+</pre>
+</div>
+
+
+<p>
+You should see appropriate syntax highlighting. If so,
+congratulations, everything is working! Read on for more information
+about the other features of the JessDE.
+</p>
+
+
+
+<a name="install_details">
+<h4>2.1.2. A few more details</h4>
+</a>
+  
+<p>
+     The JessDE editor creates problem markers to point out syntax
+     errors and warnings in your Jess documents. You most likely want
+     to have these markers show up in the Eclipse "Problems" view,
+     although they might not show up by default. After installing the
+     JessDE and restarting Eclipse, in the Problems view, click on the
+     "Filters" icon in the title bar, and check the box labelled "Jess
+     Problem" (if it's not already checked.) Your Problems view should
+     now display Jess errors and warnings.
+  </p>
+
+
+<p>To use the Rete Network View, you'll need to have the Eclipse Graph
+      Editing Framework (GEF) installed. You can get the GEF from the
+      Eclipse project page <a href="http://www.eclipse.org/gef/">here</a>, or install it
+      through Eclipse's built-in update manager. Then to display this
+      view, find it under the "Jess Debugger" group in Eclipse's "Show
+      view" dialog. Then when the cursor is inside a rule in a Jess
+      editor window, the Rete Network View will show the compiled
+      network for that rule.
+</p>
+
+
+
+
+
+<a name="using">
+<h3>2.2. Using the JessDE</h3>
+</a>
+
+<a name="using.editor">
+<h4>2.2.1. The Jess language editor</h4>
+</a>
+
+<p>The JessDE editor can edit ".clp" files. By default, any file you create
+with the extension "clp" will be opened using the JessDE
+editor. There's no separate Jess perspective, or Jess project type; we
+expect that most people will use the JessDE tools to write the Jess
+components of a hybrid Jess/Java application, and so the tools expect
+to be used on files in a Java project. The JessDE uses your Java
+          project's class path to resolve Java class names used in
+          Jess language code -- i.e., in a call to the
+            <a href="functions.html#defclass"><tt>defclass</tt></a> function.
+</p>
+
+
+<p>The editor has all the features you'd expect from a modern programmer's editor.
+
+<dl>
+    
+<dt>
+<b>Syntax coloring you can customize.</b>
+</dt>
+
+    
+<dd>You can change the default colors using the "Jess Editor" tab
+    of the Eclipse global preferences dialog. </dd>
+
+    
+<dt>
+<b>Content assistant supplies deftemplate, slot and function
+    names.</b>
+</dt>
+
+    
+<dd>You can invoke Eclipse's "Content Assist" feature in many
+    different places within the JessDE editor; JessDE will make it
+    much easier to enter Jess code. Press Alt-'/' while typing to
+    produce a list of choices. </dd>
+
+    
+<dt>
+<b>"Quick fix" assistant can repair code automatically</b>
+</dt>
+
+    
+<dd>This feature is bound to Ctrl-1 by default. Quick fix
+    currently knows how to define undefined deftemplates, and add new
+    slots to existing deftemplates (if they're defined in the same
+    file.) More to come!</dd>
+
+    
+<dt>
+<b>Real-time error checking with markers and error
+    highlighting</b>
+</dt>
+
+    
+<dd>Errors and warnings are highlighted as you type</dd>
+
+    
+<dt>
+<b>Automatic code formatting</b>
+</dt>
+
+    
+<dd>Code is indented as you type. You can also choose "Format"
+    from the "Source" menu to format an entire buffer.</dd>
+
+    
+<dt>
+<b>Fast navigation using outline view</b>
+</dt>
+
+    
+<dd>The Eclipse outline view lists all the constructs defined in a
+    buffer; you can click on any one of them to quickly navigate to
+    it. </dd>
+
+    
+<dt>
+<b>Parenthesis matching and auto-insertion</b>
+</dt>
+
+    
+<dd>When you type a '(' or '"' character, JessDE insert the
+    matching character as well. When your cursor is next to a
+    parenthesis, JessDE shows you the matching parenthesis. </dd>
+
+    
+<dt>
+<b>Online help for Jess functions and constructs via "hovers"</b>
+</dt>
+
+    
+<dd>You have quick access to the Jess manual description of every
+    function and construct type.</dd>
+
+    
+<dt>
+<b>Help hovers for deftemplates and deffunctions</b>
+</dt>
+
+    
+<dd>If you hold your mouse over the name of a deftemplate or
+    deffunction, anywhere in the code, JessDE will show a "tooltip"
+    containing information about that template or function.</dd>
+
+    
+<dt>
+<b>Run and Debug commands for Jess programs</b>
+</dt>
+
+    
+<dd>You can run or debug a Jess program using the normal Eclipse
+    "Run..."  menu or by right clicking on Navigator items or in the
+    edit window.</dd>
+
+
+</dl>
+
+</p>
+
+
+
+
+<a name="dependencies">
+<h4>2.2.2. Dependencies among files</h4>
+</a>
+
+<p>
+Sometimes one <tt>*.clp</tt> file depends on code in some other
+<tt>*.clp</tt> file having been read first; for example,
+<tt>rules.clp</tt> might need the definitions in
+<tt>templates.clp</tt>. Without these definitions, <tt>rules.clp</tt>
+will appear to have syntax errors. To deal with this, you can use the
+<a href="functions.html#require*"><tt>require*</tt></a> function. "require*" lets you
+explicitly declare these dependencies.
+</p>
+
+<p>
+If a file <tt>rules.clp</tt> depends on Jess commands being executed
+from Java, you can deal with this by creating a special file just for
+this purpose (you might call it <tt>ruledepends.clp</tt>). That special
+file can contain whatever declarations are needed to make
+<tt>rule.clp</tt> parse properly in the editor. If you add
+"<tt>(require* ruledepends)</tt>" to <tt>rules.clp</tt>, then this extra file
+will be parsed only if it's present, as it will be during
+          development. When you deploy the code, you can simply not
+          deploy <tt>ruledepends.clp</tt>, and allow
+        <tt>rules.clp</tt> to get its declarations from Java code.
+</p>
+
+<p>
+The "require" mechanism replaces the "Source dependencies" property
+sheet from earlier versions of JessDE, which is no longer supported.
+</p>
+
+
+
+<a name="using.reteview">
+<h4>2.2.3. The Rete Network view</h4>
+</a>
+
+<p>You can instantly see a graphical representation of the <a href="rete.html">Rete</a> network derived from any rule
+        using the JessDE's "Rete Network View". When this view is open
+        (you can open it using the "Windows | View | Other..." dialog
+        in Eclipse) it will display the Rete network for the rule that
+        the editor caret is in. You can use this to see, in real time,
+        how modifying a rule changes the Rete network. The graph
+        layout is far superior to that you get from the Jess "view"
+        command -- there are no overlapping or crossing lines, and the
+        height of each "column" can vary.</p>
+
+
+<a name="using.debugger">
+<h4>2.2.4. The Jess debugger</h4>
+</a>
+        The JessDE debugger lets you debug a Jess program defined in a
+        .clp file. It has all the features you'd expect from a
+        graphical debugger: you can suspend and resume a program, or
+        step through it. When the program is stopped, the contents of
+        the execution stack are displayed, and you can examine the
+        variables defined in each stack frame. Selecting a stack frame
+        also navigates to the source code being executed.
+
+        You can also set (or clear) breakpoints in any .clp file by
+        right-clicking in the ruler on the left-hand edge of the
+        editor window. Breakpoints can be set only on functions
+        (either built-in or user defined), so you can't break on a
+        <a href="constructs.html#defrule"><tt>defrule</tt></a> or <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> construct. You can, however, break
+        on a function call on the left or right-hand side of a rule.
+
+
+
+
+
+</div>
+</body>
+
+</html>

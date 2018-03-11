@@ -1,0 +1,256 @@
+<HEAD><TITLE>Jess, the Rule Engine for the Java Platform - Functions by Category</TITLE>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+</HEAD>
+<BODY>
+<div id='navbar'>
+<a href='http://www.jessrules.com/jess'>
+<img class='logo' src='jess.gif' alt='[Jess]'/></a>
+<div id='navcontainer'>
+<ul id='navlist'>
+<li><a href='index.html'>Introduction</a></li>
+<li><a href='basics.html'>The Jess Language</a></li>
+<li><a href='architecture.html'>Jess Application Programming</a></li>
+<li><a href='functions.html'>Reference</a></li>
+<ul id='navsublist'>
+  <li id='selected'><a href='functions.html'>The Jess Function List</a></li>
+  <li ><a href='constructs.html'>Jess Constructs</a></li>
+  <li ><a href='api.html'>Jess's Java APIs</a></li>
+  <li ><a href='rete.html'>The Rete Algorithm</a></li>
+  <li ><a href='references.html'>For More Information...</a></li>
+  <li ><a href='release_notes.html'>Release Notes</a></li>
+  <li ><a href='changes.html'>Change History</a></li>
+</ul>
+</ul>
+</div>
+</div>
+<div class='toc'><H2>Functions Grouped by Category</H2>
+<H4>Functions related to files and other I/O</H4>
+<a href="functions.html#close">close</a>,&nbsp;&nbsp;
+<a href="functions.html#format">format</a>,&nbsp;&nbsp;
+<a href="functions.html#get-multithreaded-io">get-multithreaded-io</a>,&nbsp;&nbsp;
+<a href="functions.html#open">open</a>,&nbsp;&nbsp;
+<a href="functions.html#printout">printout</a>,&nbsp;&nbsp;
+<a href="functions.html#read">read</a>,&nbsp;&nbsp;
+<a href="functions.html#readline">readline</a>,&nbsp;&nbsp;
+<a href="functions.html#set-multithreaded-io">set-multithreaded-io</a>,&nbsp;&nbsp;
+<a href="functions.html#socket">socket</a>
+<H4>Miscellaneous functions</H4>
+<a href="functions.html#bag">bag</a>,&nbsp;&nbsp;
+<a href="functions.html#bind">bind</a>,&nbsp;&nbsp;
+<a href="functions.html#clear-storage">clear-storage</a>,&nbsp;&nbsp;
+<a href="functions.html#fetch">fetch</a>,&nbsp;&nbsp;
+<a href="functions.html#gensym*">gensym*</a>,&nbsp;&nbsp;
+<a href="functions.html#help">help</a>,&nbsp;&nbsp;
+<a href="functions.html#jess-version-number">jess-version-number</a>,&nbsp;&nbsp;
+<a href="functions.html#jess-version-string">jess-version-string</a>,&nbsp;&nbsp;
+<a href="functions.html#set-factory">set-factory</a>,&nbsp;&nbsp;
+<a href="functions.html#setgen">setgen</a>,&nbsp;&nbsp;
+<a href="functions.html#store">store</a>,&nbsp;&nbsp;
+<a href="functions.html#system">system</a>,&nbsp;&nbsp;
+<a href="functions.html#time">time</a>
+<H4>Functions for interacting with Java code</H4>
+<a href="functions.html#add">add</a>,&nbsp;&nbsp;
+<a href="functions.html#call">call</a>,&nbsp;&nbsp;
+<a href="functions.html#context">context</a>,&nbsp;&nbsp;
+<a href="functions.html#defclass">defclass</a>,&nbsp;&nbsp;
+<a href="functions.html#definstance">definstance</a>,&nbsp;&nbsp;
+<a href="functions.html#get">get</a>,&nbsp;&nbsp;
+<a href="functions.html#get-member">get-member</a>,&nbsp;&nbsp;
+<a href="functions.html#implement">implement</a>,&nbsp;&nbsp;
+<a href="functions.html#import">import</a>,&nbsp;&nbsp;
+<a href="functions.html#instanceof">instanceof</a>,&nbsp;&nbsp;
+<a href="functions.html#load-function">load-function</a>,&nbsp;&nbsp;
+<a href="functions.html#load-package">load-package</a>,&nbsp;&nbsp;
+<a href="functions.html#new">new</a>,&nbsp;&nbsp;
+<a href="functions.html#set">set</a>,&nbsp;&nbsp;
+<a href="functions.html#set-member">set-member</a>,&nbsp;&nbsp;
+<a href="functions.html#set-value-class">set-value-class</a>,&nbsp;&nbsp;
+<a href="functions.html#synchronized">synchronized</a>,&nbsp;&nbsp;
+<a href="functions.html#throw">throw</a>,&nbsp;&nbsp;
+<a href="functions.html#try">try</a>,&nbsp;&nbsp;
+<a href="functions.html#undefinstance">undefinstance</a>,&nbsp;&nbsp;
+<a href="functions.html#update">update</a>
+<H4>Logical functions</H4>
+<a href="functions.html#and">and</a>,&nbsp;&nbsp;
+<a href="functions.html#bit-and">bit-and</a>,&nbsp;&nbsp;
+<a href="functions.html#bit-not">bit-not</a>,&nbsp;&nbsp;
+<a href="functions.html#bit-or">bit-or</a>,&nbsp;&nbsp;
+<a href="functions.html#not">not</a>,&nbsp;&nbsp;
+<a href="functions.html#or">or</a>
+<H4>Functions used primarily for debugging</H4>
+<a href="functions.html#jess-type">jess-type</a>,&nbsp;&nbsp;
+<a href="functions.html#list-function$">list-function$</a>,&nbsp;&nbsp;
+<a href="functions.html#matches">matches</a>,&nbsp;&nbsp;
+<a href="functions.html#set-watch-router">set-watch-router</a>,&nbsp;&nbsp;
+<a href="functions.html#show-jess-listeners">show-jess-listeners</a>,&nbsp;&nbsp;
+<a href="functions.html#unwatch">unwatch</a>,&nbsp;&nbsp;
+<a href="functions.html#view">view</a>,&nbsp;&nbsp;
+<a href="functions.html#watch">watch</a>
+<H4>Functions for working with defqueries</H4>
+<a href="functions.html#count-query-results">count-query-results</a>,&nbsp;&nbsp;
+<a href="functions.html#run-query">run-query</a>,&nbsp;&nbsp;
+<a href="functions.html#run-query*">run-query*</a>
+<H4>Control structures</H4>
+<a href="functions.html#apply">apply</a>,&nbsp;&nbsp;
+<a href="functions.html#break">break</a>,&nbsp;&nbsp;
+<a href="functions.html#call-on-engine">call-on-engine</a>,&nbsp;&nbsp;
+<a href="functions.html#continue">continue</a>,&nbsp;&nbsp;
+<a href="functions.html#filter">filter</a>,&nbsp;&nbsp;
+<a href="functions.html#for">for</a>,&nbsp;&nbsp;
+<a href="functions.html#foreach">foreach</a>,&nbsp;&nbsp;
+<a href="functions.html#if">if</a>,&nbsp;&nbsp;
+<a href="functions.html#lambda">lambda</a>,&nbsp;&nbsp;
+<a href="functions.html#map">map</a>,&nbsp;&nbsp;
+<a href="functions.html#progn">progn</a>,&nbsp;&nbsp;
+<a href="functions.html#return">return</a>,&nbsp;&nbsp;
+<a href="functions.html#while">while</a>
+<H4>Functions for pretty-printing constructs</H4>
+<a href="functions.html#list-deftemplates">list-deftemplates</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdeffacts">ppdeffacts</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdeffunction">ppdeffunction</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdefglobal">ppdefglobal</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdefquery">ppdefquery</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdefrule">ppdefrule</a>,&nbsp;&nbsp;
+<a href="functions.html#ppdeftemplate">ppdeftemplate</a>,&nbsp;&nbsp;
+<a href="functions.html#rules">rules</a>,&nbsp;&nbsp;
+<a href="functions.html#show-deffacts">show-deffacts</a>,&nbsp;&nbsp;
+<a href="functions.html#show-deftemplates">show-deftemplates</a>
+<H4>Functions for interacting with the rule engine</H4>
+<a href="functions.html#agenda">agenda</a>,&nbsp;&nbsp;
+<a href="functions.html#batch">batch</a>,&nbsp;&nbsp;
+<a href="functions.html#bload">bload</a>,&nbsp;&nbsp;
+<a href="functions.html#bsave">bsave</a>,&nbsp;&nbsp;
+<a href="functions.html#build">build</a>,&nbsp;&nbsp;
+<a href="functions.html#clear">clear</a>,&nbsp;&nbsp;
+<a href="functions.html#clear-focus-stack">clear-focus-stack</a>,&nbsp;&nbsp;
+<a href="functions.html#defadvice">defadvice</a>,&nbsp;&nbsp;
+<a href="functions.html#do-backward-chaining">do-backward-chaining</a>,&nbsp;&nbsp;
+<a href="functions.html#engine">engine</a>,&nbsp;&nbsp;
+<a href="functions.html#eval">eval</a>,&nbsp;&nbsp;
+<a href="functions.html#exit">exit</a>,&nbsp;&nbsp;
+<a href="functions.html#focus">focus</a>,&nbsp;&nbsp;
+<a href="functions.html#get-current-module">get-current-module</a>,&nbsp;&nbsp;
+<a href="functions.html#get-focus">get-focus</a>,&nbsp;&nbsp;
+<a href="functions.html#get-focus-stack">get-focus-stack</a>,&nbsp;&nbsp;
+<a href="functions.html#get-reset-globals">get-reset-globals</a>,&nbsp;&nbsp;
+<a href="functions.html#get-salience-evaluation">get-salience-evaluation</a>,&nbsp;&nbsp;
+<a href="functions.html#get-strategy">get-strategy</a>,&nbsp;&nbsp;
+<a href="functions.html#halt">halt</a>,&nbsp;&nbsp;
+<a href="functions.html#list-focus-stack">list-focus-stack</a>,&nbsp;&nbsp;
+<a href="functions.html#pop-focus">pop-focus</a>,&nbsp;&nbsp;
+<a href="functions.html#provide">provide</a>,&nbsp;&nbsp;
+<a href="functions.html#require">require</a>,&nbsp;&nbsp;
+<a href="functions.html#require*">require*</a>,&nbsp;&nbsp;
+<a href="functions.html#reset">reset</a>,&nbsp;&nbsp;
+<a href="functions.html#run">run</a>,&nbsp;&nbsp;
+<a href="functions.html#run-until-halt">run-until-halt</a>,&nbsp;&nbsp;
+<a href="functions.html#set-current-module">set-current-module</a>,&nbsp;&nbsp;
+<a href="functions.html#set-node-index-hash">set-node-index-hash</a>,&nbsp;&nbsp;
+<a href="functions.html#set-reset-globals">set-reset-globals</a>,&nbsp;&nbsp;
+<a href="functions.html#set-salience-evaluation">set-salience-evaluation</a>,&nbsp;&nbsp;
+<a href="functions.html#set-strategy">set-strategy</a>,&nbsp;&nbsp;
+<a href="functions.html#undefadvice">undefadvice</a>,&nbsp;&nbsp;
+<a href="functions.html#undeffacts">undeffacts</a>,&nbsp;&nbsp;
+<a href="functions.html#undefrule">undefrule</a>
+<H4>Mathematical functions</H4>
+<a href="functions.html#*">*</a>,&nbsp;&nbsp;
+<a href="functions.html#**">**</a>,&nbsp;&nbsp;
+<a href="functions.html#+">+</a>,&nbsp;&nbsp;
+<a href="functions.html#++">++</a>,&nbsp;&nbsp;
+<a href="functions.html#-">-</a>,&nbsp;&nbsp;
+<a href="functions.html#--">--</a>,&nbsp;&nbsp;
+<a href="functions.html#/">/</a>,&nbsp;&nbsp;
+<a href="functions.html#<"><</a>,&nbsp;&nbsp;
+<a href="functions.html#<="><=</a>,&nbsp;&nbsp;
+<a href="functions.html#<>"><></a>,&nbsp;&nbsp;
+<a href="functions.html#=">=</a>,&nbsp;&nbsp;
+<a href="functions.html#>">></a>,&nbsp;&nbsp;
+<a href="functions.html#>=">>=</a>,&nbsp;&nbsp;
+<a href="functions.html#abs">abs</a>,&nbsp;&nbsp;
+<a href="functions.html#div">div</a>,&nbsp;&nbsp;
+<a href="functions.html#e">e</a>,&nbsp;&nbsp;
+<a href="functions.html#eq">eq</a>,&nbsp;&nbsp;
+<a href="functions.html#eq*">eq*</a>,&nbsp;&nbsp;
+<a href="functions.html#exp">exp</a>,&nbsp;&nbsp;
+<a href="functions.html#float">float</a>,&nbsp;&nbsp;
+<a href="functions.html#integer">integer</a>,&nbsp;&nbsp;
+<a href="functions.html#log">log</a>,&nbsp;&nbsp;
+<a href="functions.html#log10">log10</a>,&nbsp;&nbsp;
+<a href="functions.html#long">long</a>,&nbsp;&nbsp;
+<a href="functions.html#max">max</a>,&nbsp;&nbsp;
+<a href="functions.html#min">min</a>,&nbsp;&nbsp;
+<a href="functions.html#mod">mod</a>,&nbsp;&nbsp;
+<a href="functions.html#neq">neq</a>,&nbsp;&nbsp;
+<a href="functions.html#pi">pi</a>,&nbsp;&nbsp;
+<a href="functions.html#random">random</a>,&nbsp;&nbsp;
+<a href="functions.html#round">round</a>,&nbsp;&nbsp;
+<a href="functions.html#sqrt">sqrt</a>
+<H4>Functions which query the type of a Value</H4>
+<a href="functions.html#evenp">evenp</a>,&nbsp;&nbsp;
+<a href="functions.html#external-addressp">external-addressp</a>,&nbsp;&nbsp;
+<a href="functions.html#floatp">floatp</a>,&nbsp;&nbsp;
+<a href="functions.html#integerp">integerp</a>,&nbsp;&nbsp;
+<a href="functions.html#java-objectp">java-objectp</a>,&nbsp;&nbsp;
+<a href="functions.html#lexemep">lexemep</a>,&nbsp;&nbsp;
+<a href="functions.html#listp">listp</a>,&nbsp;&nbsp;
+<a href="functions.html#longp">longp</a>,&nbsp;&nbsp;
+<a href="functions.html#multifieldp">multifieldp</a>,&nbsp;&nbsp;
+<a href="functions.html#numberp">numberp</a>,&nbsp;&nbsp;
+<a href="functions.html#oddp">oddp</a>,&nbsp;&nbsp;
+<a href="functions.html#stringp">stringp</a>,&nbsp;&nbsp;
+<a href="functions.html#subsetp">subsetp</a>,&nbsp;&nbsp;
+<a href="functions.html#symbolp">symbolp</a>
+<H4>String manipulation functions</H4>
+<a href="functions.html#asc">asc</a>,&nbsp;&nbsp;
+<a href="functions.html#lowcase">lowcase</a>,&nbsp;&nbsp;
+<a href="functions.html#regexp">regexp</a>,&nbsp;&nbsp;
+<a href="functions.html#str-cat">str-cat</a>,&nbsp;&nbsp;
+<a href="functions.html#str-compare">str-compare</a>,&nbsp;&nbsp;
+<a href="functions.html#str-index">str-index</a>,&nbsp;&nbsp;
+<a href="functions.html#str-length">str-length</a>,&nbsp;&nbsp;
+<a href="functions.html#sub-string">sub-string</a>,&nbsp;&nbsp;
+<a href="functions.html#sym-cat">sym-cat</a>,&nbsp;&nbsp;
+<a href="functions.html#upcase">upcase</a>
+<H4>Functions for working with lists</H4>
+<a href="functions.html#as-list">as-list</a>,&nbsp;&nbsp;
+<a href="functions.html#complement$">complement$</a>,&nbsp;&nbsp;
+<a href="functions.html#create$">create$</a>,&nbsp;&nbsp;
+<a href="functions.html#delete$">delete$</a>,&nbsp;&nbsp;
+<a href="functions.html#explode$">explode$</a>,&nbsp;&nbsp;
+<a href="functions.html#first$">first$</a>,&nbsp;&nbsp;
+<a href="functions.html#implode$">implode$</a>,&nbsp;&nbsp;
+<a href="functions.html#insert$">insert$</a>,&nbsp;&nbsp;
+<a href="functions.html#intersection$">intersection$</a>,&nbsp;&nbsp;
+<a href="functions.html#length$">length$</a>,&nbsp;&nbsp;
+<a href="functions.html#list">list</a>,&nbsp;&nbsp;
+<a href="functions.html#member$">member$</a>,&nbsp;&nbsp;
+<a href="functions.html#nth$">nth$</a>,&nbsp;&nbsp;
+<a href="functions.html#replace$">replace$</a>,&nbsp;&nbsp;
+<a href="functions.html#rest$">rest$</a>,&nbsp;&nbsp;
+<a href="functions.html#subseq$">subseq$</a>,&nbsp;&nbsp;
+<a href="functions.html#union$">union$</a>
+<H4>Functions for working with facts</H4>
+<a href="functions.html#assert">assert</a>,&nbsp;&nbsp;
+<a href="functions.html#assert-string">assert-string</a>,&nbsp;&nbsp;
+<a href="functions.html#dependencies">dependencies</a>,&nbsp;&nbsp;
+<a href="functions.html#dependents">dependents</a>,&nbsp;&nbsp;
+<a href="functions.html#duplicate">duplicate</a>,&nbsp;&nbsp;
+<a href="functions.html#fact-id">fact-id</a>,&nbsp;&nbsp;
+<a href="functions.html#fact-slot-value">fact-slot-value</a>,&nbsp;&nbsp;
+<a href="functions.html#facts">facts</a>,&nbsp;&nbsp;
+<a href="functions.html#load-facts">load-facts</a>,&nbsp;&nbsp;
+<a href="functions.html#modify">modify</a>,&nbsp;&nbsp;
+<a href="functions.html#remove">remove</a>,&nbsp;&nbsp;
+<a href="functions.html#retract">retract</a>,&nbsp;&nbsp;
+<a href="functions.html#retract-string">retract-string</a>,&nbsp;&nbsp;
+<a href="functions.html#save-facts">save-facts</a>,&nbsp;&nbsp;
+<a href="functions.html#save-facts-xml">save-facts-xml</a>
+<p>
+</div>
+<p>
+<i>
+<a href="index.html">Back to index</a>
+</i>
+</p>
+</div>
+</BODY>

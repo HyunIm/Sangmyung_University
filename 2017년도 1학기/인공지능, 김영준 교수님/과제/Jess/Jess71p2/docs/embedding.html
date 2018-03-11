@@ -1,0 +1,691 @@
+<html>
+    
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Embedding Jess in a Java Application</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li id="selected">
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>11.
+        Embedding Jess in a Java Application</h2>
+
+        
+<a name="intro">
+<h3>11.1. Introduction</h3>
+</a>
+            
+<p>In the first part of this chapter, we'll look at one way to embed Jess into a Java
+                application. It's a <i>pricing engine</i> which determines the prices
+                individual customers will pay for goods ordered through our e-commerce site. The
+                material presented here will be easier to understand if you are familiar with
+                <a href="library.html">Jess's Java APIs</a> and how to write
+                <a href="rules.html">rules</a> in the Jess programming language.
+            </p>
+            
+<p>
+                At the end of this chapter, I'll talk about some general considerations that
+                are useful when planning an application that embeds the Jess rule engine.
+            </p>
+        
+
+        
+<a name="motivation">
+<h3>11.2. Motivation</h3>
+</a>
+
+            
+<p>Imagine you're working on a pricing engine for online sales. The
+                engine is supposed to look at each order, together with a customer's
+                purchasing history, and apply various discounts and offers to the
+                order. Imagine further that you've coded this up in a traditional Java
+                class.</p>
+
+            
+<p>Your boss comes in, says, "Give a 10% discount to everybody who spends
+                more than $100." Great. You add a single if-then statement, recompile,
+                and you're back in business.</p>
+
+            
+<p>Boss comes in, says, "Give a 25% discount on items the
+                customer buys three or more of." Another if-then, another recompile.</p>
+
+            
+<p>Boss comes in, says "Revoke 10% discount per-order, make it 10% if
+                you spend $250 or more in one month. Also, if somebody buys a CD writer,
+                send them a free sample of CD-RW disks; but only if they're a repeat
+                customer. Oh, and by the way, we need to price shipping based on
+                geographic zone, except for people with multiple locations..."</p>
+
+            
+<p>After a few weeks of this, if you've been using traditional
+                programming techniques, your code is a gnarled mess -- and it's slow
+                too, as it has to do all sorts of database queries for each order that
+                comes in.</p>
+
+            
+<p>If you had written this using a rule engine, though, you'd have nice
+                clean code, with one rule for each pricing policy. If somebody needed
+                to know where the "Wacky Wednesday" pricing policy is implemented, it
+                would be easy to find it.</p>
+
+            
+<p>And if that rule engine is a Jess-like system, it's not slow, either;
+                the rule engine itself indexes all the orders and no lookups are
+                required; the rule engine just "knows" what it needs to know about
+                past orders.</p>
+
+
+        
+        
+<a name="architecture">
+<h3>11.3. Doing it with Jess</h3>
+</a>
+
+            
+<p>
+                So without further ado, we'll implement the above idea with Jess. We're going
+                to write an explicit "pricing library" which can be invoked from a Web app or
+                from any other kind of Java code. There will be both a Java component and a
+                Jess language component to what we'll write; we'll look at the Java part first.
+                Note that all the code for this example, including a test driver, comes with Jess;
+                it's in the directory <tt>Jess71p2/examples/pricing_engine</tt>. There's a <tt>README</tt>
+                file there with some information about building and running the example.
+            </p>
+
+            
+<p>Your Java code needs to create an instance of the Jess rule engine, load in the
+                catalog data, then load in the rules (which we'll be writing later in this chapter.)
+                This one instance of Jess can then be reused to process each
+                order. (You only have to load the catalog data once; Jess will index
+                it and later accesses will be fast.) We'll package all this up in a class
+                named <tt>PricingEngine</tt>:
+            </p>
+
+
+<div class="example">
+<pre>
+public class PricingEngine {
+    private Rete engine;
+    private WorkingMemoryMarker marker;
+    private Database database;
+
+    public PricingEngine(Database aDatabase) throws JessException {
+        // Create a Jess rule engine
+        engine = new Rete();
+        engine.reset();
+
+        // Load the pricing rules
+        engine.batch("pricing.clp");
+
+        // Load the catalog data into working memory
+        database = aDatabase;
+        engine.addAll(database.getCatalogItems());
+
+       // Mark end of catalog data for later
+       marker = engine.mark();
+    }
+</pre>
+</div>
+
+            
+<p>(The <tt>Database</tt> interface is an application-specific data access wrapper;
+                it's an interface and a trivial implementation is included in the
+                example code.) Note that the call to <a href="api/jess/Rete.html#batch(java.lang.String)"><tt><tt>jess.Rete.</tt>batch(java.lang.String)</tt></a>
+                will find the file <tt>myrules.clp</tt> not
+                only in the current directory but even if it's packaged in a jar file
+                with the <tt>PricingEngine</tt> class, or put into the <tt>WEB-INF/classes</tt> directory of a Web application.
+                Jess tries to find the file using a succession of different class loaders before giving up.
+            </p>
+
+            
+<p>Then whenever you want to process an order, the pricing
+                engine needs to do four things: reset the engine back
+                to its initial state; load the order data; execute the
+                rules; and extract the results. In this case the
+                results will be <tt>Offer</tt> objects in working
+                memory, put there by the rules; each <tt>Offer</tt>
+                represents some kind of special pricing deal to be
+                applied to the order. We'll write a short private
+                routine for one of these steps, and then a single
+                public method that performs all four steps on behalf
+                of clients of the pricing engine.</p>
+
+            
+<p>First, a short routine to load the order data into Jess:</p>
+
+
+<div class="example">
+<pre>
+    private void loadOrderData(int orderNumber) throws JessException {
+        // Retrive the order from the database
+        Order order = database.getOrder(orderNumber);
+
+        if (order != null) {
+           // Add the order and its contents to working memory
+           engine.add(order);
+           engine.add(order.getCustomer());
+           engine.addAll(order.getItems());
+        }
+    }
+</pre>
+</div>
+
+            
+<p>Now the pricing engine's business method, which takes an order
+                number and returns an Iterator over the applicable offers. We use one
+            of Jess's predefined <a href="api/jess/Filter.html"><tt>jess.Filter</tt></a> implementations to select only
+            the <tt>Offer</tt> objects from working memory.</p>
+
+
+<div class="example">
+<pre>
+    public Iterator run(int orderNumber) throws JessException {
+        // Remove any previous order data, leaving only catalog data
+        engine.resetToMark(marker);
+
+        // Load data for this order
+        loadOrderData(orderNumber);
+
+        // Fire the rules that apply to this order
+        engine.run();
+
+        // Return the list of offers created by the rules
+        return engine.getObjects(new Filter.ByClass(Offer.class));
+    }
+</pre>
+</div>
+
+            
+<p>That's it! Now any servlet, EJB, or other Java code can instantiate
+                a <tt>PricingEngine</tt> and use it to find the offers that apply to a given
+                order... once we write the rules, that is.</p>
+
+            
+<p>A note about error handling: I've exposed JessException in the
+                interface to all of these methods. I could have hidden JessException
+                inside them by catching JessException and rethrowing a non-Jess
+                exception. I've chosen not to do that here just to make the code
+                shorter.</p>
+
+        
+
+        
+<a name="rules">
+<h3>11.4. Making your own rules</h3>
+</a>
+
+            
+<p>All that's left is to write the rules. Our rules will be matching
+            against some simple Java model objects. Imagine you've already got some
+            model objects being used elsewhere in your system:
+            <a href="quickstart_code.html#Customer">Customer</a>
+            , <a href="quickstart_code.html#Offer">Offer</a>
+            , <a href="quickstart_code.html#Order">Order</a>
+            ,
+            <a href="quickstart_code.html#OrderItem">OrderItem</a>
+            , and
+            <a href="quickstart_code.html#CatalogItem">CatalogItem</a>
+            .  </p>
+
+            
+<p>Now all we have to do is express the business rules as Jess
+                rules. Every rule has a name, an optional documentation string, some
+                <i>patterns</i>
+                , and some
+                <i>actions.</i>
+                A
+                <i>pattern</i>
+                is
+                statement of something that must be true for the rule to apply. An
+                <i>action</i>
+                is something the rule should do if it does apply. Let's
+                see how some of our pricing rules would look in Jess.
+            </p>
+
+            
+<blockquote>
+                "Give a 10% discount to everybody who spends more than $100."
+            </blockquote>
+
+
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(defrule 10%-volume-discount
+    "Give a 10% discount to everybody who spends more than $100."
+    ?o &lt;-(Order {total &gt; 100})
+    =&gt;
+    (add (new Offer "10% volume discount" (/ ?o.total 10))))</pre>
+
+</div>
+            
+<p>In a Jess rule, the patterns come before the "=&gt;"
+            symbol. This rule applies to <tt>Order</tt> with a
+            <tt>total</tt> property greater than $100. Inside the
+            curly braces, we can write expressions which look just
+            like Boolean expressions in Java. All the properties of an
+            object are available to these expressions just by using
+            their property names. You can learn more about writing
+            rule patterns <a href="rules.html">here</a>.</p>
+
+            
+<p>The actions come after the "=&gt;" symbol. If this rule
+            applies to an <tt>Order</tt>, a new Java <tt>Offer</tt> object is
+            created with a value 10% of the order total, and that
+            <tt>Offer</tt> is added to working memory using the <a href="functions.html#add"><tt>add</tt></a> Our
+            <tt>PricingEngine</tt> class will find these
+            <tt>Offer</tt> objects later.</p>
+
+
+            
+<blockquote>
+                "Give a 25% discount on items the customer buys three or more of."
+            </blockquote>
+
+
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(defrule 25%-multi-item-discount
+    "Give a 25% discount on items the customer buys three or more of."
+    (OrderItem {quantity &gt;= 3} (price ?price))
+    =&gt;
+    (add (new Offer "25% multi-item discount" (/ ?price 4))))</pre>
+
+</div>
+
+            
+<p>In this rule, we use the value of the "price" property
+            to compute the discount. Because we don't otherwise
+            mention the "price" property, we include the simple
+            expression "(price ?price)", which assigns the value of
+            the property to the variable "?price."</p>
+
+            
+<blockquote>
+                "If somebody buys a CD writer, send them a free sample of CD-RW
+                disks; but only if they're a repeat customer."
+            </blockquote>
+
+            
+<div class="jesscode">
+
+
+
+
+<pre>
+<b>Jess&gt; </b>(defrule free-cd-rw-disks
+    "If somebody buys a CD writer, send them a free sample of CD-RW
+     disks, catalog number 782321; but only if they're a repeat customer.
+    We use a regular expression to match the CD writer's description."
+    (CatalogItem (partNumber ?partNumber) (description /CD Writer/))
+    (CatalogItem (partNumber 782321) (price ?price))
+    (OrderItem (partNumber ?partNumber))
+    (Customer {orderCount &gt; 1})
+    =&gt;	
+    (add (new Offer "Free CD-RW disks" ?price)))</pre>
+</div>
+
+            
+<p>This rule is more complicated because it includes
+            <i>correlations</i> between objects. Because we used the
+            same variable <tt>?partNumber</tt> in two different
+            patterns, the rule will only match when the corresponding
+            properties of two objects are equal -- i.e., when the
+            <tt>partNumber</tt> of an <tt>OrderItem</tt> is the same
+            as the <tt>partNumber</tt> of a <tt>CatalogItem</tt> that
+            represents a CD writer. </p>
+
+            
+<p>Also noteworthy: we've tested the "description"
+            property of the <tt>CatalogItem</tt> object with a simple
+            Java <i>regular expression.</i> If the phrase "CD Writer"
+            appears anywhere in the description, that CatalogItem will
+            match the pattern.</p>
+
+        
+
+        
+<a name="multiple">
+<h3>11.5. Multiple Rule Engines</h3>
+</a>
+        
+<p>Each
+        <tt>jess.Rete</tt>
+        object represents an
+        independent reasoning engine. A single program can include
+        any number of engines. The individual <tt>Rete</tt> objects can each have their own working memories,
+            agendas, and rulebases, and can all function in separate threads. You can use multiple identical engines in a pool, or
+            each engine can have its own rules, perhaps because you intend for them to interact in some way.
+        </p>                   
+            
+<a name="peering">
+<h4>11.5.1. Peering: Sharing Rules Among Multiple Engines</h4>
+</a>
+            
+<p>Of course, creating multiple independent engines and then loading the same set of
+                rules into each seems inefficient: the same rules would be parsed and compiled once for each engine,
+            and you'd have a lot of redundant data structures. Therefore Jess supports <i>peering</i> of rule engines. With peering,
+                you load and compile a rule base just once to create the first engine, and then you can create multiple
+                independent <i>peer</i> engines which share the compiled rules. The peers all share their tables of rules,
+                functions, templates, and defglobals, as well as their classloader, but each peer has its own
+                agenda, working memory and execution context. That means they all apply the same set of rules, but to data
+                unique to each peer. No peer sees facts asserted into the working memory of any other peer.
+                </p>
+                
+<p>On the other hand, changes to the rule base, template list, function list, etc, are seen by all the
+                    members of a peered set, regardless of which engine the changes are made through.</p>
+                
+                
+<p>All peers, including the first engine, are equivalent. Once a peer is created, the first
+                    engine and the peer behave identically; the first engine is not special in any way. Either of them can be used
+                    to create new peers.
+                </p>
+                
+<p>Creating a peer is a fast operation, and of course peering uses less memory than creating
+                    independent engines. These properties make peers ideal for use in pools in Web applications. You can
+                    create a pool of peers, remove one from the pool to service a client request, and then return it to the pool.</p>
+
+                
+<p>The following simple example shows how to use peering. The API consists solely of a special constructor
+                    in the Rete class:</p>
+
+
+<div class="javacode">
+<pre>
+    
+import jess.*;
+public class ExPeering {
+    public static void main(String[] argv) throws JessException {
+        // Create the "original" engine
+        Rete engine = new Rete();
+
+        // Load a rule into it
+        engine.eval("(defrule rule-1 (A ?x) =&gt; (printout t ?x crlf))");
+
+        // Create a peer of the first engine
+        Rete peer = engine.createPeer();
+
+        // Assert different facts into the two engines
+        engine.assertString("(A original)");
+        peer.assertString("(A peer)");
+
+        // Run the original engine; prints "original"
+        engine.run();
+
+        // Run the peer; prints "peer"
+        peer.run();
+    }
+}
+    <b>C:\&gt;</b> java ExPeering
+<pre>
+<i>
+original
+peer
+</i>
+</pre>
+
+</pre>
+</div>
+            
+        
+
+        
+<a name="thread">
+<h3>11.6. Jess in a Multithreaded Environment</h3>
+</a>
+            
+<p>
+            Jess can be used in a multithreaded environment. The
+            <tt>jess.Rete</tt>
+            class internally synchronizes itself using several
+            synchronization locks. The most important lock is a lock on working memory:
+            only one thread will be allowed to change the working memory of a given
+            <tt>jess.Rete</tt> object at a time.
+            </p>
+            
+<p>
+                The <tt>Rete.run()</tt> method, like the <tt>(run)</tt> function in the Jess programming language,
+                returns as soon as there are no more applicable rules. In a multithreaded environment, it is
+                generally appropriate for the engine to simply wait instead, because rules may be activated due to
+                working memory changes that happen on another thread. That's the purpose of the <tt>Rete.runUntilHalt()</tt>
+                method and the <tt>(run-until-halt)</tt> function, which use Java's <tt>wait()/notify()</tt> system to pause the
+                calling thread until active rules are available to fire. <tt>runUntilHalt</tt> and <tt>(run-until-halt)</tt> won't
+                return until <tt>Rete.halt()</tt> or <tt>(halt)</tt> are called, as the names suggest.
+            </p>
+            
+<p> Our <tt>PricingEngine</tt> class is stateful and not
+            meant to be used in a multithreaded way. This is by
+            design. If you want to use a <tt>PricingEngine</tt> in a
+            Web application, then your choices are analagous to your
+            choices in using JDBC <tt>Connection</tt> objects: either
+            create new ones as needed, which is simple, but
+            inefficient; or use an object pool and a finite collection
+            of objects which are checked out, used, and returned to
+            the pool. The important point is that multiple
+            <tt>PricingEngine</tt> objects will be absolutely
+            independent, and you can create as few or as many as you
+            need for a given application.
+            </p>
+
+        
+
+        
+<a name="errors">
+<h3>11.7. Error Reporting and Debugging</h3>
+</a>
+
+            
+<p>I'm constantly trying to improve Jess's error reporting,
+                but it is still not perfect. When you get an error from
+                Jess (during parsing or at runtime) it is generally delivered as a Java
+                exception. The exception will contain an explanation of the problem. If you print a
+                stack trace of the exception, it can also help you understand what went wrong.
+                For this reason, it is <i>very important</i> that, if you're embedding
+                Jess in a Java application, you <i>don't</i> write code like this:</p>
+
+            
+<div class="example">
+<pre>
+// Don't ignore exceptions like this!
+try {
+Rete engine = new Rete();
+engine.eval("(gibberish!)");
+} catch (JessException ex) { /* ignore errors */ }
+            </pre>
+</div>
+
+            If you ignore the Java exceptions, you will miss Jess's explanations
+            of what's wrong with your code. Don't laugh - more people code this
+            way than you'd think!
+            <p></p>
+            Anyway, as an example, if you attempt to load the folowing rule in the
+            standard Jess command-line executable,
+
+            <div class="example">
+<pre>
+; There is an error in this rule
+Jess&gt; (defrule foo-1
+(foo bar)
+-&gt;
+(printout "Found Foo Bar" crlf))
+            </pre>
+</div>
+
+            You'll get the following printout:
+
+            <div class="example">
+<pre>
+Jess reported an error in routine Jesp.parseDefrule.
+Message: Expected '=&gt;' at token '-&gt;'.
+Program text: ( defrule foo-1 ( foo bar ) -&gt;  at line 3.
+            </pre>
+</div>
+
+            This exception, like all exceptions reported by Jess, lists a Java
+            routine name. The name <tt>parseDefrule</tt> makes it fairly clear
+            that a rule was being parsed, and the detail message explains
+            that <tt>-&gt;</tt> was found in the input instead of the expected
+            <tt>=&gt;</tt> symbol (we accidentally typed <tt>-&gt;</tt> instead). This
+            particular error message, then, was fairly easy to understand.
+
+            <p></p>Runtime errors can be more puzzling, but the printout will
+            generally give you a lot of information. Here's a rule where we
+            erroneously try to add the number <tt>3.0</tt> to the word <tt>four</tt>:
+            <div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule foo-2
+=&gt;
+(printout t (+ 3.0 four) crlf))
+            </pre>
+</div>
+
+            This rule will compile fine, since the parser doesn't know that the
+            <tt>+</tt> function won't accept the symbol <tt>four</tt> as an argument.
+            When we <tt>(reset)</tt> and <tt>(run)</tt>, however,  we'll see:
+
+            <div class="example">
+<pre>
+Jess reported an error in routine +
+  while executing (+ 3.0 four)
+  while executing (printout t (+ 3.0 four) crlf)
+  while executing defrule MAIN::foo-2
+  while executing (run).
+Message: Not a number: four.
+  Program text: ( run )  at line 12.
+            </pre>
+</div>
+
+            In this case, the error message is also pretty clear. It shows the
+            offending function (+ 3.0 four); then the function that called that
+            (printout); the message then shows the context in which the function was called
+            (defrule MAIN::foo-2), and finally the function which caused the rule to
+            fire (run).  <p></p>
+
+            
+<p></p>The message 'Not a number: four' tells you that
+            the <tt>+</tt> function wanted a numeric argument, but found the
+            symbol <tt>four</tt> instead.
+
+            <p></p>
+            If we make a similar mistake on the LHS of a rule:
+            <div class="example">
+<pre>
+Jess&gt; (defrule foo-3
+(test (eq 3 (+ 2 one)))                                         -
+=&gt;
+)
+            </pre>
+</div>
+            We see the following after a <tt>reset</tt>:
+            <div class="example">
+<pre>
+Jess reported an error in routine +
+  while executing (+ 2 one)
+  while executing (eq 3 (+ 2 one))
+  while executing 'test' CE
+  while executing rule LHS (TECT)
+  while executing (reset).
+Message: Not a number: one.
+  Program text: ( reset )  at line 22.
+            </pre>
+</div>
+
+            Again, the error message is very detailed, and makes it clear, I hope,
+            that the error occurred during rule LHS execution, in a <tt>test</tt>
+            CE, in the function <tt>(+ 2 one).</tt> Note that Jess cannot tell you
+            which rule this LHS belongs to, since rule LHSs can be shared.
+        
+        <a name="javaapi">
+<h3>11.8. Creating Rules from Java</h3>
+</a>
+
+            
+<p>It is now possible to create Jess rules and queries using only the
+                Java API -- i.e., without writing either a Jess language or XML
+                version of the rule. This isn't recommended -- part of the power of a
+                rule engine is the ability it gives you to separate your rules from
+                your other code -- but sometimes it may be worth doing. </p>
+
+            
+<p>Defining rules from Java is complex, and is still an undocumented process.
+            If you're interested in doing it, your best resource is the source code for the <tt>jess.xml</tt>
+                package, which uses Jess's public APIs to build rules. Be aware that these APIs may change
+                without notice.
+            </p>
+
+
+        
+
+    
+</div>
+</body>
+
+</html>

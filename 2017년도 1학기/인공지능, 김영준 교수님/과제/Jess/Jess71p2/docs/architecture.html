@@ -1,0 +1,181 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Jess Application Design</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li id="selected">
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>9.
+        Jess Application Design</h2>
+
+
+<a name="good_application">
+<h3>9.1. What makes a good Jess application?</h3>
+</a>
+
+
+<p>Jess is a rule
+engine - a special kind of software that very efficiently applies rules
+to data. A rule-based program can have hundreds or even thousands of
+<a href="rules.html"><i>rules</i></a>, and Jess will continually
+apply them to data stored in its <a href="memory.html"><i>working memory</i></a>. The rules might
+represent the knowledge of a human expert in some domain, a set of
+business rules, a technical specification, or the rules of a game.
+The working memory might represent the state of an evolving
+situation (an interview, an emergency), the contents of a database, the
+status of a Web user's session, or a commercial account.</p>
+
+
+<p>
+    
+<a href="http://www.jessrules.com/guidelines.shtml">Many articles</a>,
+    and indeed, entire books have been written about rule-based systems
+    and how to design them. It's worth reading some of this literature to give
+    yourself an idea of what rule engines can and can't do. The most important
+    piece of advice I can give you is that if you already know how to solve a problem
+    procedurally, then do it that way. Don't use a rule engine and then try to
+    force it to execute a specific sequence of rules. The whole point of
+    a rule engine is that it's good at finding the right sequence of rules to apply,
+    all by itself.
+</p>
+
+
+
+    
+<a name="application_types">
+<h3>9.2. Command-line, GUI, or embedded?</h3>
+</a>
+
+
+<p>As we've discussed, Jess can be used in many ways. Besides the
+different categories of problems Jess can be applied to, being a
+library, it is amenable to being used in many different kinds of Java
+programs. Jess can be used in command-line applications, GUI
+applications, servlets, and applets. Furthermore, Jess can either
+provide the Java <tt>main()</tt> for your program, or you can write it
+yourself. You can develop Jess applications (with or without GUIs)
+without compiling a single line of Java code. You can also write Jess
+applications which are controlled entirely by Java code you write,
+with a  minumum of Jess language code.
+</p>
+<p>
+The most important step in developing a Jess application is to choose
+an architecture from among the almost limitless range of
+possibilities. One way to organize the possibilities is to list them
+in increasing order of the amount of Java programming involved.
+</p>
+
+
+<ol>
+
+<li>Pure Jess language scripts. No Java code at all.</li>
+
+
+<li>Pure Jess language scripts, but the scripts access Java APIs.</li>
+
+
+<li>Mostly Jess language scripts, but some custom Java code in the
+    form of new Jess commands written in Java.</li>
+
+
+<li>Half Jess language scripts, with a substantial amount of Java code
+    providing custom commands and APIs; <tt>main()</tt> provided by
+    Jess.</li>
+
+
+<li>Half Jess language scripts, with a substantial amount of Java code
+    providing custom commands and APIs; <tt>main()</tt> provided by
+    you or an application server.</li>
+
+
+<li>Mostly Java code, which loads Jess language scripts at runtime.</li>
+
+
+<li>All Java code, which manipulates Jess entirely through its Java
+    API. </li>
+
+</ol>
+
+
+
+<p>Examples of some of these types of applications are packaged with
+Jess. The basic examples like <tt>wordgame.clp</tt>,
+<tt>zebra.clp</tt>, and <tt>fullmab.clp</tt> are all type 1)
+programs. <tt>awtdraw.clp</tt>, <tt>swingdraw.clp</tt> and
+<tt>jframe.clp</tt> are type 2) programs. The example in <a href="embedding.html">this chapter</a> is a type 6 application.
+</p> 
+<p> Your choice can be guided by many factors, but ultimately it
+will depend on what you feel most comfortable with. Types 4) and 5)
+are most prevalent in real-world applications.  </p> 
+
+
+</div>
+</body>
+
+</html>

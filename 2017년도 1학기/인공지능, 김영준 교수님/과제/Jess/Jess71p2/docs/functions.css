@@ -1,0 +1,18 @@
+/* Page background color */
+body { background-color: #FFFFFF; color: #000000;}
+
+
+/* Headers */
+
+h2 { color: #000000; textAlign: center}
+h3 { color: #000000; textAlign: center}
+
+H4 { color: #0000FF; font-family: courier}
+
+
+H5 { color: #000000; font-style: italic}
+
+
+
+/* Table cell data */
+td { color: #000000 }

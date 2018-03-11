@@ -1,0 +1,362 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Adding Commands to Jess</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li id="selected">
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>12.
+        Adding Commands to Jess</h2>
+
+The Java interface <tt>jess.Userfunction</tt> represents a single
+function in the Jess language. You can add new functions to the Jess
+language simply by writing a class that implements the
+<tt>jess.Userfunction</tt> interface (see below for details on how
+this is done), creating a single instance of this class and installing
+it into a <tt>jess.Rete</tt> object using
+<tt>Rete.addUserfunction()</tt>. The <tt>Userfunction</tt> classes you
+write can maintain state; therefore a <tt>Userfunction</tt> can cache
+results across invocations, maintain complex data structures, or keep
+references to external Java objects for callbacks. A single
+<tt>Userfunction</tt> can be a gateway into a complex Java subsystem.
+
+
+<a name="extensions">
+<h3>12.1. Writing Extensions</h3>
+</a>
+I've made it as easy as possible to add user-defined functions to Jess.
+There is no system type-checking on arguments, so you don't need to tell
+the system about your arguments, and values are self-describing, so you
+don't need to tell the system what type you return. You do, however, need
+to understand several Jess classes, including <tt>jess.Value</tt>,
+<tt>jess.Context</tt>, and <tt>jess.Funcall</tt>, as previously
+discussed in the chapter
+<a href="library.html">Introduction to Programming with Jess in Java</a>.
+
+
+<a name="implementing_userfunction">
+<h4>12.1.1. Implementing             your Userfunction</h4>
+</a>
+
+
+<p></p>
+To implement the <tt>jess.Userfunction</tt> interface, you need to implement
+only two methods: <tt>getName()</tt> and <tt>call().</tt> Here's an example
+of a class called 'MyUpcase' that implements the Jess function <tt>my-upcase</tt>,
+which expects a String as an argument, and returns the string in uppercase.
+<div class="javacode">
+<pre>
+    
+import jess.*;
+
+public class ExMyUpcase implements Userfunction {
+    // The name method returns the name by which
+    // the function will appear in Jess code.
+    public String getName() { return "my-upcase"; }
+
+    public Value call(ValueVector vv, Context context) throws JessException {
+        String result = vv.get(1).stringValue(context).toUpperCase();
+        return new Value(result, RU.STRING);
+      }
+  }
+
+</pre>
+</div>
+
+The <tt>call()</tt> method does the business of your
+Userfunction. When <tt>call()</tt> is invoked, the first argument will
+be a <tt>ValueVector</tt> representation of the Jess code that evoked
+your function. For example, if the following Jess function calls were
+made,
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(load-function ExMyUpcase)</pre>
+
+<pre>
+<b>Jess&gt; </b>(my-upcase foo)</pre>
+
+<pre>
+<i>"FOO"</i>
+</pre>
+
+</div>
+
+the first argument to <tt>call()</tt> would be a <tt>ValueVector</tt>
+of length two. The first element would be a <tt>Value</tt> containing
+the symbol (type <tt>RU.SYMBOL</tt>) <tt>my-upcase</tt>, and the second
+argument would be a <tt>Value</tt> containing the string
+(<tt>RU.STRING</tt>) <tt>"foo"</tt>.
+
+<p></p> Note that we use <tt>vv.get(1).stringValue(context)</tt> to get
+the first argument to <tt>my-upcase</tt> as a Java String. If the
+argument doesn't contain a string, or something convertible to a
+string, <tt>stringValue()</tt> will throw a <tt>JessException</tt>
+describing the problem; hence you don't need to worry about incorrect
+argument types if you don't want to. <tt>vv.get(0)</tt> will always
+return the symbol <tt>my-upcase</tt>, the name of the function being
+called (the clever programmer will note that this would let you
+construct multiple objects of the same class, implementing different
+functions based on the name of the function passed in as a constructor
+argument). If you want, you can check how many arguments your function
+was called with and throw a JessException if it was the wrong number
+by using the <tt>vv.size()</tt> method. In any case, our simple
+implementation extracts a single argument and uses the Java
+<tt>toUpperCase()</tt> method to do its work. <tt>call()</tt> must
+wrap its return value in a <tt>jess.Value</tt> object, specifying the
+type (here it is <tt>RU.STRING</tt>).
+
+<a name="userfunction_return_values">
+<h5>12.1.1.1. Legal return                values</h5>
+</a>
+
+A <tt>Userfunction</tt> must return a valid <tt>jess.Value</tt>
+          object; it cannot return the Java <tt>null</tt> value. To
+          return "no value" to Jess, use <tt>nil</tt>. The value of
+          <tt>nil</tt> is available in the public static final
+          variable <tt>jess.Funcall.NIL.</tt>
+
+
+
+<a name="loading_userfunctions">
+<h4>12.1.2. Loading             your Userfunction</h4>
+</a>
+
+
+<p></p> Having written this class, you can then, in your Java main
+program, simply call <tt>Rete.addUserfunction()</tt> with an instance
+of your new class as an argument, and the function will be available
+from Jess code. So, we could have
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExAddUF {
+  public static void main(String[] argv) throws JessException {
+    // Add the 'my-upcase' command to Jess
+    Rete r = new Rete();
+    r.addUserfunction(new ExMyUpcase());
+
+    // This will print "FOO".
+    System.out.println(r.eval("(my-upcase foo)"));
+  }
+}
+<b>C:\&gt;</b> java ExAddUF
+<pre>
+<i>"FOO"</i>
+</pre>
+
+</pre>
+</div>
+
+Alternatively, the Jess language command <a href="functions.html#load-function"><tt>load-function</tt></a> could
+be used to load <tt>my-upcase</tt> from Jess:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(load-function ExMyUpcase)</pre>
+
+<pre>
+<b>Jess&gt; </b>(my-upcase foo)</pre>
+
+<pre>
+<i>"FOO"</i>
+</pre>
+
+</div>
+
+
+
+<a name="assert_from_userfunctions">
+<h4>12.1.3. Calling assert             from a Userfunction</h4>
+</a>
+
+
+The <tt>jess.Rete.assertFact()</tt> method has two overloads: one version
+            takes a <tt>jess.Context</tt> argument, and the other does
+            not. When writing a Userfunction, you should always use
+            the first version, passing the <tt>jess.Context</tt>
+            argument to the Userfunction. If you do not, your
+            Userfunction will not interact correctly with the <a href="rules.html#logical_ce"> <tt>logical</tt>
+            conditional element.</a>
+
+
+
+
+
+
+<a name="packages">
+<h3>12.2. Writing Extension Packages</h3>
+</a>
+
+The <tt>jess.Userpackage</tt> interface is a handy way to group a collection
+of <tt>Userfunctions</tt> together, so that you don't need to install them
+one by one (all of the extensions shipped with Jess are included in Userpackage
+classes). A <tt>Userpackage</tt> class should supply the one method <tt>add(),</tt>
+which should simply add a collection of <tt>Userfunctions</tt> to a
+<tt>Rete</tt> object using
+<tt>addUserfunction().</tt> Nothing mysterious going on, but it's very
+convenient. As an example, suppose <tt>MyUpcase</tt> was only one of a
+number of similar functions you wrote. You could put them in a
+<tt>Userpackage</tt> class like this:
+
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExMyStringFunctions implements Userpackage {
+    public void add(Rete engine) {
+        engine.addUserfunction(new ExMyUpcase());
+        // Other similar statements
+    }
+}
+
+</pre>
+</div>
+
+Now in your Java code, you can call
+<div class="javacode">
+<pre>
+
+import jess.*;
+public class ExAddUP {
+  public static void main(String[] argv) throws JessException {
+    // Add the 'my-upcase' command to Jess
+    Rete r = new Rete();
+    r.addUserpackage(new ExMyStringFunctions());
+
+    // This will still print FOO.
+    System.out.println(r.eval("(my-upcase foo)"));
+  }
+}
+<b>C:\&gt;</b> java ExAddUP
+<pre>
+<i>"FOO"</i>
+</pre>
+
+</pre>
+</div>
+
+or from your Jess code, you can call
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(load-package ExMyStringFunctions)</pre>
+
+<pre>
+<b>Jess&gt; </b>(my-upcase foo)</pre>
+
+<pre>
+<i>"FOO"</i>
+</pre>
+
+</div>
+
+to load these functions in. After either of these snippets, Jess
+language code could call <tt>my-upcase</tt>, <tt>my-downcase</tt>, etc.
+
+<p></p>
+
+<tt>Userpackage</tt>s are a great place to assemble a collection of
+interrelated functions which potentially can share data or maintain references
+to other function objects. You can also use <tt>Userpackage</tt>s to make
+sure that your <tt>Userfunction</tt>s are constructed with the correct
+constructor arguments.
+
+<p></p>
+All of Jess's "built-in" functions are simply <tt>Userfunctions</tt>,
+albeit ones which have special access to Jess' innards. Most of them
+are automatically loaded by code in the <tt>jess.Funcall</tt>
+class. You can use these as examples for writing your own Jess extensions.
+
+
+
+
+
+<a name="getting_references">
+<h3>12.3. Obtaining References to Userfunction Objects</h3>
+</a>
+
+Occasionally it is useful to be able to obtain a reference to an installed
+<tt>Userfunction</tt> object. The method <tt>Userfunction Rete.findUserfunction(String
+name)</tt> lets you do this easily. It returns the <tt>Userfunction</tt>
+object registered under the given name, or null if there is none. This
+is useful when you write Userfunctions which themselves maintain state
+of some kind, and you need access to that state.
+
+
+
+</div>
+</body>
+
+</html>

@@ -1,0 +1,6042 @@
+<html>
+
+  
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - The Jess Function List</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+<ul id="navsublist">
+  
+<li id="selected">
+<a href="functions.html">The Jess Function List</a>
+</li>
+  
+<li>
+<a href="constructs.html">Jess Constructs</a>
+</li>
+  
+<li>
+<a href="api.html">Jess's Java APIs</a>
+</li>
+  
+<li>
+<a href="rete.html">The Rete Algorithm</a>
+</li>
+  
+<li>
+<a href="references.html">For More Information...</a>
+</li>
+  
+<li>
+<a href="release_notes.html">Release Notes</a>
+</li>
+  
+<li>
+<a href="changes.html">Change History</a>
+</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>16.
+        The Jess Function List</h2>
+
+    In this chapter, every Jess language function shipped with Jess version
+    7 is described. Previous versions of Jess had a notion of
+    "optional functions," but Jess 7 does not: all of the functions
+    described here are always available.
+    <p></p>
+    You may also like to look at a list of functions <a href="function_index.html">grouped by category</a> or <a href="function_alpha.html">sorted by name.</a>
+      
+<blockquote>
+      
+<i>Note:</i> many functions documented as requiring a specific
+      minimum number of arguments will actually return sensible
+      results with fewer; for example, the <a href="functions.html#+"><tt>+</tt></a>
+      function will return the value of a single argument as its
+      result. This behavior is to be regarded as undocumented and
+      unsupported. In addition, all functions documented as requiring
+      a specific number of arguments will not report an error if
+      invoked with more than that number; extra arguments are simply
+      ignored.
+    </blockquote>
+
+    
+<a name="-">
+<h3>16.1. (- &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the first argument minus all subsequent
+          arguments. The return value is an <tt>INTEGER</tt> or
+          <tt>LONG</tt> unless any of the arguments are
+          <tt>FLOAT</tt>, in which case it is a <tt>FLOAT</tt>.
+        </dd>
+      
+</dl>
+<a name="--">
+<h3>16.2. (-- &lt;variable&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A variable</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Subtracts one from the variable (which should contain a numeric
+          value,) sets the variable to the new value, and returns the
+          new value. Throws an exception if the argument is not a
+          variable containing a numeric type. The type of the variable
+          is preserved.
+        </dd>
+      
+</dl>
+<a name="/">
+<h3>16.3. (/ &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the first argument divided by all subsequent
+          arguments. The return value is a <tt>FLOAT</tt>.
+        </dd>
+      
+</dl>
+<a name="*">
+<h3>16.4. (* &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the products of its arguments. The return value is
+          an <tt>INTEGER</tt> or <tt>LONG</tt> unless any of the
+          arguments are <tt>FLOAT</tt>, in which case it is a
+          <tt>FLOAT</tt>.
+        </dd>
+
+      
+</dl>
+<a name="**">
+<h3>16.5. (** &lt;numeric-expression&gt; &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Raises its first argument to the power of its second
+          argument (using Java's <tt>Math.pow()</tt>
+          function). <b><i>Note</i>:</b> the return value may be
+          <tt>NaN</tt> (not a number); see the Java API documentation for details. 
+        </dd>
+      
+</dl>
+<a name="+">
+<h3>16.6. (+ &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the sum of its arguments. The return value is an
+          <tt>INTEGER</tt> or <tt>LONG</tt> unless any of the
+          arguments are <tt>FLOAT</tt>, in which case it is a
+          <tt>FLOAT</tt>.
+        </dd>
+      
+</dl>
+<a name="++">
+<h3>16.7. (++ &lt;variable&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A variable</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Adds one to the variable (which should contain a numeric
+          value,) sets the variable to the new value, and returns the
+          new value. Throws an exception if the argument is not a
+          variable containing a numeric type. The type of the variable
+          is preserved.
+        </dd>
+      
+</dl>
+<a name="<">
+<h3>16.8. (&lt; &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if each argument is less than the
+          argument following it; otherwise, returns
+          <tt>FALSE</tt>. The definition of "less than" varies
+          depending on the types being compared.
+        </dd>
+      
+</dl>
+<a name="<=">
+<h3>16.9. (&lt;= &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the value of each argument is less
+          than or equal to the value of the argument following it;
+          otherwise, returns <tt>FALSE</tt>. The definition of "less
+          than or equal to" depends on the objects being compared.
+        </dd>
+      
+</dl>
+<a name="<>">
+<h3>16.10. (&lt;&gt; &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the value of the first argument is
+          not equal in value to all subsequent arguments; otherwise
+          returns <tt>FALSE</tt>. The definition of "not equal"
+          depends on the objects being compared.
+        </dd>
+      
+</dl>
+<a name="=">
+<h3>16.11. (= &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the value of the first argument is
+          equal in value to all subsequent arguments; otherwise,
+          returns <tt>FALSE</tt>. The integer 2 and the float 2.0 are
+          <a href="functions.html#="><tt>=</tt></a>, but not <a href="functions.html#eq"><tt>eq</tt></a>.
+        </dd>
+      
+</dl>
+<a name=">">
+<h3>16.12. (&gt; &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the value of each argument is
+          greater than that of the argument following it; otherwise,
+          returns <tt>FALSE</tt>. The definition of "greater than"
+          depends on the objects being compared
+        </dd>
+      
+</dl>
+<a name=">=">
+<h3>16.13. (&gt;= &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions or <tt>Comparable</tt> objects</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the value of each argument is
+          greater than or equal to that of the argument following it;
+          otherwise, returns <tt>FALSE</tt>. The definition of
+          "greater than or equal to" depends on the objects being
+          compared.
+        </dd>
+      
+</dl>
+<a name="abs">
+<h3>16.14. (abs &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the absolute value of its only argument.
+        </dd>
+      
+</dl>
+<a name="add">
+<h3>16.15. (add &lt;Java object&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A Java object</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                nil</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Adds the given object to working memory. Creates a "shadow fact"
+                representing the given Java object, using the template whose name is
+                the same as the given object's class, without the package prefix. If
+                this template doesn't exist, it is created. Equivalent to calling
+<div class="example">
+<pre>
+(definstance &lt;classname&gt; &lt;Java object&gt; auto)
+</pre>
+</div>
+                See the description of the <a href="functions.html#definstance"><tt>definstance</tt></a> function for
+                more information.
+            </dd>
+        
+</dl>
+<a name="agenda">
+<h3>16.16. (agenda [&lt;module-name&gt; | *])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Optionally, a module name or the symbol "*"</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          NIL</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Displays a list of rule activations to the WSTDOUT
+          router. If no argument is specified, the activations in the
+          current module (not the focus module) are displayed. If a
+          module name is specified, only the activations in that
+          module are displayed. If "*" is specified, then all
+          activations are displayed.
+        </dd>
+      
+</dl>
+<a name="and">
+<h3>16.17. (and &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if all arguments evaluate to a
+          non-<tt>FALSE</tt> value; otherwise, returns
+          <tt>FALSE</tt>.</dd>
+      
+</dl>
+<a name="apply">
+<h3>16.18. (apply &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A function name or lambda followed by zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          An expression</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the result of calling the first argument, either the name of a Jess
+          function or a lambda expression, on all the remaining arguments. The strength of
+          this method lies in the fact that you can call a function
+          whose name, for instance, is in a Jess variable.</dd>
+      
+</dl>
+<a name="asc">
+<h3>16.19. (asc &lt;string&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Any string or symbol</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the Unicode value of the first character of the
+          argument, as an RU.INTEGER.
+        </dd>
+      
+</dl>
+<a name="as-list">
+<h3>16.20. (as-list &lt;java-object&gt;)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>
+          A Java object (must be an array)</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+          A list</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+          Converts the given Java array into a Jess list. This happens automatically for arrays
+          returned by functions declared to return an array, but you can easily fetch an array from
+          a Java method that returns Object, and in this case this function is useful.
+            </dd>
+        
+</dl>
+<a name="assert">
+<h3>16.21. (assert &lt;fact&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more facts</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A Fact, or FALSE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Adds all the facts to the working memory; returns the last
+          fact asserted or <tt>FALSE</tt> if no facts were
+          successfully asserted (for example, if all facts given are
+          duplicates of existing facts.) A <a href="api/jess/JessEvent.html"><tt>jess.JessEvent</tt></a> of type <tt>JessEvent.FACT</tt>
+          will be sent if the event mask is set
+          appropriately.</p>
+          
+<p>It is important to remember that all pattern-matching
+          happens during calls to <a href="functions.html#assert"><tt>assert</tt></a>, <a href="functions.html#retract"><tt>retract</tt></a>, <a href="functions.html#modify"><tt>modify</tt></a>, and related
+          functions. Pattern-matching happens whether the engine is
+          running or not.</p>
+          
+<p>Example:</p>
+          
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert (testing 1 2 3))</pre>
+
+<pre>
+<i>&lt;Fact-1&gt;</i>
+</pre>
+          
+</div>
+
+
+</dd>
+      
+</dl>
+<a name="assert-string">
+<h3>16.22. (assert-string &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string representing a fact</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A Fact, or FALSE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Converts a string into a fact and asserts it. Attempts to
+          parse string as a fact, and if successful, returns the value
+          returned by assert with the same fact. Note that the string
+          must contain the fact's enclosing parentheses.</p>
+          
+<p>Example:</p>
+          
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(assert-string "(testing 1 2 3)")</pre>
+
+<pre>
+<i>&lt;Fact-1&gt;</i>
+</pre>
+          
+</div>
+        
+</dd>
+      
+</dl>
+<a name="bag">
+<h3>16.23. (bag &lt;bag-command&gt; &lt;bag-arguments&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A symbol (a sub-command) and one or more additional arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          The <a href="functions.html#bag"><tt>bag</tt></a> command lets you
+          manipulate Java hashtables from Jess.  The net result is
+          that you can create any number of associative arrays or
+          property lists. Each such array or list has a name by which
+          it can be looked up. The lists can contain other lists as
+          properties, or any other Jess data type.
+
+          <p></p>The <a href="functions.html#bag"><tt>bag</tt></a> command does different
+          things based on its first argument.  It's really seven
+          commands in one:
+
+          <ul>
+            
+<li>
+              
+<tt>create</tt> accepts a String, the name of a new Bag
+              to be created.  The bag object itself is returned. For
+              example:
+
+              <div class="jesscode">
+                
+<pre>
+<b>Jess&gt; </b>(bag create my-bag)</pre>
+              
+</div>
+</li>
+
+            
+<li>
+              
+<tt>delete</tt> accepts the name of an existing bag, and
+              deletes it from the list of bags.</li>
+
+            
+<li>
+              
+<tt>find</tt> accepts the name of a bag, and returns the
+              corresponding bag object, if one exists, or
+              <tt>nil.</tt>
+</li>
+
+            
+<li>
+              
+<tt>list</tt> returns a list of the names of all the
+              existing bags.</li>
+
+            
+<li>
+              
+<tt>set</tt> accepts as arguments a bag, a String
+              property name, and any Jess value as its three
+              arguments. The named property of the given bag is set to
+              the value, and the value is returned.</li>
+
+            
+<li>
+              
+<tt>get</tt> accepts as arguments a bag and a String
+              property name. The named property is retrieved and
+              returned, or <tt>nil</tt> if there is no such
+              property. For example:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*bag* = 0)</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bind ?*bag* (bag create my-bag))</pre>
+
+<pre>
+<i>&lt;Java-Object:java.util.Hashtable&gt;</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bag set ?*bag* my-prop 3.0)</pre>
+
+<pre>
+<i>3.0</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(bag get ?*bag* my-prop)</pre>
+
+<pre>
+<i>3.0</i>
+</pre>
+
+</div>
+</li>
+
+            
+<li>
+              
+<tt>props</tt> accepts a bag as the single argument and
+              returns a list of the names
+              of all the properties of that bag.</li>
+          
+</ul>
+        
+</dd>
+      
+</dl>
+<a name="batch">
+<h3>16.24. (batch &lt;filename&gt; [&lt;charset&gt;])</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                One string representing the name of a file,
+                and optionally a character set name</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                (Varies)</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Attempts to parse and evaluate the given file as Jess
+                code. If successful, returns the return value of the
+                last expression in the file.  <p></p> 
+<b><i>Note:</i></b>
+                the argument must follow Jess' rules for valid
+                strings. On UNIX systems, this presents no particular
+                problems, but Win32 filenames may need special
+                treatment. In particular: pathnames should use either
+                '\\' (double backslash) or '/' (forward slash) instead
+                of '\' (single backslash) as directory separators.
+                <p></p> In an applet, batch will try to find the
+                file relative to the applet's document base. In any
+                program, if the file is not found, the name is then
+                passed to
+                <tt>ClassLoader.getSystemResourceAsStream()</tt>. This
+                allows files along the class path, including files in
+                JARs, to be batched.</p>
+                
+<p>If you specify a character set name as the optional
+                second argument, Jess will assume the file is written
+                using that character set.</p>
+            
+</dd>
+        
+</dl>
+<a name="bind">
+<h3>16.25. (bind &lt;variable&gt; &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A variable name and any value</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Binds a variable to a new value. Assigns the given value to
+          the given variable, creating the variable if
+          necessary. Returns the given value.</p>
+          
+<p>Example:</p>
+          
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?x 3)</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>?x</pre>
+
+<pre>
+<i>3</i>
+</pre>
+          
+</div>
+            
+<p>If the variable name contains a period, like <tt>?x.y</tt>, then this function
+                will attempt to modify slot y of a fact in variable ?x to the given value.</p>
+
+        
+</dd>
+      
+</dl>
+<a name="bit-and">
+<h3>16.26. (bit-and &lt;integer-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more integer expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          int</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Performs the bitwise AND of the arguments. <tt>(bit-and 7
+          4)</tt> is 4, and is equivalent to the Java <tt>7 &amp;
+          4</tt>.</dd>
+      
+</dl>
+<a name="bit-not">
+<h3>16.27. (bit-not &lt;integer-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One integer expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          int</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Performs the bitwise NOT of the argument. <tt>(bit-not
+          0)</tt> is -1, and is equivalent to the Java
+          <tt>~0</tt>.</dd>
+      
+</dl>
+<a name="bit-or">
+<h3>16.28. (bit-or &lt;integer-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more integer expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          int</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Performs the bitwise OR of the arguments. <tt>(bit-or 2
+          4)</tt> is 6, and is equivalent to the Java <tt>2 |
+          4</tt>.</dd>
+      
+</dl>
+<a name="bload">
+<h3>16.29. (bload &lt;filename&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string representing the name of a file</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>The argument is the path to a file previously produced by
+          the <a href="functions.html#bsave"><tt>bsave</tt></a> command. The file is
+          decompressed and deserialized to restore the state of the
+          current Rete object. I/O routers are not restored from the
+          file; they retain their previous state. Furthermore,
+          JessListeners are not restored from the file; again, they
+          are retained from their state prior to the bload.</p>
+	  
+<p>To decode the dump file, this function decompresses the
+	  data using <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/zip/GZIPInputStream.html"><tt>java.util.zip.GZIPInputStream</tt></a>
+	  and sends the result to the <a href="api/jess/Rete.html#bload(java.io.InputStream)"><tt><tt>jess.Rete.</tt>bload(java.io.InputStream)</tt></a> method. Therefore,
+	  this function cannot be directly read data saved by
+	  <a href="api/jess/Rete.html#bsave(java.io.OutputStream)"><tt><tt>jess.Rete.</tt>bsave(java.io.OutputStream)</tt></a> method because the decompression step will fail.</p>
+        
+</dd>
+      
+</dl>
+<a name="break">
+<h3>16.30. (break)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>None</dd>
+
+            
+<dt>Returns:</dt>
+<dd>N/A</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Immediately exit any enclosing loop or control scope. Can be used inside of <a href="functions.html#for"><tt>for</tt></a>, <a href="functions.html#while"><tt>while</tt></a>,
+                and <a href="functions.html#foreach"><tt>foreach</tt></a> loops, as well as within the body of a <a href="constructs.html#deffunction"><tt>deffunction</tt></a> or
+                the right hand side of a <a href="constructs.html#defrule"><tt>defrule</tt></a>. If called anywhere else, will throw an exception.
+            </dd>
+        
+</dl>
+<a name="bsave">
+<h3>16.31. (bsave &lt;filename&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string representing the name of a file</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Dumps the engine in which it is called to the given filename
+          argument in a format that can be read using <a href="functions.html#bload"><tt>bload</tt></a>. Any input/output streams and
+          event listeners are not saved during the serialization
+          process.</p>
+	  
+<p>To produce the dump file, this function calls the
+	  <a href="api/jess/Rete.html#bsave(java.io.OutputStream)"><tt><tt>jess.Rete.</tt>bsave(java.io.OutputStream)</tt></a> method and compresses
+	  the data using
+	  <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/zip/GZIPOutputStream.html"><tt>java.util.zip.GZIPOutputStream</tt></a>. Therefore,
+	  data saved by this method cannot be directly read by the
+	  <a href="api/jess/Rete.html#bload(java.io.InputStream)"><tt><tt>jess.Rete.</tt>bload(java.io.InputStream)</tt></a> method without first
+	  decompressing it.</p>
+        
+</dd>
+      
+</dl>
+<a name="build">
+<h3>16.32. (build &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string representing some Jess code</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Evaluates a string as though it were entered at the command
+          prompt. Only allows constructs to be evaluated. Attempts to
+          parse and evaluate the given string as Jess code. If
+          successful, returns the return value of the last expression
+          in the string. This is typically used to define rules from
+          Jess code. For instance:
+
+
+          <p></p>
+<tt>(build "(defrule foo (foo) =&gt; (bar))")</tt>
+
+          
+<p></p> Note: The string must consist of one single construct;
+          multiple constructs can be built using multiple calls to
+          <tt>build.</tt>
+        
+</dd>
+      
+</dl>
+<a name="call">
+<h3>16.33. ([call] &lt;java object&gt; | &lt;class-name&gt; &lt;method-name&gt; &lt;argument&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A java object or class name, optionally a method or field name, and any number of
+          additional arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Calls a Java method on the given object, a static method
+          of the class named by the first argument, invokes a lambda,
+          or returns the value of a Java field in the object.
+          Unless the first argument is a lambda, the second
+          argument is the name of the method or field. All subsequent arguments, if any,
+          are passed to the lambda or method. When calling Java methods,
+          arguments are promoted and
+          overloaded methods selected precisely as for <a href="functions.html#new"><tt>new</tt></a>.  The return value is converted to a
+          suitable Jess value before being returned.  Array return
+          values are converted to lists.
+
+          <p></p>The functor <a href="functions.html#call"><tt>call</tt></a> may be
+          omitted unless the method being called is a Java static method. The
+          following two method calls are equivalent:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?list (new java.util.ArrayList))</pre>
+
+<pre>
+<b>Jess&gt; </b>;; These are legal and equivalent
+(call ?list add "Foo")
+(?list add "Foo")
+</pre>
+
+</div>
+
+          
+<p>Note that <a href="functions.html#call"><tt>call</tt></a> can even be omitted
+          if the object comes from the return value of another
+          function call:</p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>;; This is legal
+((new java.util.ArrayList 10) add "Foo")
+</pre>
+
+</div>
+
+
+<p>If the first argument is a Java object, and the second a symbol, and there
+are no other arguments, and the object does not have a no-argument method by the
+given name, then Jess will attempt to return the value of a field by that name
+        in the object, if one exists. As with method calls, the "call" functor can be omitted. So,
+        for example, </p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(bind ?dim (new java.awt.Dimension 10 20))</pre>
+
+<pre>
+<b>Jess&gt; </b>;; These are legal and equivalent
+(get-member ?dim width)
+(?dim width)
+</pre>
+
+</div>
+        
+</dd>
+      
+</dl>
+<a name="call-on-engine">
+<h3>16.34. (call-on-engine &lt;Java object&gt;  &lt;jess-code&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          an <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> object, and an executable
+          snippet of Jess code</dd>
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Executes some Jess code in the context of the given Rete
+          object. This is a nice way to send messages between multiple
+          Rete engines in one process. Note that the current variable
+          context is used to evaluate the code, so (for instance) all
+          defglobal values will be from the calling engine, not the
+          target.
+
+        </dd>
+      
+</dl>
+<a name="clear">
+<h3>16.35. (clear)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Clears Jess. Deletes all rules, deffacts, defglobals,
+          templates, facts, activations, and so forth. Java
+          Userfunctions are not deleted.</dd>
+      
+</dl>
+<a name="clear-focus-stack">
+<h3>16.36. (clear-focus-stack)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Removes all modules from the focus stack.
+        </dd>
+
+      
+</dl>
+<a name="clear-storage">
+<h3>16.37. (clear-storage)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Clears the hashtable used by <a href="functions.html#store"><tt>store</tt></a> and <a href="functions.html#fetch"><tt>fetch</tt></a>.
+        </dd>
+      
+</dl>
+<a name="close">
+<h3>16.38. (close &lt;router-identifier&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more router identifiers (symbols)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Closes any I/O routers associated with the given name by
+          calling <tt>close()</tt> on the underlying stream, then
+          removes the routers. Any I/O errors are ignored. Any subsequent attempt to use a closed
+          router will report <tt>bad router</tt>. See <a href="#open">open</a>.</dd>
+      
+</dl>
+<a name="complement$">
+<h3>16.39. (complement$ &lt;list-expression&gt; &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a new list consisting of all elements of the
+          second list not appearing in the first
+          list.</dd>
+      
+</dl>
+<a name="context">
+<h3>16.40. (context)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A <a href="api/jess/Context.html"><tt>jess.Context</tt></a> object</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the execution context (a <a href="api/jess/Context.html"><tt>jess.Context</tt></a> object) it is called in. This
+          provides a way for deffunctions to get a handle to this
+          useful class.
+        </dd>
+      
+</dl>
+<a name="continue">
+<h3>16.41. (continue)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>None</dd>
+
+            
+<dt>Returns:</dt>
+<dd>N/A</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Immediately jump to the end of any enclosing loop and begin the next iteration of the loop. For "while" loops, the loop test will be executed next; for "for" loops, the increment function will be executed. Can be used inside of <a href="functions.html#for"><tt>for</tt></a>, <a href="functions.html#while"><tt>while</tt></a>,
+                and <a href="functions.html#foreach"><tt>foreach</tt></a> loops. If called anywhere else, will throw an exception.
+            </dd>
+        
+</dl>
+<a name="count-query-results">
+<h3>16.42. (count-query-results &lt;query-name&gt; &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A query name, and zero or more additional expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          INTEGER</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Runs a <a href="queries.html">query</a> and
+          returns a count of the matches. See the documentation for
+          <a href="queries.html">defquery</a> for more
+          details. Also see <a href="#run-query">run-query</a>
+          for caveats concerning calling count-query-results on a rule
+          RHS.
+        </dd>
+      
+</dl>
+<a name="create$">
+<h3>16.43. (create$ &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Creates and returns a new list containing all the given
+          arguments, in order. For each argument that is a list,
+          the individual elements of the list are added to the
+          new list; this function will not create nested
+          lists (which are not meaningful in the Jess language.)
+          <b><i>Note</i></b>: lists must be created explicitly
+          using this function or others that return them. Lists
+          cannot be directly parsed from Jess input.</dd>
+      
+</dl>
+<a name="defadvice">
+<h3>16.44. (defadvice                    (before | after) (&lt;function-name&gt; | &lt;list&gt; |                    ALL )                    &lt;function-call&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The symbol <tt>before</tt> or the symbol <tt>after</tt>,
+          followed by either one function name or a list of
+          function names or the symbol <tt>ALL</tt>, followed by one or
+          more function calls.</dd>
+
+          
+<dt>Returns:</dt>
+<dd>
+            (varies)</dd>
+          
+<dt>Description:</dt>
+<dd>
+            Lets you supply extra code to run before or after the
+            named function(s) or all functions. If <tt>before</tt> is
+            specified, the code will execute before the named
+            function(s); the variable $?argv will hold the entire
+            function call vector (function name and parameters) on
+            entry to and exit from the code block. If <tt>after</tt>
+            is specified, the function will be called before the code
+            block is entered. When the block is entered, the variable
+            ?retval will refer to the original function's return
+            value.  <p></p> Whether <tt>before</tt> or <tt>after</tt> is
+            specified, if the code block explicitly calls <a href="functions.html#return"><tt>return</tt></a> with a value, the returned
+            value will appear to the caller to be the return value of
+            the original function. For <tt>before</tt> advice, this
+            means the original function will not be called in this
+            case.
+          </dd>
+      
+</dl>
+<a name="defclass">
+<h3>16.45. (defclass &lt;template-name&gt;                    &lt;Java class name&gt; [extends &lt;template-name&gt;])</h3>
+</a>
+<dl>
+
+      
+<dt>Arguments:</dt>
+<dd>
+          Two or four symbols, as noted above</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The second argument</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Defines a template with the given name, with slots based
+          on the Java Beans properties found in the named class. If
+          the optional extends clause is included, the second named
+          template will become the parent of the new template. The
+          common slots in the two templates will be in the same order,
+          at the beginning of the new template. Rules defined to match
+          instances of the parent template will also match instances
+          of the new child template.</p>
+          
+<p>
+          Note that anything you can do using the defclass function,
+          you can also do with the <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a>
+          construct -- but deftemplate lets you do even more.
+          </p>
+        
+</dd>
+      
+</dl>
+<a name="definstance">
+<h3>16.46. (definstance &lt;template-name&gt; &lt;Java object&gt; [static | dynamic | auto] )</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A symbol, a Java object, and (optionally) one of the symbols
+                <tt>static</tt>, <tt>dynamic</tt>, or <tt>auto</tt>
+</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                The new shadow fact</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Creates a "shadow fact" representing the given Java
+                object, according to the named template. By default,
+                or if the "dynamic" qualifier is specified, and if the
+                object accepts <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/PropertyChangeListener.html"><tt>java.beans.PropertyChangeListener</tt></a>s, then
+                Jess will install a listener in the given object, so
+                that Jess can keep the shadow fact updated if the
+                object's properties change. If the object doesn't
+                accept <tt>PropertyChangeListener</tt>s, or if the
+                "static" qualifier is specified, then no listener will
+                be registered and the shadow fact will not be upated
+                when the object changes. The "auto" qualifier is
+                equivalent to the default behavior.
+                </p>
+
+                
+<p>Note that it is an error for a given Java object to
+                be added to working memory more than once. The second
+                and subsequent <a href="functions.html#definstance"><tt>definstance</tt></a> calls for a
+                given object will return a fact-id with value -1.</p>
+
+                
+<p>This function is a generalized form of <a href="functions.html#add"><tt>add</tt></a>.</p>
+            
+</dd>
+        
+</dl>
+<a name="delete$">
+<h3>16.47. (delete$ &lt;list-expression&gt; &lt;begin-integer-expression&gt; &lt;end-integer-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A list and two integer expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a new list like the original list but
+          with the elements in the specified range removed. The first
+          numeric expression is the 1-based index of the first element
+          to remove; the second is the 1-based index of the last
+          element to remove. It is an error to use any index value less than
+            1 or greater than the list length, or an end index less than
+            the begin index. </dd>
+      
+</dl>
+<a name="dependencies">
+<h3>16.48. (dependencies &lt;fact-id&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Fact</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A list</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a list containing all the <a href="api/jess/Token.html"><tt>jess.Token</tt></a>
+          objects that give logical support from the argument fact; if
+          there are none this function returns an empty list. A
+          <tt>jess.Token</tt> object is a list of facts; they're the
+          same objects returned by <a href="functions.html#run-query"><tt>run-query</tt></a>.
+        </dd>
+      
+</dl>
+<a name="dependents">
+<h3>16.49. (dependents &lt;fact-id&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Fact or fact-id</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A list</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a list containing all the <tt>jess.Fact</tt> objects
+          that get logical support from the argument fact; if there
+          are none this function returns an empty list.
+        </dd>
+      
+</dl>
+<a name="div">
+<h3>16.50. (div &lt;numeric-expression&gt; &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the first argument divided by all subsequent
+          arguments using integer division. The return value is an <tt>INTEGER.</tt>
+        
+</dd>
+      
+</dl>
+<a name="do-backward-chaining">
+<h3>16.51. (do-backward-chaining &lt;template-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Name of a template (ordered or unordered)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Marks a template as being eligible for backwards chaining,
+          as described in the text. If the template is unordered --
+          i.e., if it is explicitly defined with a (deftemplate)
+          construct -- then it must be defined <i>before</i> calling
+          <tt>do-backward-chaining</tt>. In addition, this function
+          must be called <i>before</i> defining any rules which use
+          the template.
+        </dd>
+      
+</dl>
+<a name="duplicate">
+<h3>16.52. (duplicate                    &lt;fact-specifier&gt; (&lt;slot-name&gt; &lt;value&gt;)+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A fact and one or more two-element lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A fact</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+         
+<p>
+          Makes a copy of the fact; the fact must be an unordered
+          fact. Each list is taken as the name of a slot in this fact
+          and a new value to assign to the slot. A new fact is
+          asserted which is similar to the given fact but which has
+          the specified slots replaced with new values. The new fact
+          is returned. It is an error to call <a href="functions.html#duplicate"><tt>duplicate</tt></a> on a shadow fact.</p>
+
+            
+<p>As of Jess version 7, the slot names can be variables.</p>
+        
+</dd>
+      
+</dl>
+<a name="e">
+<h3>16.53. (e)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the transcendental number <i>e</i>.
+        </dd>
+      
+</dl>
+<a name="engine">
+<h3>16.54. (engine)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> object</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> object in which the
+          function is called.
+        </dd>
+      
+</dl>
+<a name="eq">
+<h3>16.55. (eq &lt;expression&gt; &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more arbitrary arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>
+          Returns <tt>TRUE</tt> if the first argument is equal in type
+          and value to all subsequent arguments. For strings, this
+          means identical contents.  Uses the Java
+          <tt>Object.equals()</tt> function, so can be redefined. Note
+          that the integer <tt>2</tt> and the
+          floating-point number <tt>2.0</tt> are <i>not</i> <a href="functions.html#eq"><tt>eq</tt></a>, but they are <a href="functions.html#eq*"><tt>eq*</tt></a> and <a href="functions.html#="><tt>=</tt></a>.
+          </p>
+          
+<p>
+          While often used in procedural code, this function is only
+          rarely used during pattern matching. Direct matching is
+          preferable.
+          </p>
+        
+</dd>
+      
+</dl>
+<a name="eq*">
+<h3>16.56. (eq* &lt;expression&gt; &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more arbitrary arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the first argument is equivalent to
+          all the others.  Uses numeric equality for numeric types,
+          unlike <tt>eq</tt>. Note that the integer 2 and the
+          floating-point number 2.0 are <i>not</i> <a href="functions.html#eq"><tt>eq</tt></a>, but they are <a href="functions.html#eq*"><tt>eq*</tt></a> and <a href="functions.html#="><tt>=</tt></a>.
+        </dd>
+      
+</dl>
+<a name="eval">
+<h3>16.57. (eval &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string containing a valid Jess expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Evaluates a string as though it were entered at a command
+          prompt. Only allows functions to be evaluated. Evaluates the
+          string as if entered at the command line and returns the
+          result.  <p></p> Note: The string must consist of one
+          single function call; multiple calls can be evaluated using
+          multiple calls to eval.
+        </dd>
+      
+</dl>
+<a name="evenp">
+<h3>16.58. (evenp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for even numbers; otherwise, returns
+          <tt>FALSE</tt>.  Results with non-integers may be
+          unpredictable.
+        </dd>
+      
+</dl>
+<a name="exit">
+<h3>16.59. (exit)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Nothing</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Exits Jess and halts Java.
+        </dd>
+      
+</dl>
+<a name="exp">
+<h3>16.60. (exp &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Raises the value <i>e</i> to the power of its only argument.
+        </dd>
+      
+</dl>
+<a name="explode$">
+<h3>16.61. (explode$ &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Creates a list value from a string. Parses the string
+          as if by a succession of <a href="functions.html#read"><tt>read</tt></a>
+          calls, then returns these individual values as the elements
+          of a list.
+        </dd>
+      
+</dl>
+<a name="external-addressp">
+<h3>16.62. (external-addressp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<b>Deprecated.</b> Use <a href="functions.html#java-objectp"><tt>java-objectp</tt></a> instead.
+        </dd>
+      
+</dl>
+<a name="fact-id">
+<h3>16.63. (fact-id &lt;integer&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One number, a fact-id</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The given number as a <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a>
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          If the argument is the fact-id of an existing fact, returns
+          that <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a> object; otherwise throws an
+          exception. The lookup done by this function is
+          <i>slow</i>. Be sure you really need to call this
+          function. If you have a value that prints as
+          "&lt;Fact-1&gt;", then it's already a Fact object.
+        </dd>
+      
+</dl>
+<a name="facts">
+<h3>16.64. (facts [&lt;module name&gt; | *])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Module name or * (optional)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Prints a list of all facts in working memory from the current module. If a module name
+          is provided as an argument, facts from that module are listed instead. If the argument "*"
+          is given, all facts from all modules are listed.
+        </dd>
+      
+</dl>
+<a name="fact-slot-value">
+<h3>16.65. (fact-slot-value &lt;fact-id&gt; &lt;slot-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a> and a slot name</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the value in the named slot of the fact. You should
+          <i>never</i> need to call this on the left hand side of a
+          rule; direct matching is always better. You should only
+          occasionally need it in other code; again, directly matching
+          the slots on the left hand side of a rule is better.
+        </dd>
+      
+</dl>
+<a name="fetch">
+<h3>16.66. (fetch &lt;string or symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One string or symbol</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Retrieves and returns any value previously stored by the
+          <a href="functions.html#store"><tt>store</tt></a> function under the given
+          name, or <tt>nil</tt> if there is none. Analogous to the
+          <tt>fetch()</tt> member function of the <tt>Rete</tt>
+          class. See the section on <a href="java.html#xfer">using store and fetch</a> for
+          details.
+        </dd>
+      
+</dl>
+<a name="filter">
+<h3>16.67. (filter &lt;predicate function&gt; &lt;list&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A function and a list</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                A list</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Calls the function on each item in the list; returns a list of all the results for which the
+                function does not return FALSE. The function can either
+                be the name of a Userfunction, or it can be a <a href="functions.html#lambda"><tt>lambda</tt></a> expression.
+            </dd>
+        
+</dl>
+<a name="first$">
+<h3>16.68. (first$ &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One list</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the first field of a list as a new 1-element
+          list.
+        </dd>
+      
+</dl>
+<a name="float">
+<h3>16.69. (float &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Floating-point number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Converts its only argument to a float.
+        </dd>
+      
+</dl>
+<a name="floatp">
+<h3>16.70. (floatp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for floats; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="focus">
+<h3>16.71. (focus &lt;module-name&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more symbols, the names of modules</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The name of the previous focus module</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Changes the focus module. The next time the engine runs, the
+          first rule to fire will be from the first module listed (if
+          any rules are activated in this module.) The previously
+          active module is pushed down on the focus stack. If more
+          than one module is listed, they are pushed onto the focus
+          stack in order from right to left.
+        </dd>
+      
+</dl>
+<a name="for">
+<h3>16.72. (for                    &lt;initializer&gt; &lt;condition&gt;                    &lt;increment&gt; &lt;body expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Three or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Jess's <tt>for</tt> function works just like Java's
+          <tt>for</tt> loop. First the initializer is evaluated. Then
+          the condition is evaluated. If it does not evaluate to
+          FALSE, the body expressions are evaluated in order. Next,
+          the increment is evaluated, and then the condition is
+          checked again. The loop continues until the condition
+          evaluates to FALSE or until a <a href="functions.html#return"><tt>return</tt></a> or <a href="functions.html#break"><tt>break</tt></a> is encountered.
+          <p></p>
+          Example:
+<div class="jesscode">
+<pre>
+<b>Jess&gt; </b>(for (bind ?i 0) (&lt; ?i 10) (++ ?i)
+    (printout t ?i crlf))</pre>
+</div>
+          In Java, the initializer, condition, or increment can be
+          empty. In Jess, you can use the constant <tt>nil</tt> as an
+          equivalent.
+        </dd>
+      
+</dl>
+<a name="foreach">
+<h3>16.73. (foreach &lt;variable&gt; &lt;list-expression&gt; &lt;action&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A variable, a list expression or iterator, and zero or more arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Varies</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>The named variable is set to each value from the list, in
+          turn.  For each value, all of the other arguments are
+          evaluated in order. The <a href="functions.html#break"><tt>break</tt></a>
+          function can be used to break the iteration.</p>
+
+          
+<p>Example:</p>
+
+
+<div class="jesscode">
+<pre>
+<b>Jess&gt; </b>(foreach ?x (create$ a b c d) (printout t ?x crlf))</pre>
+<pre>
+<i>a
+b
+c
+d</i>
+</pre>
+</div>
+
+          
+<p>There are two ways to specify the series of values: you
+          can either specify a Jess list (as created by <a href="functions.html#create$"><tt>create$</tt></a>) or you can provide a
+          <tt>java.util.Iterator.</tt>
+</p>
+
+
+
+        
+</dd>
+      
+</dl>
+<a name="format">
+<h3>16.74. (format &lt;router-identifier&gt; &lt;string-expression&gt; &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A router identifier, a format string, and zero or more arguments</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A string</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sends formatted output to the specified logical
+          name. Formats the arguments into a string according to the
+          format string, which is identical to that used by
+          <tt>printf</tt> in the C language (find a C book for more
+          information).  Returns the string, and optionally prints the
+          string to the named router.  If you pass <tt>nil</tt> for
+          the router name, no printing is done.</dd>
+      
+</dl>
+<a name="gensym*">
+<h3>16.75. (gensym*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a special unique sequenced value. Returns a unique
+          symbol which consists of the letters <tt>gen</tt> plus an
+          integer. Use <a href="functions.html#setgen"><tt>setgen</tt></a> to set the
+          value of the integer to be used by the next gensym call.
+        </dd>
+      
+</dl>
+<a name="get">
+<h3>16.76. (get &lt;Java object&gt; &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object and a string.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd> 
+<p>Retrieves the value  of a JavaBean's property or
+          instance variable.  The first  argument is the  JavaBean and
+          the second argument is the  name of the property or
+          variable. Jess will first try to find a JavaBean property by
+          this name; if none is found, it will look for an instance variable.
+          The  return value  is  converted to  a  suitable Jess  value
+          exactly as for <a href="#call">call.</a>
+</p>
+          
+<p>
+              If applied to a <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a> object <tt>get</tt> returns the value of the named slot,
+              exactly as for <a href="functions.html#fact-slot-value"><tt>fact-slot-value</tt></a>.
+          </p>
+
+          
+</dd>
+          
+</dl>
+<a name="get-current-module">
+<h3>16.77. (get-current-module)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The name of the current module
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Gets the current module (see <a href="#set-current-module">set-current-module</a>).
+        </dd>
+
+      
+</dl>
+<a name="get-focus">
+<h3>16.78. (get-focus)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the name of the current focus module (see <a href="#focus">focus</a>).
+        </dd>
+
+      
+</dl>
+<a name="get-focus-stack">
+<h3>16.79. (get-focus-stack)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the module names on the focus stack as a
+          list. The top module on the stack is the first entry
+          in the list.
+        </dd>
+
+      
+</dl>
+<a name="get-member">
+<h3>16.80. (get-member (&lt;Java object&gt; | &lt;string-expression&gt;)                    &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object or a string, and a member variable name.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Retrieves the value of a Java object's data member. The
+          first argument is the object (or the name of a class, for a
+          static member) and the second argument is the name of the
+          field. The return value is converted to a suitable Jess
+          value exactly as for <a href="#call">call.</a>
+</dd>
+      
+</dl>
+<a name="get-multithreaded-io">
+<h3>16.81. (get-multithreaded-io)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns TRUE is Jess is currently using a separate thread to
+          flush I/O streams. Turning this on can lead to a modest
+          performance enhancement, at the expense of possible loss of
+          output on program termination.
+        </dd>
+      
+</dl>
+<a name="get-reset-globals">
+<h3>16.82. (get-reset-globals)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Indicates the current setting of global variable reset
+          behavior. See <a href="#set-reset-globals">set-reset-globals</a> for an
+          explanation of this property.</dd>
+      
+</dl>
+<a name="get-salience-evaluation">
+<h3>16.83. (get-salience-evaluation)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Indicates the current setting of salience evaluation
+          behavior. See <a href="#set-salience-evaluation">set-salience-evaluation</a>
+          for an explanation of this property.</dd>
+      
+</dl>
+<a name="get-strategy">
+<h3>16.84. (get-strategy)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          (None)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A symbol, the name of the current conflict resolution strategy.</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+            Returns the name of the current conflict resolution
+          strategy. See <a href="functions.html#set-strategy"><tt>set-strategy</tt></a>.
+        </dd>
+      
+</dl>
+<a name="halt">
+<h3>16.85. (halt)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Halts rule execution. No effect unless called from the RHS
+          of a rule.
+        </dd>
+      
+</dl>
+<a name="help">
+<h3>16.86. (help &lt;function-name&gt;)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>
+          A function name</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+          Prints a description of the named function to WSTDOUT.
+            </dd>
+        
+</dl>
+<a name="if">
+<h3>16.87. (if &lt;expression&gt; then &lt;action&gt;* [elif &lt;expression&gt; then &lt;action&gt;*]* [else &lt;action&gt;*])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Boolean expression, the symbol <tt>then</tt>,
+          and any number of additional expressions; followed (zero or more times)
+            by the symbol
+          <tt>elif</tt>, a Boolean expression, <tt>then</tt>, and another list of expressions;
+          optionally followed by the symbol
+          <tt>else</tt> and another list of expressions.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Allows conditional execution of a group of actions. The first
+          Boolean expression is evaluated. If it does not evaluate to
+          <tt>FALSE</tt>, the first list of actions is evaluated,
+          and the return value is that returned by the last action
+          of that list. If it does evaluate to <tt>FALSE</tt>, and there
+            are optional <tt>elif</tt> blocks, then the Boolean expression of
+            each of these is evaluated in turn; the first time one of them
+            evaluates to non-<tt>FALSE</tt>, the associated list of actions is
+            evaluated and the last result is returned. Finally, if none of the
+            expressions is non-<tt>FALSE</tt>, and the optional <tt>else</tt> block
+            is supplied, then the final list of actions
+          is evaluated and the value of the last is returned.
+
+          <p></p>
+          Example:
+
+<div class="jesscode">
+
+
+<pre>
+<b>Jess&gt; </b>(if (&gt; ?x 100) then
+    (printout t "X is big" crlf)
+ elif (&gt; ?x 50) then
+    (printout t "X is average" crlf)
+ else
+    (printout t "X is small" crlf))
+</pre>
+
+</div>
+       
+</dd>
+      
+</dl>
+<a name="implement">
+<h3>16.88. (implement &lt;interface&gt; [using] &lt;function&gt;)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>
+                The name of an interface, the optional symbol "using", and a Jess function or lambda expression
+            </dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                An object that implements the given interface
+            </dd>
+
+            
+<dt>Description:</dt>
+<dd>
+            Lets you implement any interface from Jess. Here's an example of creating a Runnable object
+            entirely from Jess and running it in a new Thread:
+                <div class="jesscode">
+ 
+<pre>
+<b>Jess&gt; </b>;; Function's arguments will be the name of the method called on proxy object
+;; (run, here ), followed by the individual arguments passed to called
+;; method (none here).
+(deffunction my-runnable ($?args)
+  (printout t "Hello, World" crlf))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>;; Make a Runnable whose run() method will call my-runnable
+(bind ?runnable (implement Runnable using my-runnable))</pre>
+
+<pre>
+<b>Jess&gt; </b>;; Use the Runnable
+((new Thread ?runnable) start)</pre>
+
+</div>
+            
+</dd>
+
+        
+</dl>
+<a name="implode$">
+<h3>16.89. (implode$ &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One list</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Creates a string from a list value. Converts each
+          element of the list to a string, and returns these
+          strings concatenated with single intervening spaces.
+        </dd>
+      
+</dl>
+<a name="import">
+<h3>16.90. (import &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One symbol</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Works like the Java <tt>import</tt> statement. You can
+          import either a whole package using</p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.io.*)</pre>
+
+</div>
+          
+<p>or a single class using</p>
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.awt.Button)
+</pre>
+</div>
+          
+<p>After that, all functions that can accept a Java class name
+          (<a href="functions.html#new"><tt>new</tt></a>, <a href="functions.html#defclass"><tt>defclass</tt></a>, <a href="functions.html#call"><tt>call</tt></a>, etc) will refer to the import list
+          to try to find the class that goes with a specific
+          name. Note that <tt>java.lang.*</tt> is now implicitly
+          imported.</p>
+
+          
+<p>In addition, when you import a single class by name, Jess
+          will define a series of Userfunctions that provide easy
+          access to that class's static members. These functions are
+          named <i>ClassName.memberName</i>. For example, because the
+          classes in <tt>java.lang</tt> are imported this way, there
+          are functions named "Thread.currentThread",
+          "Integer.parseInt" which give access to those Java methods;
+          there are also functions named "Short.MAX_VALUE" and
+          "Thread.NORM_PRIORITY" which return the values of those Java
+          constants. </p>
+
+<div class="jesscode">
+
+
+
+
+<pre>
+<b>Jess&gt; </b>(if (&gt; ?i (Short.MAX_VALUE)) then
+    ((System.out) println "Too large for short")
+    else
+    ((System.out) println "Would fit in a short"))</pre>
+
+</div>
+
+
+        
+</dd>
+      
+</dl>
+<a name="insert$">
+<h3>16.91. (insert$ &lt;list-expression&gt; &lt;integer-expression&gt; &lt;single-or-list-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A list, an integer, and one or more lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A list</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a new list like the original but with one or
+          more values inserted. Inserts the elements of the second and
+          later lists so that they appear starting at the given
+          1-based index of the first list. An index value one greater than
+            the list length is legal and will result in the second list being
+            appended at the end
+            of the first list.
+        </dd>
+      
+</dl>
+<a name="instanceof">
+<h3>16.92. (instanceof                    &lt;Java object&gt; &lt;class-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object and the name of a Java class</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns true if the Java object can be assigned
+          to a variable whose type is given by the class
+          name. Implemented using java.lang.Class.isInstance() . The
+          class name can be fully-qualified or it can be an imported
+          name; see the discussion of the <a href="functions.html#import"><tt>import</tt></a> function.
+        </dd>
+      
+</dl>
+<a name="integer">
+<h3>16.93. (integer &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Converts its only argument to an integer. Truncates any
+          fractional component of the value of the given numeric
+          expression and returns the integral part.
+        </dd>
+      
+</dl>
+<a name="integerp">
+<h3>16.94. (integerp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for integers; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="intersection$">
+<h3>16.95. (intersection$ &lt;list-expression&gt; &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the intersection of two lists. Returns a
+          list consisting of the elements the two argument
+          lists have in common.
+        </dd>
+      
+</dl>
+<a name="java-objectp">
+<h3>16.96. (java-objectp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the expression evaluates to a Java object.
+        </dd>
+      
+</dl>
+<a name="jess-type">
+<h3>16.97. (jess-type &lt;value&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                Any value</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Symbol</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Returns a symbol denoting the Jess data type of the
+                argument.
+            </dd>
+        
+</dl>
+<a name="jess-version-number">
+<h3>16.98. (jess-version-number)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Float</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a version number for Jess; currently 7.0 .
+        </dd>
+      
+</dl>
+<a name="jess-version-string">
+<h3>16.99. (jess-version-string)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a human-readable string descriptive of this version
+          of Jess.
+        </dd>
+      
+</dl>
+<a name="lambda">
+<h3>16.100. (lambda (&lt;arguments&gt;) &lt;function call&gt;+)</h3>
+</a>
+<dl>
+            
+<dt>Arguments:</dt>
+<dd>
+                A list of arguments followed by any number of function calls
+            </dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                An anonymous deffunction
+            </dd>
+
+            
+<dt>Description:</dt>
+<dd>
+            Lets you create an unnamed deffunction. This is useful in conjunction with the <a href="functions.html#implement"><tt>implement</tt></a> function.
+            In this example, we create a Runnable and execute it in a Thread.
+<div class="jesscode">
+ 
+<pre>
+<b>Jess&gt; </b>((new Thread (implement Runnable using
+     (lambda ($?args)
+         (printout t "Hello, World" crlf))
+     )
+  ) start)</pre>
+
+</div>
+                
+<p>This looks a lot like doing the same thing with an
+                anonymous class in Java:</p>
+
+<div class="example">
+<pre>
+new Thread(new Runnable() {
+    public void run() {
+        System.out.println("Hello, World!");
+    }
+}.start();
+</pre>
+</div>
+
+            
+</dd>
+
+        
+</dl>
+<a name="length$">
+<h3>16.101. (length$ &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the number of elements in a list value.
+        </dd>
+      
+</dl>
+<a name="lexemep">
+<h3>16.102. (lexemep &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Any expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for symbols and strings; otherwise,
+          returns <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="list">
+<h3>16.103. (list &lt;value&gt;*)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                Any number of values</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                A list</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                An alias for <a href="functions.html#create$"><tt>create$</tt></a>.
+            </dd>
+        
+</dl>
+<a name="list-deftemplates">
+<h3>16.104. (list-deftemplates [module-name | *])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Optionally, a module name, or the symbol "*"</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          With no arguments, prints a list of all <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a>s in the
+          current module (not the focus module) to the 't'
+          router. With a module name for an argument, prints the names
+          of the templates in that module. With "*" as an argument,
+          prints the names of all templates.
+        </dd>
+      
+</dl>
+<a name="list-focus-stack">
+<h3>16.105. (list-focus-stack)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Displays the module focus stack, one module per line; the
+          top of the stack (the focus module) is displayed first.
+        </dd>
+
+      
+</dl>
+<a name="list-function$">
+<h3>16.106. (list-function$)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a list list of all the functions currently
+          callable, including intrinsics, deffunctions, and
+          <a href="api/jess/Userfunction.html"><tt>jess.Userfunction</tt></a>s. Each function name is a symbol.  The names are
+          sorted in alphabetical order.
+        </dd>
+      
+</dl>
+<a name="listp">
+<h3>16.107. (listp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Any value</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for list values; otherwise,
+          returns <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="load-facts">
+<h3>16.108. (load-facts &lt;file-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A string representing the name of a file of facts</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Asserts facts loaded from a file. The argument should name a
+          file containing a list of facts (not <a href="constructs.html#deffacts"><tt>deffacts</tt></a> constructs,
+          and no other commands or constructs).  Jess will parse the
+          file and assert each fact. The return value is the return
+          value of assert when asserting the last fact. In an applet,
+          <a href="functions.html#load-facts"><tt>load-facts</tt></a> will use
+          <tt>getDocumentBase()</tt> to find the named file.  <p></p>
+          
+<b><i>Note:</i></b> See the <a href="functions.html#batch"><tt>batch</tt></a> command for a discussion about
+          specifying filenames in Jess.</p>
+          
+<p>
+              The file can be in either of two formats. The first format is just a
+              list of facts in Jess language syntax.  The second format is an XML file
+              with a <tt>fact-list</tt> root element containing nothing but <tt>fact</tt>
+              elements, as in JessML.
+          </p>
+
+        
+</dd>
+      
+</dl>
+<a name="load-function">
+<h3>16.109. (load-function &lt;class-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a Java class</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          The argument must be the fully-qualified name of a Java
+          class that implements the <a href="api/jess/Userfunction.html"><tt>jess.Userfunction</tt></a> interface. The class
+          is loaded in to Jess and added to the engine, thus making
+          the corresponding command available. See <a href="extending.html">Extending Jess with Java</a> for
+          more information.</dd>
+      
+</dl>
+<a name="load-package">
+<h3>16.110. (load-package &lt;class-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a Java class</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          The argument must be the fully-qualified name of a Java
+          class that implements the <a href="api/jess/Userpackage.html"><tt>jess.Userpackage</tt></a> interface. The class
+          is loaded in to Jess and added to the engine, thus making
+          the corresponding package of commands available.  See <a href="extending.html">Extending Jess with Java</a> for
+          more information.</dd>
+      
+</dl>
+<a name="log">
+<h3>16.111. (log &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the logarithm base <tt>e</tt> of its only argument.
+        </dd>
+      
+</dl>
+<a name="log10">
+<h3>16.112. (log10 &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the logarithm base-10 of its only argument.
+        </dd>
+      
+</dl>
+<a name="long">
+<h3>16.113. (long &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression, either numeric or String</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          RU.LONG</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Interprets the expression as a Java long (if possible) and
+          returns a long value. This function is retained for backward
+          compatibility only, as the Jess language now allows long
+          literals.
+        </dd>
+      
+</dl>
+<a name="longp">
+<h3>16.114. (longp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns TRUE if the expression is of type RU.LONG; FALSE
+          otherwise.
+        </dd>
+      
+</dl>
+<a name="lowcase">
+<h3>16.115. (lowcase &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One symbol or string.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String or symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Converts uppercase characters in a string or symbol to
+          lowercase. Returns the argument as an all-lowercase symbol
+          unless the argument is a string, in which case a string is
+          returned.
+        </dd>
+      
+</dl>
+<a name="map">
+<h3>16.116. (map &lt;function&gt; &lt;list&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A function and a list</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                A list</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Calls the function on each item in the list; returns a list of all the results. The function can either
+                be the name of a Userfunction, or it can be a <a href="functions.html#lambda"><tt>lambda</tt></a> expression.
+            </dd>
+        
+</dl>
+<a name="matches">
+<h3>16.117. (matches &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One symbol, a rule or query name</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Produces a printout, useful for debugging, of the
+          contents of the left and right Rete memories of each
+          two-input node on the given rule or query's
+          LHS.</dd>
+      
+</dl>
+<a name="max">
+<h3>16.118. (max &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more numerical expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the value of its largest numeric
+          argument</dd>
+      
+</dl>
+<a name="member$">
+<h3>16.119. (member$ &lt;expression&gt; &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A value and a list</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer or FALSE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the first position (1-based index) of a value
+          within a list; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="min">
+<h3>16.120. (min &lt;numeric-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the value of its smallest numeric
+          argument.</dd>
+      
+</dl>
+<a name="mod">
+<h3>16.121. (mod &lt;numeric-expression&gt; &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two integer expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the remainder of the result of dividing the first
+          argument by its second (assuming that the result of the
+          division must be an integer).
+        </dd>
+      
+</dl>
+<a name="modify">
+<h3>16.122. (modify &lt;fact-specifier&gt; (&lt;slot-name&gt; &lt;value&gt;)+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Fact and one or more two-element lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A Fact</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>Modifies a given unordered fact in working memory. The
+          first argument specifies the fact to modify, and can be
+          either a Fact object (such as you'd obtain from a pattern
+          binding) or an integer (the id number of a fact.) If you use
+          the id number, the corresponding fact must be looked up
+          using <a href="api/jess/Rete.html#findFactByID(int)"><tt><tt>jess.Rete.</tt>findFactByID(int)</tt></a>,
+          a slow operation.  The fact must be an unordered fact.</p>
+
+          
+<p>Subsequent arguments are two-item lists. Each list is
+          taken as the name of a slot in this fact and a new value to
+          assign to the slot.  The fact is removed from working
+          memory, the values in the specified slots are replaced with
+          the new values, and the fact is reasserted. The fact-ID of
+          the fact does not change.  The fact itself is returned. A
+          <a href="api/jess/JessEvent.html"><tt>jess.JessEvent</tt></a> of type FACT + MODIFIED will
+          be sent if the event mask is set appropriately.</p>
+
+          
+<p>Modifying a shadow fact will cause the appropriate object
+          properties to be set as well.</p>
+
+          
+<p>As of Jess version 7, the slot names can be
+          variables.</p>
+
+          
+<p>It is important to remember that all pattern-matching
+          happens during calls to <a href="functions.html#assert"><tt>assert</tt></a>, <a href="functions.html#retract"><tt>retract</tt></a>, <a href="functions.html#modify"><tt>modify</tt></a>, and related
+          functions. Pattern-matching happens whether the engine is
+          running or not.</p>
+
+</dd>
+      
+</dl>
+<a name="multifieldp">
+<h3>16.123. (multifieldp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Any value</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<b>Deprecated.</b> Use <a href="functions.html#listp"><tt>listp</tt></a> instead.
+        </dd>
+      
+</dl>
+<a name="neq">
+<h3>16.124. (neq &lt;expression&gt; &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two or more values</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          
+<p>
+          Returns <tt>TRUE</tt> if the first argument is not equal in
+          type and value to all subsequent arguments (see <a href="functions.html#eq"><tt>eq</tt></a>).
+          </p>
+          
+<p>
+          While often used in procedural code, this function is only
+          rarely used during pattern matching. Direct matching is
+          preferable.
+          </p>
+        
+</dd>
+      
+</dl>
+<a name="new">
+<h3>16.125. (new &lt;class-name&gt; &lt;argument&gt;*)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+            The name of a Java class and zero or more expressions</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+          Creates a new Java object and returns it. The first
+          argument is the class name:
+                <tt>java.util.Vector</tt>, for example. The second and later
+          arguments are constructor arguments.  The constructor will
+          be chosen from among all constuctors for the named class
+          based on a <i>first-best fit</i> algorithm. Built-in Jess
+          types are converted as necessary to match available
+          constructors. See the text for more details. Also see the
+          <a href="functions.html#import"><tt>import</tt></a> function.</dd>
+        
+</dl>
+<a name="not">
+<h3>16.126. (not &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if its only arguments evaluates to
+          <tt>FALSE</tt>; otherwise, returns <tt>FALSE</tt>. Note that
+          this function is distinct from the <a href="rules.html#not_ce">not conditional element.</a>
+        
+</dd>
+      
+</dl>
+<a name="nth$">
+<h3>16.127. (nth$ &lt;integer-expression&gt; &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A number and a list</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the value of the specified (1-based index) field of
+          a list value.
+        </dd>
+      
+</dl>
+<a name="numberp">
+<h3>16.128. (numberp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for numbers; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="oddp">
+<h3>16.129. (oddp &lt;integer-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One integer expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for odd numbers; otherwise, returns
+          <tt>FALSE</tt>; see <a href="functions.html#evenp"><tt>evenp</tt></a>.
+        </dd>
+      
+</dl>
+<a name="open">
+<h3>16.130. (open &lt;file-name&gt; &lt;router-identifier&gt; [r|w|a])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A file name, an identifier for the file (a symbol), and optionally a
+          mode string, one of r, w, a.
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The file identifier, a router name.
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Opens a file. Subsequently, the given router identifier can
+          be passed to <a href="functions.html#printout"><tt>printout</tt></a>, <a href="functions.html#read"><tt>read</tt></a>, <a href="functions.html#readline"><tt>readline</tt></a>, or any other functions
+          that accept I/O routers as arguments. By default, the file
+          is opened for reading; if a mode string is given, it may be
+          opened for reading only (<tt>r</tt>), writing only
+          (<tt>w</tt>), or appending (<tt>a</tt>).  <p></p>
+          
+<b><i>Note:</i></b> See the <a href="functions.html#batch"><tt>batch</tt></a> command for a discussion about
+          specifying filenames in Jess.
+        </dd>
+      
+</dl>
+<a name="or">
+<h3>16.131. (or &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if any of the arguments evaluates to a
+          non-<tt>FALSE</tt> value; otherwise, returns
+          <tt>FALSE</tt>.  Note that
+          this function is distinct from the <a href="rules.html#or_ce">or conditional element.</a>
+        
+</dd>
+      
+</dl>
+<a name="pi">
+<h3>16.132. (pi)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the number <tt>pi</tt>.
+        </dd>
+      
+</dl>
+<a name="pop-focus">
+<h3>16.133. (pop-focus)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The name of a module
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Removes the top module from the focus stack and returns its
+          name.
+        </dd>
+
+      
+</dl>
+<a name="ppdeffacts">
+<h3>16.134. (ppdeffacts &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a deffacts</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a pretty-print rendering of a <a href="constructs.html#deffacts"><tt>deffacts</tt></a>.
+        </dd>
+      
+</dl>
+<a name="ppdeffunction">
+<h3>16.135. (ppdeffunction &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a deffunction</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a pretty-print representation of a <a href="constructs.html#deffunction"><tt>deffunction</tt></a>.
+        </dd>
+      
+</dl>
+<a name="ppdefglobal">
+<h3>16.136. (ppdefglobal &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a defglobal</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a pretty-print representation of a <a href="constructs.html#defglobal"><tt>defglobal</tt></a>
+        
+</dd>
+      
+</dl>
+<a name="ppdefquery">
+<h3>16.137. (ppdefquery &lt;symbol&gt; | *)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a defquery or *</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+            An alias for <a href="functions.html#ppdefrule"><tt>ppdefrule</tt></a> .
+        </dd>
+      
+</dl>
+<a name="ppdefrule">
+<h3>16.138. (ppdefrule &lt;symbol&gt; | *)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a rule or query, or the symbol *</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a pretty-print rendering of a <a href="constructs.html#defrule"><tt>defrule</tt></a> or <a href="constructs.html#defquery"><tt>defquery</tt></a>. If the
+          argument is the symbol "*", a single string containing all
+          existing rules and queries in alphabetical order of their
+          names is returned.
+        </dd>
+      
+</dl>
+<a name="ppdeftemplate">
+<h3>16.139. (ppdeftemplate &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a template</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a pretty-print representation of a <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a>.
+        </dd>
+      
+</dl>
+<a name="printout">
+<h3>16.140. (printout &lt;router-identifier&gt; &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A router identifier followed by zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sends unformatted output to the specified logical
+          name. Prints its arguments to the named router, which must
+          be open for output. No spaces are added between
+          arguments. The special symbol <tt>crlf</tt> prints as a
+          newline.  The special router name <tt>t</tt> can be used to
+          signify standard output.</dd>
+      
+</dl>
+<a name="progn">
+<h3>16.141. (progn &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                Zero or more expressions</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                The result of evaluating the last expression, or nil</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                A simple control structure that allows you to group multiple
+                function calls where syntactically only one is allowed - for
+                instance, on the LHS of a rule.</dd>
+        
+</dl>
+<a name="provide">
+<h3>16.142. (provide &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A symbol</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Returns the symbol.
+            </dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>
+                 Provides a feature to Jess. The symbol is entered in
+                 the feature table. See <a href="functions.html#require"><tt>require</tt></a>.
+                </p>
+                
+<p>
+                 If the feature is meant to be loaded from a
+                 subdirectory of the current directory or a
+                 subdirectory of a class path root, then the feature
+                 name must reflect that. For example if a feature X is
+                 implemented in the file <tt>com/company/X.clp</tt>,
+                 then the feature name must be "com/company/X". This
+                 full feature name must be used by <a href="functions.html#require"><tt>require</tt></a> to load the feature or the feature
+                 may not be found.
+                </p>
+            
+</dd>
+        
+</dl>
+<a name="random">
+<h3>16.143. (random)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                None</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Number</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Returns a pseudo-random integer between 0 and 65536.
+            </dd>
+        
+</dl>
+<a name="read">
+<h3>16.144. (read [&lt;router-identifier&gt;])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          An optional input router identifier (when omitted t is the default)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Reads a single-field value from a specified logical
+          name. Read a single symbol, string, or number from the named
+          router, returns this value. The router <tt>t</tt> means
+          standard input. Newlines are treated as ordinary whitespace.
+          If you need to parse text line-by-line, use <a href="functions.html#readline"><tt>readline</tt></a> and <a href="functions.html#explode$"><tt>explode$</tt></a>.
+        </dd>
+      
+</dl>
+<a name="readline">
+<h3>16.145. (readline [&lt;router-identifier&gt;])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          An optional input router identifier (when omitted t is the default)</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Reads an entire line as a string from the specified logical
+          name (router).  The router <tt>t</tt> means standard input.
+        </dd>
+      
+</dl>
+<a name="regexp">
+<h3>16.146. (regexp &lt;regular expression&gt; &lt;data&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A regular expression and a target, as symbols or strings</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Compiles the regular expression and tries to match it
+          against the entire target string, returning the Boolean result of the
+          match. Uses the <tt>java.util.regexp</tt> package.
+        </dd>
+      
+</dl>
+<a name="remove">
+<h3>16.147. (remove &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A symbol, the name of a template</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                (Nothing)</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Retracts all the facts currently in working memory that use the given template. Removing
+                a shadow fact template will result in an implicit call to
+                <a href="functions.html#undefinstance"><tt>undefinstance</tt></a> for the corresponding objects (the objects
+                will no longer be pattern-matched). A <a href="api/jess/JessEvent.html"><tt>jess.JessEvent</tt></a> of type
+                FACT + REMOVED will be sent for each fact removed if the event mask is set
+                appropriately.</p>
+                
+<p>It is important to remember that all pattern-matching
+                    happens during calls to <a href="functions.html#assert"><tt>assert</tt></a>, <a href="functions.html#retract"><tt>retract</tt></a>, <a href="functions.html#modify"><tt>modify</tt></a>, and related
+                    functions. Pattern-matching happens whether the engine is
+                    running or not.</p>
+            
+</dd>
+        
+</dl>
+<a name="replace$">
+<h3>16.148. (replace$ &lt;list-expression&gt; &lt;begin-integer-expression&gt; &lt;end-integer-expression&gt; &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A list, two numeric expressions, and one or more additional
+          single or list values</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a copy of a the original list with the
+          elements in a specified range replaced with a new set of
+          values.  The variable number of final arguments are inserted
+          into the first list, replacing elements between the
+          1-based indices given by the two numeric arguments,
+          inclusive.
+
+          Example:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(replace$ (create$ a b c) 2 2 (create$ x y z))</pre>
+
+<pre>
+<i>(a x y z c)</i>
+</pre>
+
+</div>
+
+        
+</dd>
+      
+</dl>
+<a name="require">
+<h3>16.149. (require                      &lt;symbol&gt; [&lt;filename&gt;])</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A symbol, and optionally a filename</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Returns the symbol, or throws an exception on failure.
+            </dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>
+                "Require" is similar to <a href="functions.html#batch"><tt>batch</tt></a>. The main difference is that
+                it will only load a file once. If a file has been read
+                before, this function won't read it a second time,
+                whereas <a href="functions.html#batch"><tt>batch</tt></a> would.
+                </p>
+                
+<p>
+                The symbol argument is a "feature name". A file can
+                "provide a feature" (see the <a href="functions.html#provide"><tt>provide</tt></a> function.) Once a
+                feature has been provided, subsequent calls to
+                <tt>require</tt> for this same feature name will be
+                ignored.
+                </p>
+                
+<p>
+                If the optional filename is supplied, Jess passes that
+                name to <a href="functions.html#batch"><tt>batch</tt></a> to attempt
+                to read the file, if necessary. If the optional
+                filename is not provided, Jess appends ".clp" to the
+                feature name and uses that as the argument to <a href="functions.html#batch"><tt>batch</tt></a>. If the feature is not
+                provided by the first file that is read, an exception is
+                thrown to announce this failure.
+                </p>
+                
+<p>
+                The most important use of "require" is to establish
+                dependencies between files in the JessDE editor.
+                </p>
+            
+</dd>
+        
+</dl>
+<a name="require*">
+<h3>16.150. (require*                      &lt;symbol&gt; [&lt;filename&gt;])</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A symbol, and optionally a filename</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Returns the symbol, or nil on failure.
+            </dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>
+                  This function is just like <a href="functions.html#require"><tt>require</tt></a>, except that it fails
+                  silently if the file is missing or if there is an
+                  error while parsing the required file. If the
+                  feature is provided, the feature name is returned;
+                  otherwise, <tt>nil</tt> is returned instead.
+                </p>
+            
+</dd>
+        
+</dl>
+<a name="reset">
+<h3>16.151. (reset)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Removes all facts from working memory, removes all
+          activations, then asserts the fact <tt>(initial-fact)</tt>,
+          then asserts all facts found in deffacts, asserts a fact
+          representing each registered Java object, and (if the
+          set-reset-globals property is TRUE) initializes all
+          defglobals.</dd>
+      
+</dl>
+<a name="rest$">
+<h3>16.152. (rest$ &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One list</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns all but the first field of a list as a new
+          list.
+        </dd>
+      
+</dl>
+<a name="retract">
+<h3>16.153. (retract &lt;expression&gt;+)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                One or more <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a> objects or integers</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                TRUE</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Retracts the facts given. Retracting a
+                shadow fact will result in an implicit call to
+                <a href="functions.html#undefinstance"><tt>undefinstance</tt></a> for the corresponding object (the object
+                will no longer be pattern-matched). A <a href="api/jess/JessEvent.html"><tt>jess.JessEvent</tt></a> of type
+                FACT + REMOVED will be sent if the event mask is set
+                appropriately. Note that the arguments to this function
+                must be integers or actual <a href="api/jess/Fact.html"><tt>jess.Fact</tt></a>
+                objects; they cannot be explicit facts as are accepted by
+                <a href="functions.html#assert"><tt>assert</tt></a>.</p>
+                
+<p>It is important to remember that all pattern-matching
+                    happens during calls to <a href="functions.html#assert"><tt>assert</tt></a>, <a href="functions.html#retract"><tt>retract</tt></a>, <a href="functions.html#modify"><tt>modify</tt></a>, and related
+                    functions. Pattern-matching happens whether the engine is
+                    running or not.</p>
+            
+</dd>
+        
+</dl>
+<a name="retract-string">
+<h3>16.154. (retract-string &lt;string&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A string, a representation of a Fact</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Parses the string as a Fact; if such a fact exists in
+          working memory, calls <a href="functions.html#retract"><tt>retract</tt></a>
+          on it.
+        </dd>
+      
+</dl>
+<a name="return">
+<h3>16.155. (return [&lt;expression&gt;])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          An optional expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          From a <a href="constructs.html#deffunction"><tt>deffunction</tt></a>, returns the given value and exits the
+          deffunction immediately. From the RHS of a <a href="constructs.html#defrule"><tt>defrule</tt></a>, terminates
+          the rule's execution immediately and pops the current focus
+          module from the focus stack. No argument should be given
+          when return is called from the RHS of a rule.
+        </dd>
+      
+</dl>
+<a name="round">
+<h3>16.156. (round &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Rounds its argument to the closest integer.
+        </dd>
+      
+</dl>
+<a name="rules">
+<h3>16.157. (rules [ &lt;module-name&gt; | * ])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Optionally, a module name, or the symbol "*"</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          With no arguments, prints a list of all rules and queries in
+          the current module (not the focus module) to the 't'
+          router. With a module name for an argument, prints the names
+          of the rules and queries in that module. With "*" as an
+          argument, prints the names of all rules and queries.
+        </dd>
+      
+</dl>
+<a name="run">
+<h3>16.158. (run [&lt;integer&gt;])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Optionally, a single integer</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+            Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Starts the inference engine. If no argument is supplied,
+          Jess will keep running until no more activations remain or
+          <a href="functions.html#halt"><tt>halt</tt></a> is called. If an argument is
+          supplied, it gives the maximum number of rules to fire
+          before stopping. The function returns the number of rules
+          actually fired.
+        </dd>
+      
+</dl>
+<a name="run-query">
+<h3>16.159. (run-query &lt;query-name&gt; &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                The name of a query, and zero or more additional expressions</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                A <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Iterator.html"><tt>java.util.Iterator</tt></a>
+</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>
+<b>Deprecated.</b> Use <a href="functions.html#run-query*"><tt>run-query*</tt></a>
+               instead.</p>
+                Runs a <a href="queries.html">query</a>
+                and returns a <tt>java.util.Iterator</tt> of the
+                matches. See the documentation for <a href="queries.html">defquery</a> for more
+                details. Note that run-query can lead to backwards
+                chaining, which can cause rules to fire; thus if
+                run-query is called on a rule RHS, other rules' RHSs
+                may run to completion before the instigating rule
+                completes. Putting run-query on a rule RHS can also
+                cause the count of executed rules returned by <a href="functions.html#run"><tt>run</tt></a> to be low.
+                <p>
+                    Note that the <tt>Iterator</tt> returned by this
+                    function should be used immediately. It will
+                    become invalid if any of the following functions
+                    are called before you've used it: <tt>reset</tt>,
+                    <tt>count-query-results</tt>, or
+                    <tt>run-query</tt>. It <i>may</i> become invalid
+                    if any of the following are called:
+                    <tt>assert</tt>, <tt>retract</tt>,
+                    <tt>modify</tt>, or <tt>duplicate</tt>, and if any
+                    of the affected facts are involved in the active
+                    query's result.
+                </p>
+            
+</dd>
+        
+</dl>
+<a name="run-query*">
+<h3>16.160. (run-query* &lt;query-name&gt; &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                The name of a query, and zero or more additional expressions</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                A <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a>
+</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                Runs a <a href="queries.html">query</a>
+                and returns a <a href="api/jess/QueryResult.html"><tt>jess.QueryResult</tt></a> of the
+                matches. See the documentation for <a href="queries.html">defquery</a> for more
+                details. Note that run-query can lead to backwards
+                chaining, which can cause rules to fire; thus if
+                run-query is called on a rule RHS, other rules' RHSs
+                may run to completion before the instigating rule
+                completes. Putting <a href="functions.html#run-query*"><tt>run-query*</tt></a> on a rule RHS can also
+                cause the count of executed rules returned by <a href="functions.html#run"><tt>run</tt></a> to be low.
+            </dd>
+        
+</dl>
+<a name="run-until-halt">
+<h3>16.161. (run-until-halt)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Runs the engine until <a href="functions.html#halt"><tt>halt</tt></a> is
+          called. Returns the number of rules fired. When there are no
+          active rules, the calling thread will be blocked waiting on
+          the activation semaphore.
+        </dd>
+      
+</dl>
+<a name="save-facts">
+<h3>16.162. (save-facts &lt;file-name&gt; [&lt;template-name&gt;])</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+                A filename, and optionally a symbol</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Boolean</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Saves facts to a file in Jess language format. Attempts to open the named file for
+                writing, and then writes a list of all facts in working
+                memory to the file. This file is suitable for reading with
+                <a href="functions.html#load-facts"><tt>load-facts</tt></a>. If the optional second argument is given, only
+                facts whose head matches this symbol will be saved.
+                </p>
+                
+<p>
+<b><i>Note:</i></b> See the <a href="functions.html#batch"><tt>batch</tt></a> command for a discussion about
+                specifying filenames in Jess.</p>
+            
+</dd>
+        
+</dl>
+<a name="save-facts-xml">
+<h3>16.163. (save-facts-xml &lt;file-name&gt; [&lt;template-name&gt;])</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+
+                A filename, and optionally a symbol</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+                Boolean</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+                
+<p>Saves facts to a file in XML format.
+                    This function attempts to open the named file for
+                writing, and then writes a list of all facts in working
+                memory to the file. A well-formed document
+                    containing an XML declaration, a <tt>fact-list</tt> root element, and
+                    one <tt>fact</tt> element for each fact will be written.
+                    This file is suitable for reading with
+                <a href="functions.html#load-facts"><tt>load-facts</tt></a>. If the optional second argument is given, only
+                facts whose head matches this symbol will be saved.</p>
+                
+<p>
+<b><i>Note:</i></b> See the <a href="functions.html#batch"><tt>batch</tt></a> command for a discussion about
+                specifying filenames in Jess.</p>
+            
+</dd>
+        
+</dl>
+<a name="set">
+<h3>16.164. (set &lt;Java object&gt; &lt;string-expression&gt; &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object, a property name, and an expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The last argument</dd>
+
+        
+<dt>Description:</dt>
+<dd> Sets a JavaBean's property or instance variable
+          to the given value. The first argument is the Bean object;
+          the second argument is the name of the property or
+          variable. The third value is the new value for the property;
+          the same conversions are applied as for <a href="functions.html#new"><tt>new</tt></a>
+          and <a href="functions.html#call"><tt>call</tt></a>. Jess will first try to find a
+          JavaBean property by the given name; if none is found, it
+          will look for an instance variable.</dd>
+
+      
+</dl>
+<a name="set-current-module">
+<h3>16.165. (set-current-module &lt;module-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a valid module
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The name of the previous current module
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sets the current module. Any constructs defined without
+          explicitly naming a module are defined in the current
+          module. Note that defining a defmodule also sets the current
+          module.
+        </dd>
+
+      
+</dl>
+<a name="set-factory">
+<h3>16.166. (set-factory &lt;factory object&gt; )</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          An object that implements the interface
+          <a href="api/jess/factory/Factory.html"><tt>jess.factory.Factory</tt></a>
+</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A <a href="api/jess/factory/Factory.html"><tt>jess.factory.Factory</tt></a>
+        
+</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Set the "thing factory" for the active Rete
+          object. Providing an alternate "thing factory" is a very
+          advanced, and currently undocumented, way to extend Jess's
+          functionality.
+        </dd>
+      
+</dl>
+<a name="setgen">
+<h3>16.167. (setgen &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sets the starting number used by <a href="functions.html#gensym*"><tt>gensym*</tt></a>. Note that if this number has
+          already been used, <a href="functions.html#gensym*"><tt>gensym*</tt></a>
+          uses the next larger number that has not been used.
+        </dd>
+      
+</dl>
+<a name="set-member">
+<h3>16.168. (set-member (&lt;Java object&gt; | &lt;string-expression&gt;) &lt;string&gt; &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object or class name, a member variable name and an expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The last argument</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sets a Java object's member variable to the given value. The
+          first argument is the object (or the name of the class, in
+          the case of a static member variable). The second argument
+          is the name of the variable. The third value is the new
+          value for the variable; the same conversions are applied as
+          for <a href="functions.html#new"><tt>new</tt></a> and <a href="functions.html#call"><tt>call</tt></a>.</dd>
+      
+</dl>
+<a name="set-multithreaded-io">
+<h3>16.169. (set-multithreaded-io (TRUE | FALSE))</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Specify whether Jess should use a separate thread to flush
+          I/O streams. Turning this on can lead to a modest
+          performance enhancement, at the expense of possible loss of
+          output on program termination. Returns the previous value of
+          this property.
+        </dd>
+      
+</dl>
+<a name="set-node-index-hash">
+<h3>16.170. (set-node-index-hash &lt;integer&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One integral value</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sets the default hashing key used in all Rete network join
+          node memories defined after the function is called; this
+          function will not affect parts of the network already in
+          existence at the time of the call. A small value will give
+          rise to memory-efficient nodes; a larger value will use more
+          memory. If the created nodes will generally have to remember
+          many partial matches, large numbers will lead to faster
+          performance; the opposite may be true for nodes which will
+          rarely hold more than one or two partial matches. This
+          function sets the default; explicit <tt>declare</tt>
+          statements can override this for specific rules.
+        </dd>
+      
+</dl>
+<a name="set-reset-globals">
+<h3>16.171. (set-reset-globals &lt;Boolean&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One Boolean value </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Changes the current setting of the global variable reset
+          behavior. If this property is set to TRUE (the default),
+          then the (reset) command reinitializes the values of global
+          variables to their initial values (if the initial value was
+          a function call, the function call is reexecuted.) If the
+          property is set to FALSE, then (reset) will not
+          affect global variables. Note that in previous versions of
+          Jess, defglobals were always reset; but if the initial value
+          was set with a function call, the function was <b>not</b>
+          reevaluated. Now it is.</dd>
+      
+</dl>
+<a name="set-salience-evaluation">
+<h3>16.172. (set-salience-evaluation (when-defined | when-activated | every-cycle))</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One of the symbols <tt>when-defined</tt>, <tt>when-activated</tt>, or <tt>every-cycle</tt>
+</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          One of the potential arguments (the previous value of this property)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Changes the current setting of the salience evaluation
+          behavior. By default, a rule's salience will be determined
+          once, when the rule is defined (when-defined.)  If this
+          property is set to when-activated, then the salience of each
+          rule will be redetermined immediately before each time it is
+          placed on the agenda.  If the property is set to
+          every-cycle, then the salience of every rule is redetermined
+          immediately after each time any rule fires.</dd>
+      
+</dl>
+<a name="set-strategy">
+<h3>16.173. (set-strategy &lt;strategy-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A symbol or string representing the name of a strategy (can
+          be a fully-qualifed Java class name). You can use <tt>depth</tt> and
+          <tt>breadth</tt> to represent the two built-in
+          strategies.</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The previous strategy as a symbol.</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Lets you specify the <i>conflict resolution strategy</i>
+          Jess uses to order the firing of rules of equal
+          salience. Currently, there are two strategies available:
+          <i>depth</i> <i>(LIFO)</i> and <i>breadth (FIFO).</i> When
+          the depth strategy is in effect (the default), more recently
+          activated rules are fired before less recently activated
+          rules of the same salience. When the breadth strategy is
+          active, rules of the same salience fire in the order in
+          which they are activated. Note that in either case, if
+          several rules are activated simultaneously (i.e., by the
+          same fact-assertion event) the order in which these several
+          rules fire is unspecified, implementation-dependent and
+          subject to change. More built-in strategies may be added in
+          the future.  You can implement your own strategies
+          in Java by creating a class that implements the
+          <tt>jess.Strategy</tt> interface and then specifying its
+          fully-qualified classname as the argument to <a href="functions.html#set-strategy"><tt>set-strategy</tt></a>.  Details can be
+          gleaned from the source.
+        </dd>
+      
+</dl>
+<a name="set-value-class">
+<h3>16.174. (set-value-class &lt;string-expression&gt; TRUE|FALSE)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+          The name of a Java class</dd>
+
+          
+<dt>Returns:</dt>
+<dd>
+            TRUE</dd>
+
+          
+<dt>Description:</dt>
+<dd>
+            
+<p>A <i>value object</i> is an instance of a class that represents a specific value.
+            They are often immutable like Integer, Double, and String. For Jess's purposes, a value object
+            is one whose <tt>hashCode()</tt> method returns a constant -- i.e., whose hash code doesn't change
+            during normal operation of the class. Integer, Double, and all the other wrapper classes
+            qualify, as does String, and generally all immutable classes. Any class that doesn't override the
+            default <tt>hashCode()</tt> method also qualifies as a value object by the definition. Java's
+            Collection classes (Lists, Maps, Sets, etc.) are classic examples of classes that are <i>not</i>
+            value objects, because their hash codes depend on the collection's contents.</p>
+
+            
+<p>As far as Jess is concerned, an object is a value object as long as its hash code won't
+            change while the object is in working memory. This includes the case where the object is contained in a slot
+            of any fact. If the hash code will only change during calls to <a href="functions.html#modify"><tt>modify</tt></a>, then the object
+            is still a value object.</p>
+
+            
+<p>Jess can make certain assumptions about value objects that lead to large performance increases
+            during pattern matching. Because many classes are actually value classes by Jess's broad definition,
+            <i>Jess now assumes that all objects (except for Maps and Collections) are value objects by default.</i> If you're working
+            with a class that is <i>not</i> a value class, it's very important that you tell Jess about it by
+            using the set-value-class function or the static method <a href="api/jess/HashCodeComputer.html#setIsValueClass(Rete, String, boolean)"><tt><tt>jess.HashCodeComputer.</tt>setIsValueClass(Rete, String, boolean)</tt></a>
+            Failure to do so will lead to undefined (bad) behavior.</p>
+          
+</dd>
+        
+</dl>
+<a name="set-watch-router">
+<h3>16.175. (set-watch-router &lt;router-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+            A symbol, the name of a valid output router
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The previous watch router name</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+            Sets the router that the output from <a href="functions.html#watch"><tt>watch</tt></a> goes to. The old value is returned.
+            Note that the watch router is not reset by <a href="functions.html#reset"><tt>reset</tt></a> or <a href="functions.html#clear"><tt>clear</tt></a>.
+        </dd>
+      
+</dl>
+<a name="show-deffacts">
+<h3>16.176. (show-deffacts)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Displays all defined <a href="constructs.html#deffacts"><tt>deffacts</tt></a> to the 't' router.
+        </dd>
+      
+</dl>
+<a name="show-deftemplates">
+<h3>16.177. (show-deftemplates)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Displays all defined <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a>s to the 't'
+          router.
+        </dd>
+      
+</dl>
+<a name="show-jess-listeners">
+<h3>16.178. (show-jess-listeners)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          nil</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Displays all <a href="api/jess/JessListener.html"><tt>jess.JessListener</tt></a>s registered with the
+          engine to the 't' router.
+        </dd>
+      
+</dl>
+<a name="socket">
+<h3>16.179. (socket &lt;Internet-hostname&gt; &lt;TCP-port-number&gt; &lt;router-identifier&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          An Internet hostname, a TCP port number, and a router identifier</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The router identifier</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Somewhat equivalent to <a href="functions.html#open"><tt>open</tt></a>,
+          except that instead of opening a file, opens an unbuffered
+          TCP network connection to the named host at the named port,
+          and installs it as a pair of read and write routers under
+          the given name.</dd>
+      
+</dl>
+<a name="sqrt">
+<h3>16.180. (sqrt &lt;numeric-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A numeric expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the square root of its only argument.
+        </dd>
+      
+</dl>
+<a name="store">
+<h3>16.181. (store &lt;string or symbol&gt; &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A string or symbol and any other value</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Associates the expression with the name given by the first
+          argument, such that later calls to the <a href="functions.html#fetch"><tt>fetch</tt></a> will retrieve it. Storing the
+          symbol nil will clear any value associated with
+          name. Analagous to the <tt>store()</tt> member function of
+          the <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> class. See section on <a href="java.html#xfer">using store and fetch</a> for
+          more details.</dd>
+      
+</dl>
+<a name="str-cat">
+<h3>16.182. (str-cat &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Concatenates its arguments as strings to form a single
+          string. For Java objects, the toString() method of the
+          contained object is called.</dd>
+      
+</dl>
+<a name="str-compare">
+<h3>16.183. (str-compare &lt;string-expression&gt; &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two symbols or strings</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Lexicographically compares two strings. Returns 0 if the
+          strings are identical, a negative integer if the first is
+          lexicographically less than the second, a positive integer
+          if lexicographically greater.
+        </dd>
+      
+</dl>
+<a name="str-index">
+<h3>16.184. (str-index &lt;lexeme-expression&gt; &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two symbols or strings</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer or FALSE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the position of the first argument within the second
+          argument.  This is the 1-based index at which the first
+          string first appears in the second; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="stringp">
+<h3>16.185. (stringp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for strings; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="str-length">
+<h3>16.186. (str-length &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A symbol or string</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Integer</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the length of a symbol in characters.
+        </dd>
+      
+</dl>
+<a name="subseq$">
+<h3>16.187. (subseq$ &lt;list-expression&gt; &lt;begin-integer-expression&gt; &lt;end-integer-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A list and two numeric expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Extracts the specified range from a list value
+          consisting of the elements between the two 1-based indices
+          of the given list, inclusive.  Index values less than 1 and
+          greater than the list length are accepted, and so is a
+          begin index greater than an end index, resulting in an
+          empty list.
+
+        </dd>
+      
+</dl>
+<a name="subsetp">
+<h3>16.188. (subsetp &lt;list-expression&gt; &lt;list-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> if the first argument is a subset of
+          the second (i.e., all the elements of the first list
+          appear in the second list); otherwise, returns
+          <tt>FALSE</tt>.</dd>
+      
+</dl>
+<a name="sub-string">
+<h3>16.189. (sub-string &lt;begin-integer-expression&gt; &lt;end-integer-expression&gt; &lt;string-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Two numbers and a string</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          String</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Retrieves a subportion from a string. Returns the string
+          consisting of the characters between the two 1-based indices
+          of the given string, inclusive. Both index values must not be
+          less than 1 or greater than the string length. A begin
+          index that is equal to the end index plus one results in the
+          null string.
+
+        </dd>
+      
+</dl>
+<a name="symbolp">
+<h3>16.190. (symbolp &lt;expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One expression</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns <tt>TRUE</tt> for symbols; otherwise, returns
+          <tt>FALSE</tt>.
+        </dd>
+      
+</dl>
+<a name="sym-cat">
+<h3>16.191. (sym-cat &lt;expression&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Concatenates its arguments as strings to form a single
+          symbol. For Java objects, the
+          toString() method of the contained object is
+          called.</dd>
+      
+</dl>
+<a name="synchronized">
+<h3>16.192. (synchronized &lt;java-object&gt; &lt;action&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          Any Java object, followed by any number of expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Executes the expressions inside a Java "synchronized" block
+          which locks the given object. Returns the value of the last
+          expression evaluated.
+        </dd>
+      
+</dl>
+<a name="system">
+<h3>16.193. (system &lt;lexeme-expression&gt;+ [&amp;])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more symbols or strings</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          a <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Process.html"><tt>java.lang.Process</tt></a> object, or FALSE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Sends a command to the operating system. Each symbol or string
+          becomes one element of the argument array in a call to the
+          Java <tt>java.lang.Runtime.exec(String[] cmdaray)</tt>
+          method; therefore to execute the command <tt>edit
+          myfile.txt</tt>, you should call <tt>(system edit
+          myfile.txt)</tt>, not (system "edit myfile.txt").  <p></p>
+          Normally blocks (i.e., Jess stops until the launched
+          application returns), but if the last argument is an
+          ampersand (<tt>&amp;</tt>), the program will run in the
+          background. The standard output and standard error streams
+          of the process are connected to the 't' router, but the
+          input of the process is not connected to the terminal.  <p></p>
+          Returns the Java Process object. You can call <tt>waitFor</tt> and
+          then <tt>exitValue</tt> to get the exit status of the process.
+        </dd>
+      
+</dl>
+<a name="throw">
+<h3>16.194. (throw &lt;java-object&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object that must inherit from <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Throwable.html"><tt>java.lang.Throwable</tt></a>
+</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Does not return</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Throws the given exception object. If the object is a
+          <a href="api/jess/JessException.html"><tt>jess.JessException</tt></a>, throws it directly. If the object is
+          some other type of exception, it is wrapped in a
+          <tt>JessException</tt> before throwing. The object's stack
+          trace is filled in such that the exception will appear to
+          have been created by the <a href="functions.html#throw"><tt>throw</tt></a>
+          function.
+        </dd>
+      
+</dl>
+<a name="time">
+<h3>16.195. (time)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Number</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns the number of seconds since 12:00 AM, Jan 1, 1970.
+        </dd>
+      
+</dl>
+<a name="try">
+<h3>16.196. (try &lt;expression&gt;* [catch &lt;expression&gt;*] [finally &lt;expression&gt;*])</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more expressions, followed optionally by the symbol
+          <tt>catch</tt> followed by zero or more expressions, followed
+          optionally by the symbol <tt>finally</tt> followed by zero or more
+          expressions. Either the <tt>catch</tt>, or the <tt>finally</tt>, or both must
+          be included.
+        </dd>
+        
+<dt>Returns:</dt>
+<dd>(Varies)</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          This command works something like Java <tt>try</tt> with a
+          few simplifications.  The biggest difference is that the
+          <tt>catch</tt> clause can specify neither a type of
+          exception nor a variable to receive the exception
+          object. All exceptions occurring in a <a href="functions.html#try"><tt>try</tt></a> block are routed to the single
+          <tt>catch</tt> block. The variable <tt>?ERROR</tt> is made
+          to point to the exception object. For example:
+
+<div class="jesscode">
+<pre>
+<b>Jess&gt; </b>
+(try
+    (open NoSuchFile.txt r)
+ catch
+    (printout t (call ?ERROR toString) crlf))
+</pre>
+</div>
+
+          prints
+
+          <div class="example">
+<pre>
+Jess reported an error in routine open
+    while executing (open NoSuchFile.txt r).
+Message: I/O Exception.
+          </pre>
+</div>
+
+          
+<p></p>An empty <tt>catch</tt> block is fine. It just signifies
+          ignoring possible errors.  <p></p>The code in the
+          <tt>finally</tt> block, if present, is executed after all
+          try and/or catch code has executed, immediately before the
+          <a href="functions.html#try"><tt>try</tt></a> function returns.
+
+        </dd>
+      
+</dl>
+<a name="undefadvice">
+<h3>16.197. (undefadvice &lt;function-name&gt; | ALL | &lt;list&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A function name, or ALL, or a list of function names</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Removes all advice from the named function(s).
+        </dd>
+      
+</dl>
+<a name="undeffacts">
+<h3>16.198. (undeffacts &lt;deffacts-name&gt; | *)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a deffacts, or the symbol "*"</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Deletes a deffacts. The next time the engine is reset, the
+          facts in that deffacts will not be asserted. If the argument
+          is "*", all deffacts are deleted.
+        </dd>
+      
+</dl>
+<a name="undefinstance">
+<h3>16.199. (undefinstance (&lt;java-object&gt; | * ))</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Java object, or the symbol "*"</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          If the object currently has a shadow fact, it is removed
+          from the working memory. Furthermore, if the object has a
+          <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/beans/PropertyChangeListener.html"><tt>java.beans.PropertyChangeListener</tt></a> installed, this is removed
+          as well. If the argument is "*" this is done for all Java
+          objects in working memory.
+        </dd>
+      
+</dl>
+<a name="undefrule">
+<h3>16.200. (undefrule &lt;rule-name&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          The name of a rule</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          Boolean</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Deletes a rule. Removes the named rule from the Rete network
+          and returns <tt>TRUE</tt> if the rule existed. This rule
+          will never fire again.
+        </dd>
+      
+</dl>
+<a name="union$">
+<h3>16.201. (union$ &lt;list-expression&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more lists</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          List</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Returns a new list consisting of the union of all of
+          its list arguments (i.e., of all the elements that
+          appear in any of the arguments with duplicates removed).
+        </dd>
+      
+</dl>
+<a name="unwatch">
+<h3>16.202. (unwatch &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more of the symbols <tt>all</tt>, <tt>rules</tt>, <tt>compilations</tt>, <tt>activations</tt>, <tt>facts</tt>, <tt>focus</tt>
+</dd>
+        
+<dt>Returns:</dt>
+<dd></dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Causes trace output to not be printed for the given
+          indicators. See <tt>watch</tt>.
+        </dd>
+      
+</dl>
+<a name="upcase">
+<h3>16.203. (upcase &lt;lexeme-expression&gt;)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A string or symbol</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          A string or symbol</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Converts lowercase characters in a string or symbol to
+          uppercase. Returns the argument as an all-uppercase symbol,
+          unless the argument is a string, in which case a string is
+          returned.
+        </dd>
+      
+</dl>
+<a name="update">
+<h3>16.204. (update &lt;java-object&gt;+)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          One or more Java objects, previously passed as arguments to
+            <a href="functions.html#add"><tt>add</tt></a> or <a href="functions.html#definstance"><tt>definstance</tt></a>.
+        </dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          The shadow fact tied to the last argument.</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+            Java objects in working memory aren't necessarily updated
+            automatically, since Jess may not know when an object
+            object has been changed. This function lets you tell Jess
+            explicitly that one or more Java objects have been
+            updated. In response, Jess will find their corresponding
+            shadow facts and update all their slots.
+        </dd>
+      
+</dl>
+<a name="view">
+<h3>16.205. (view)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          None</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          The view command displays a live snapshot of the Rete
+          network in a graphical window. See <a href="rete.html">How Jess Works</a> for details.
+        </dd>
+      
+</dl>
+<a name="watch">
+<h3>16.206. (watch &lt;symbol&gt;)</h3>
+</a>
+<dl>
+
+            
+<dt>Arguments:</dt>
+<dd>
+          One or more of the symbols <tt>all</tt>, <tt>rules</tt>, <tt>compilations</tt>, <tt>activations</tt>, <tt>facts</tt>, <tt>focus</tt>
+</dd>
+
+            
+<dt>Returns:</dt>
+<dd>
+          TRUE</dd>
+
+            
+<dt>Description:</dt>
+<dd>
+          Produces additional debug output when specific events happen
+          in Jess, depending on the argument(s). Any number of different
+          watches can be active simultaneously:
+
+                <ul>
+                    
+<li>
+                        
+<tt>rules</tt>: prints a message when any rule
+              fires.</li>
+
+                    
+<li>
+                        
+<tt>compilations</tt>: prints a message when any rule is
+              compiled.</li>
+
+                    
+<li>
+                        
+<tt>activations</tt>: prints a message when any rule is
+              activated, or deactivated, showing which facts have
+              caused the event.</li>
+
+                    
+<li>
+                        
+<tt>facts</tt>: print a message whenever a fact is
+              asserted or retracted.</li>
+                    
+<li>
+                        
+<tt>focus</tt>: print a message for each change to the
+              module focus stack.</li>
+
+                    
+<li>
+                        
+<tt>all</tt>: all of the above.
+                    </li>
+                
+</ul>
+            
+</dd>
+        
+</dl>
+<a name="while">
+<h3>16.207. (while &lt;expression&gt; [do] &lt;action&gt;*)</h3>
+</a>
+<dl>
+
+        
+<dt>Arguments:</dt>
+<dd>
+          A Boolean expression, the symbol <tt>do</tt>, and
+          zero or more expressions</dd>
+
+        
+<dt>Returns:</dt>
+<dd>
+          (Varies)
+        </dd>
+
+        
+<dt>Description:</dt>
+<dd>
+          Allows conditional looping. Evaluates the boolean expression
+          repeatedly.  As long as it does not equal <tt>FALSE</tt>,
+          the list of other expressions are evaluated. A <a href="functions.html#break"><tt>break</tt></a> also terminates the iteration. The value of
+          the last expression evaluated is the return
+          value of this function.</dd>
+      
+</dl>
+  
+</div>
+</body>
+
+</html>

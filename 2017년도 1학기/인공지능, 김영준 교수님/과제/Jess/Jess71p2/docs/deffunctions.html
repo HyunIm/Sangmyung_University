@@ -1,0 +1,265 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Defining Functions in Jess</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="basics.html">Jess Language Basics</a>
+</li>
+  
+<li id="selected">
+<a href="deffunctions.html">Defining Functions in Jess</a>
+</li>
+  
+<li>
+<a href="memory.html">Working Memory</a>
+</li>
+  
+<li>
+<a href="rules.html">Making Your Own Rules</a>
+</li>
+  
+<li>
+<a href="queries.html">Querying Working Memory</a>
+</li>
+  
+<li>
+<a href="java.html">Using Java from Jess</a>
+</li>
+
+</ul>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>4.
+        Defining Functions in Jess</h2>
+
+
+<a name="deffunctions">
+<h3>4.1. Deffunctions</h3>
+</a>
+
+You can define your own functions in the Jess rule language using the
+    <tt>deffunction</tt>
+construct. A <tt>deffunction</tt> construct looks like this:
+
+<div class="example">
+<pre>(deffunction &lt;function-name&gt; [&lt;doc-comment&gt;] (&lt;parameter&gt;*)
+   &lt;expr&gt;* [&lt;return-specifier&gt;])
+</pre>
+</div>
+The <tt>&lt;function-name&gt;</tt> must be a symbol. Each <tt>&lt;parameter&gt;</tt>
+must be a variable name. The optional <tt>&lt;doc-comment&gt;</tt> is a
+double-quoted string that can describe the purpose of the
+function. There may be an arbitrary number of <tt>&lt;expr&gt;</tt>
+expressions. The optional <tt>&lt;return-specifier&gt;</tt> gives the
+return value of the function. It can either be an explicit use of the
+<a href="functions.html#return"><tt>return</tt></a> function or it can be any value or expression. Control
+flow in <tt>deffunction</tt>s is achieved via control-flow
+functions like <a href="functions.html#foreach"><tt>foreach</tt></a>, <a href="functions.html#if"><tt>if</tt></a>,
+and <a href="functions.html#while"><tt>while</tt></a>. The
+following is a <tt>deffunction</tt> that returns the larger of its two
+numeric arguments:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deffunction max (?a ?b)
+  (if (&gt; ?a ?b) then
+      (return ?a)
+  else
+      (return ?b)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+</div>
+
+Note that this could have also been written as:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(deffunction max (?a ?b)
+  (if (&gt; ?a ?b) then
+      ?a
+   else
+      ?b))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+</div>
+
+This function can now be called anywhere a Jess function call can be
+used. For example
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(printout t "The greater of 3 and 5 is " (max 3 5) "." crlf)</pre>
+
+<pre>
+<i>The greater of 3 and 5 is 5.</i>
+</pre>
+
+</div>
+
+
+<p>Normally a <tt>deffunction</tt> takes a specific number of
+arguments. To write a <tt>deffunction</tt> that takes an arbitrary
+number of arguments, make the last formal parameter be a
+<i>multifield</i> -- a variable prefixed with a '$' character. When
+the <tt>deffunction</tt> is called, the multifield variable will
+contain all the remaining arguments passed to the function, as a
+list. A <tt>deffunction</tt> can accept no more than one such wildcard
+argument, and it must be the last argument to the function.</p>
+
+    
+<p>
+        You can also customize the Jess language with functions written in Java. These
+        are indistinguishable from built-in functions, and in fact, you write them using the
+        same interface used to define built-in functions. See <a href="extending.html">here</a>
+        for details.
+    </p>
+
+
+
+
+
+<a name="defadvice">
+<h3>4.2. Defadvice</h3>
+</a>
+
+Sometimes a Jess function won't behave exactly as you'd like. The
+<a href="functions.html#defadvice"><tt>defadvice</tt></a> construct lets you write
+some Jess code which will be executed before or after each time a
+given Jess function is called. <a href="functions.html#defadvice"><tt>defadvice</tt></a> lets you easily "wrap" extra code
+around any Jess function, such that it executes before (and thus can
+alter the argument list seen by the real function, or short-circuit it
+completely by returning a value of its own) or after the real function
+(and thus can see the return value of the real function and possibly
+alter it. ) defadvice provides a great way for Jess add-on authors to
+extend Jess without needing to change any internal code.  <p></p> Here
+are some examples of what defadvice looks like.  <p></p> This intercepts
+calls to 'plus' (+) and adds the extra argument '1', such that (+ 2 2)
+becomes (+ 2 2 1) -&gt; 5. The variable '$?argv' is special. It always
+refers to the list of arguments the real Jess function will receive
+when it is called.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defadvice before + (bind $?argv (create$ $?argv 1)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(+ 2 2)</pre>
+
+<pre>
+<i>5</i>
+</pre>
+
+</div>
+
+This makes all additions equal to 1. By returning, the defadvice keeps
+the real function from ever being called.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defadvice before + (return 1))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(+ 2 2)</pre>
+
+<pre>
+<i>1</i>
+</pre>
+
+</div>
+
+This subtracts one from the return value of the + function. ?retval is
+another magic variable - it's the value the real function
+returned. When we're done, we remove the advice with <a href="functions.html#undefadvice"><tt>undefadvice</tt></a>.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defadvice after + (return (- ?retval 1)))</pre>
+
+<pre>
+<i>TRUE</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(+ 2 2)</pre>
+
+<pre>
+<i>3</i>
+</pre>
+
+<pre>
+<b>Jess&gt; </b>(undefadvice +)</pre>
+
+<pre>
+<b>Jess&gt; </b>(+ 2 2)</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+</div>
+
+
+
+
+</div>
+</body>
+
+</html>

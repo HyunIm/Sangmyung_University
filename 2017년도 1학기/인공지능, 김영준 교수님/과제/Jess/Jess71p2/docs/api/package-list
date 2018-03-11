@@ -1,0 +1,10 @@
+javax.rules
+javax.rules.admin
+jess
+jess.awt
+jess.factory
+jess.jsr94
+jess.server
+jess.swing
+jess.tools
+jess.xml

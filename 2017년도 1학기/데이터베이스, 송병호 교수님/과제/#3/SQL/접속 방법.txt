@@ -1,0 +1,3 @@
+1. pc에서 putty 실행
+2. mango 서버 로그인 (id, pw) oracle 수행
+3. $ SQL plus

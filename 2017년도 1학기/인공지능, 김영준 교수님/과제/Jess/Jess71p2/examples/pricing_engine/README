@@ -1,0 +1,32 @@
+----------------------------------------------------------------------
+		   Jess 7.0 Pricing Engine Example
+----------------------------------------------------------------------
+
+The files in this directory comprise an example of both how Jess's
+Java APIs can be used to embed Jess in a Java program, and how to
+write some simple Jess rules to select special offers to customers in
+a sales application. The example is designed to show off a number of
+Jess features new in Jess 7.0 -- primarily new simplified APIs and
+simplified rule language syntax -- so even if you're an experienced
+Jess user, this example is worth a look. 
+
+This example is discussed in detail in chapter 11 of the manual,
+"Embedding Jess in a Java Application." In this README, I'll just
+describe the files and how to run the example; refer to the manual for
+a technical discussion.
+
+There are three Java packages here. The package
+gov.sandia.jess.example.pricing contains the pricing engine itself;
+the class gov.sandia.jess.example.pricing.PricingEngine shows one way
+to use Jess's Java APIs. The package
+gov.sandia.jess.example.pricing.model contains model classes for a
+simple e-commerce application, used in the demo. Finally, the package
+gov.sandia.jess.example.pricing.demo contains the driver class to run
+everything here as a demo, and some test data in the form of a mock
+database implementation.
+
+The actual rules are in the file pricing.clp . There's also an ant
+build file build.xml. To run the demo, compile all the classes, then
+run gov.sandia.jess.example.pricing.demo.Demo . If you have Apache Ant
+installed (see http://ant.apache.org) then you can do all of this by
+just typing "ant test".

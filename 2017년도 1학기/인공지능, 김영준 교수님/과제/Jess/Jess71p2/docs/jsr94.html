@@ -1,0 +1,332 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - The javax.rules API</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li>
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li id="selected">
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>15.
+        The javax.rules API</h2>
+
+
+<a name="introduction">
+<h3>15.1. Introduction</h3>
+</a>
+
+<p>
+<tt>javax.rules</tt>, also known as JSR-94, is a Java runtime api
+   for rule engines. It provides a very simple model of interaction
+   with the rule engine itself, and a somewhat more involved mechanism
+   for administering sets of rules. </p>
+
+
+<p>The <tt>javax.rules</tt> API does <i>not</i> define a rule language
+   of its own, but rather just an API for working with vendor-specific
+   rule languages. In theory, you can write a program to the
+   <tt>javax.rules</tt> API, and use it with different rule engines
+   without modifying or recompiling the Java code. This would be
+   accomplished by changing parameters in a configuration file, and
+   swapping out one vendor-specific rule definition file for
+   another. In practice, the <tt>javax.rules</tt> API fails to
+   expose many of the interesting features of Jess directly, so this
+   implementation provides a "hook" that will allow you to add
+   Jess-specific code to take advantage of these features.</p>
+
+
+<p>Finally, note that the reference implementation of
+   <tt>javax.rules</tt> took the form of a driver for Jess. This
+   driver was defined in the package <tt>org.jcp.jsr94.jess</tt> and
+   used its own XML "wrapper" format for Jess language code. Jess 7
+   now includes its own <tt>javax.rules</tt> driver, defined in the
+   package <tt>jess.jsr94</tt>. This new driver supports code written
+   in the Jess language itself as well as <a href="xml.html">JessML</a>; the reference implementation's
+   "wrapper" format is not supported. Please don't use the reference
+   implementation driver; use the new <tt>jess.jsr94</tt> driver
+   instead.</p>
+
+
+
+<a name="using">
+<h3>15.2. Using javax.rules</h3>
+</a>
+   
+<p>Using <tt>javax.rules</tt> to work with Jess is a two-stage
+   process. In the first stage, you create and register a <i>rule
+   execution set,</i> which is basically an instance of
+   <tt>jess.Rete</tt> with templates, rules, and other necessary code
+   already loaded. In the second stage, you retrieve the rule
+   execution set from the registrar, load Java objects into it, and
+   execute the rules.</p>
+
+   
+<a name="registering">
+<h4>15.2.1. Registering a RuleExecutionSet</h4>
+</a>
+    
+<p>
+       Our first example shows how to create a rule execution set from a
+       file of Jess code and how to register it with <tt>javax.rules</tt>.
+       You could use an XML file instead of a Jess file; the code would not change.
+       Exception handling has been left out for brevity. Most of the methods
+       in the <tt>javax.rules</tt> API throw both a subclass of
+       <tt>javax.rules.RuleException</tt> and <tt>java.rmi.RemoteException.</tt>
+   
+</p>
+   
+<p>
+       Typically, a <tt>RuleExecutionSet</tt> is created once and executed multiple times. The intention
+       behind the <tt>javax.rules</tt> design is that <tt>RuleExecutionSet</tt>s would be created using an
+       app server's configuration tools, and then used by application code.
+   </p>
+
+
+<div class="javacode">
+<pre>
+
+import javax.rules.*;
+import javax.rules.admin.*;
+import java.util.HashMap;
+import java.io.FileReader;
+
+public class ExJSR94Register {
+  public static final String URI = "rules://test-rules";
+  public static final String RULE_SERVICE_PROVIDER = "jess.jsr94";
+
+  public static void main(String[] argv) throws Exception {
+    // Load the rule service provider.
+    // Loading this class will automatically register this
+    // provider with the provider manager.
+    Class.forName(RULE_SERVICE_PROVIDER + ".RuleServiceProviderImpl");
+
+    // Get the rule service provider from the provider manager.
+    RuleServiceProvider serviceProvider =
+        RuleServiceProviderManager.getRuleServiceProvider(RULE_SERVICE_PROVIDER);
+
+    // get the RuleAdministrator
+    RuleAdministrator ruleAdministrator =
+        serviceProvider.getRuleAdministrator();
+
+    // get an input stream to a ruleset
+    FileReader reader = new FileReader("rules.clp");
+
+    // parse the ruleset
+    try {
+        // "properties" holds vendor-specific information
+        // Jess doesn't use this parameter for these methods
+        HashMap properties = new HashMap();
+
+        // Create the RuleExecutionSet
+        RuleExecutionSet executionSet =
+            ruleAdministrator.getLocalRuleExecutionSetProvider(properties).
+            createRuleExecutionSet(reader, properties);
+
+        // register the RuleExecutionSet
+        ruleAdministrator.registerRuleExecutionSet(URI,
+                                                   executionSet, properties);
+
+    } finally {
+        reader.close();
+    }
+  }
+}
+
+</pre>
+</div>
+
+    
+
+    
+<a name="using">
+<h4>15.2.2. Using a RuleExecutionSet</h4>
+</a>
+    
+<p>Now that we have registered a <tt>RuleExecutionSet</tt>, we can use it to run the rules.
+    For this example, let's use the following trivial rule file <tt>rules.clp</tt>:
+    </p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defrule foo
+=&gt;
+(add (new String "Hello, World!")))</pre>
+
+</div>
+
+    
+<p>When executed, this rule will fire and add a single String to working memory. Here is the Java
+    code to retrieve and execute the <tt>RuleExecutionSet:</tt>
+</p>
+
+
+<div class="javacode">
+<pre>
+
+import javax.rules.*;
+import javax.rules.admin.*;
+import java.util.*;
+
+public class ExExecuteJSR94 {
+  public static final String URI = "rules://test-rules";
+  public static final String RULE_SERVICE_PROVIDER = "jess.jsr94";
+
+  public static void main(String[] argv) throws Exception {
+    // Get the rule service provider from the provider manager.
+    RuleServiceProvider serviceProvider =
+        RuleServiceProviderManager.getRuleServiceProvider(RULE_SERVICE_PROVIDER);
+
+    // Get a RuleRuntime
+    RuleRuntime runtime = serviceProvider.getRuleRuntime();
+
+    // Create a StatelessRuleSession
+    StatelessRuleSession session = (StatelessRuleSession)
+        runtime.createRuleSession(URI, new HashMap(),
+                                  RuleRuntime.STATELESS_SESSION_TYPE);
+
+    // Create a input list.
+    List input = new ArrayList();
+
+    // Execute the rules
+    List results = session.executeRules(input);
+
+    // Release the session.
+    session.release();
+
+    // Report the results
+    System.out.println(results);
+  }
+}
+<b>C:\&gt;</b> java ExExecuteJSR94
+</pre>
+</div>
+
+
+<p>When you run this program, if all goes well it will print "[Hello, World!]," displaying the single object
+in working memory.</p>
+
+
+<a name="objects">
+<h4>15.2.3. Working with Java Objects</h4>
+</a>
+
+<p>
+When we called <tt>executeRules()</tt> in the example above, we passed an empty <tt>List</tt> as an argument.
+You can instead pass in a <tt>List</tt> populated with Java objects. Jess will, for each object:</p>
+
+
+<ol>
+
+<li>Determine the name of the class, without the package name.</li>
+
+<li>Ensure that a template has been created under that name, or create a new one.</li>
+
+<li>Add that object to working memory  under that class name.</li>
+
+</ol>
+
+
+<p>Jess will then execute the rules. You therefore should write your
+rules assuming that the objects will be filed in working memory under
+their class name with the package prefix removed. Note that your rule
+file should define appropriate templates for any objects actually
+matched by your rules using <a href="constructs.html#deftemplate"><tt>deftemplate</tt></a> or <a href="functions.html#defclass"><tt>defclass</tt></a>, or the rules won't parse.
+</p>
+
+
+<p>
+In this release, there's no way to control how these templates will be
+placed into modules, and there's no way to express Jess's concept of
+inheritance. These features will be added in a later release.
+</p>
+
+
+
+
+<a name="more">
+<h4>15.2.4. Going Further</h4>
+</a>
+
+<p>
+There's a lot more to the <tt>javax.rules</tt> API than we've covered here. In particular, besides
+stateless rule sessions, there are stateful rule sessions that let you add and remove objects over time.
+Furthermore, there are many different ways to create a RuleExecutionSet. Besides creating one from a
+local file, they can be created from XML DOM trees and directly from existing <tt>jess.Rete</tt> objects.
+Interested readers are directed to <a href="http://jcp.org/aboutJava/communityprocess/final/jsr094/index.html">the specification itself</a>
+for more information until more information is added to this manual.
+</p>
+
+
+
+
+
+</div>
+</body>
+
+</html>

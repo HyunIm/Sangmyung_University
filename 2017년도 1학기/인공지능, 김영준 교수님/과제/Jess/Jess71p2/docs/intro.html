@@ -1,0 +1,434 @@
+<html>
+
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Getting Started</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="index.html">Home</a>
+</li>
+  
+<li>
+<a href="table_of_contents.html">Table of Contents</a>
+</li>
+  
+<li id="selected">
+<a href="intro.html">Getting Started</a>
+</li>
+  
+<li>
+<a href="eclipse.html">The JessDE Developer's Environment</a>
+</li>
+
+</ul>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>1.
+        Getting Started</h2>
+
+
+
+<a name="requirements">
+<h3>1.1. Requirements</h3>
+</a>
+
+
+<p>Jess is a programmer's library written in Java. Therefore, to use
+Jess, you'll need a Java Virtual Machine (JVM). You can get an
+excellent JVM for Windows, Linux, and Solaris free from <a href="http://java.sun.com">Sun Microsystems</a>. Jess 7.1 is
+compatible with all released versions of Java starting with JDK 1.4,
+including JDK 1.6, the latest release. Older Jess versions numbered
+4.x were compatible with JDK 1.0, 5.x versions worked with JDK 1.1,
+and Jess 6 worked with JDK 1.2 and up.</p>
+
+
+<p>Be sure your JVM is installed and working correctly before trying
+to use Jess.
+</p>
+
+
+<p>To use the JessDE integrated development environment, you'll need
+version 3.1 or later of the Eclipse SDK from <a href="http://www.eclipse.org">http://www.eclipse.org</a>. Be sure
+that Eclipse is installed and working properly before installing the
+JessDE.
+</p>
+
+
+<p>The Jess library serves as an interpreter for another language,
+which I will refer to in this document as the Jess language. The Jess
+language is a highly specialized form of Lisp.</p>
+
+
+<p>I am going to assume that you, the reader, are a programmer who
+will be using either one or both of these languages. I will assume
+that all readers have at least a minimal facility with Java. You must
+have a Java runtime system, and you must know how to use it at least
+in a simple way. You should know how to use it to</p>
+
+
+<ul>
+    
+<li>run a Java application</li>
+    
+<li>deal with configuration issues like the CLASSPATH variable</li>
+    
+<li>(optional) compile a collection of Java source files</li>
+
+</ul>
+
+
+<p>If you do not have at least this passing familiarity with a Java
+environment, then may I suggest you purchase an introductory book on
+the topic. Java software for many platforms -- as well as a wealth of
+tutorials and documentation -- is available at no cost from <a href="http://java.sun.com">http://java.sun.com</a>.
+</p>
+
+<p>
+For those readers who are going to program in the Jess language, I
+assume general familiarity with the principles of programming. I will
+describe the entire Jess language, so no familiarity with Lisp is
+required (although some is helpful.) Furthermore, I will attempt to
+describe, to the extent possible, the important concepts of rule-based
+systems as they apply to Jess. Again, though, I will assume that the
+reader has some familiarity with these concepts and more. If you are
+unfamiliar with rule-based systems, you may want to purchase a text on
+this topic as well.
+</p>
+
+<p>
+Many readers will want to extend Jess' capabilities by either adding
+commands (written in Java) to the Jess language, or embedding the
+Jess library in a Java application. Others will want to use the Jess
+language's Java integration capabilities to call Java functions from
+Jess language programs. In sections of this document targeted towards
+these readers, I will assume moderate knowledge of Java programming. I
+will not teach any aspects of the Java language. The interested reader
+is once again referred to your local bookstore.
+</p>
+
+<p>
+This document contains a <a href="references.html">bibliography</a>
+wherein a number of books on all these topics are listed.</p>
+
+
+
+
+<a name="setup">
+<h3>1.2. Getting ready</h3>
+</a>
+
+<a name="unpacking">
+<h4>1.2.1. Unpacking the Distribution</h4>
+</a>
+
+Jess is supplied as a single .zip file which can be used on all
+supported platforms. This single file contains all you need to use
+Jess on Windows, UNIX, or the Macintosh (except for a JVM, which you
+must install yourself.)
+
+<p></p>
+
+When Jess is unpacked, you should have a directory named
+<tt>Jess71p2/</tt>.  Inside this directory should be the
+following files and subdirectories: <p></p>
+
+<table ncols="2" border="">
+
+    
+<tr>
+      
+<td><tt>README</tt></td>
+      <td>A quick start guide.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>LICENSE</tt></td>
+        <td>Information about your rights regarding the use of Jess.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>bin</tt></td> <td>A directory containing a Windows
+        batch file (jess.bat) and a UNIX shell script (jess) that you
+        can use to start the Jess command prompt.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>lib</tt></td>
+        <td>A directory containing Jess itself, as a Java archive
+        file. Note that this is <i>not</i> a "clickable" archive file;
+        you can't double-click on it to run Jess. This is
+        deliberate. This directory also contains the JSR-94
+        (javax.rules) API in the file jsr94.jar.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>docs/</tt></td>
+        <td>This documentation. "index.html" is the entry point for
+        the Jess manual.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>examples/jess</tt></td>
+        <td>A directory of small example programs in the Jess language.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>examples/xml</tt></td> <td>A directory of small
+        example programs in JessML, Jess's XML rule language.</td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>eclipse</tt></td> <td>The JessDE, Jess's Integrated
+        Development Environment, supplied as a set of plugins for
+        Eclipse 3.0. See <a href="eclipse.html">here</a> for
+        installation instructions.
+        </td>
+    
+</tr>
+
+    
+<tr>
+        
+<td><tt>src</tt> (Optional)</td>
+        <td>If this directory is present, it contains the full source
+        for the Jess rule engine and development environment,
+        including an Ant script for building it.</td>
+    
+</tr>
+
+
+</table>
+
+
+
+
+
+<a name="cli">
+<h4>1.2.2. Command-line Interface</h4>
+</a>
+Jess has an interactive command-line interface. The distribution
+includes two scripts that you can run to get a Jess command prompt:
+one for Windows, and one for UNIX. They're both in the bin/
+directory. Run the one that's appropriate for your system, and you
+should see something like this
+
+<div class="example">
+<pre>
+C:\Jess71p2&gt; bin\jess.bat
+
+Jess, the Rule Engine for the Java Platform
+Copyright (C) 2008 Sandia Corporation
+Jess Version 7.1p1 8/6/2008
+
+<b>Jess&gt;</b>
+
+</pre>
+</div>
+
+That's the Jess prompt. Try evaluating a prefix math expression like
+"(+ 2 2)". Don't forget those parentheses!
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(+ 2 2)</pre>
+
+<pre>
+<i>4</i>
+</pre>
+
+</div>
+
+Jess evaluates this function, and prints the result. In the next
+        chapter of this manual, we'll look at the syntax of the Jess
+        rule language itself.
+
+<p></p>
+
+To execute a file of Jess code from the Jess prompt, use
+the <a href="functions.html#batch"><tt>batch</tt></a> command:
+
+<div class="example">
+<pre>
+
+<b>Jess&gt;</b> (batch "examples/jess/sticks.clp")
+Who moves first (Computer: c Human: h)?
+</pre>
+</div>
+
+Note that in the preceding example, you type what follows the
+<tt>Jess&gt;</tt> prompt, and Jess responds with the text on the next line. I will
+follow this convention throughout this manual.
+<p></p>
+
+To execute the same Jess program directly from the operating-system
+prompt, you can pass the name of the program as an argument to the
+script that starts Jess:
+
+<div class="example">
+<pre>
+C:\Jess71p2&gt; bin\jess.bat examples\jess\sticks.clp
+
+Jess, the Rule Engine for the Java Platform
+Copyright (C) 2008 Sandia Corporation
+Jess Version 7.1p1 8/6/2008
+
+Who moves first (Computer: c Human: h)?
+</pre>
+</div>
+
+
+<a name="jline">
+<h5>1.2.2.1. Command-line editing</h5>
+</a>
+
+<p>When working at the Jess command line, it's convenient to be able to edit
+and reinvoke previous commands. The Jess library doesn't support this directly, but the excellent
+open-source product <a href="http://jline.sourceforge.net/">JLine</a> can add this capability to any
+command-line Java program, Jess included. JLine works great with the Jess prompt and
+I strongly recommend it.
+</p>
+
+
+
+
+
+<a name="console">
+<h5>1.2.2.2. Graphical console</h5>
+</a>
+The class <tt>jess.Console</tt> is a simple graphical version of the
+Jess command-line interface. You type into a text field at the bottom
+of the window, and output appears in a scrolling window above. Type
+
+<div class="example">
+<pre>
+C:\Jess71p2&gt; java -classpath lib\jess.jar jess.Console
+</pre>
+</div>
+
+from the Jess71p2 directory to try it.
+
+
+
+
+<a name="installing">
+<h4>1.2.3. Java Programming with Jess</h4>
+</a>
+    To use Jess as a library from your Java programs, the file
+    <tt>jess.jar</tt> (in the lib directory) must either be on your
+    class path, be installed as a standard extension, or your
+    development tools must be set up to recognize it.  The details of
+    doing these tasks are system and environment dependent, but
+    setting the class path usually involves modifying an environment
+    variable, and installing a standard extension simply means copying
+    <tt>jess.jar</tt> into your <tt>$(JAVA_HOME)/jre/lib/ext</tt>
+    directory. Refer to the Java documentation or an introductory Java
+    text for details.
+
+
+<a name="examples">
+<h4>1.2.4. Jess Example Programs</h4>
+</a>
+
+There are some simple example programs (in the examples/jess and
+examples/xml directories) that you can use to test that you have
+installed Jess properly. These include <tt>fullmab.clp</tt>,
+<tt>zebra.clp</tt>, and <tt>wordgame.clp</tt>. <tt>fullmab.clp</tt> is
+a version of the classic Monkey and Bananas problem. To run it
+yourself from the command line, just type:
+
+<div class="example">
+<pre>
+C:\Jess71p2&gt; bin\jess examples\jess\fullmab.clp
+</pre>
+</div>
+
+and the problem should run, producing a few screens of output. Any
+file of Jess code can be run this way. Giving Jess a file name on the
+command line is like using the <a href="functions.html#batch"><tt>batch</tt></a>
+function. Therefore, you generally need to make sure that the file ends
+with:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(reset)
+(run)</pre>
+
+</div>
+
+or no rules will fire. The <tt>zebra.clp</tt> and
+<tt>wordgame.clp</tt> programs are two classic examples selected to
+show how Jess deals with tough situations. These examples both
+generate large numbers of partial pattern matches, so they are slow
+and use up a lot of memory. Other examples include <tt>sticks.clp</tt>
+(an interactive game) and <tt>jframe.clp</tt> (a demo of building a
+graphical interface using Jess's Java integration capabilities).  <p></p>
+
+The XML examples are in individual subdirectories; each subdirectory
+contains a README file with instructions for running that example.
+
+
+
+
+</div>
+</body>
+
+</html>

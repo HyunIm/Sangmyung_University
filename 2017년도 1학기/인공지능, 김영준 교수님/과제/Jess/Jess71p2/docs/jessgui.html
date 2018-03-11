@@ -1,0 +1,273 @@
+<html>
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Jess, the Rule Engine for the Java Platform - Creating Graphical User Interfaces in the Jess Language</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+<BASE TARGET="_top">
+</head>
+<body>
+<div id="navbar">
+
+<a href="http://www.jessrules.com/jess">
+<img class="logo" src="jess.gif" alt="[Jess]"></a>
+
+<div id="navcontainer">
+
+<ul id="navlist">
+
+<li>
+<a href="index.html">Introduction</a>
+</li>
+
+<li>
+<a href="basics.html">The Jess Language</a>
+</li>
+
+<li>
+<a href="architecture.html">Jess Application Programming</a>
+</li>
+
+<ul id="navsublist">
+  
+<li>
+<a href="architecture.html">Jess Application Design</a>
+</li>
+  
+<li>
+<a href="library.html">Introduction to Programming with Jess in Java</a>
+</li>
+  
+<li>
+<a href="embedding.html">Embedding Jess in a Java Application</a>
+</li>
+  
+<li>
+<a href="extending.html">Adding Commands to Jess</a>
+</li>
+  
+<li id="selected">
+<a href="jessgui.html">Creating Graphical User Interfaces in the Jess Language</a>
+</li>
+  
+<li>
+<a href="xml.html">Jess and XML</a>
+</li>
+  
+<li>
+<a href="jsr94.html">The javax.rules API</a>
+</li>
+
+</ul>
+
+<li>
+<a href="functions.html">Reference</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+<div class="maintext">
+<h2>13.
+        Creating Graphical User Interfaces in the Jess Language</h2>
+
+Jess, being just a set of Java classes, is easily incorporated as a
+library into graphical applications written in Java. It is also
+possible, though, to write graphical applications in the Jess
+language itself. The details of this are outlined in this chapter.
+
+
+<a name="events">
+<h3>13.1. Handling Java AWT events</h3>
+</a>
+
+It should now be obvious that you can easily construct GUI objects from
+Jess. For example, here is a <tt>Button</tt>:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*b* = (new java.awt.Button "Hello"))</pre>
+
+</div>
+
+<p>
+What might not be obvious is how, from Jess, you can arrange to have something
+happen when the button is pressed. <a href="java.html#proxies">This section</a>
+of this manual shows how to implement an interface using only Jess code. Therefore,
+all you need to do to create event handlers in Jess is to implement the appropriate
+interface.
+</p>
+
+<p>
+An example should clarify matters. Let's say that when a <tt>Hello</tt>
+button is pressed, you would like the string <tt>Hello, World!</tt> to
+be printed to standard output (how original!). Here's a complete program in Jess that
+demonstrates how to do it:
+</p>
+
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import java.awt.*)</pre>
+
+<pre>
+<b>Jess&gt; </b>(import java.awt.event.*)</pre>
+
+<pre>
+<b>Jess&gt; </b>;; Create the widgets
+(defglobal ?*f* = (new Frame "Button Demo"))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*b* = (new Button "Hello"))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Add a listener to the button
+(?*b* addActionListener (implement ActionListener using (lambda (?name ?evt)
+    (printout t "Hello, World!" crlf))))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Assemble and display the GUI
+(?*f* add ?*b*)</pre>
+
+<pre>
+<b>Jess&gt; </b>(?*f* pack)</pre>
+
+<pre>
+<b>Jess&gt; </b>(set ?*f* visible TRUE)</pre>
+
+</div>
+
+You'll have to quit this program using ^C. To fix this, you can add a
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/event/WindowListener.html"><tt>java.awt.event.WindowListener</tt></a>  which handles <tt>WINDOW_CLOSING</tt>
+events to the above program:
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b> ;; Add a WINDOW_CLOSING listener
+(import java.awt.event.WindowEvent)
+(?*f* addWindowListener  (implement WindowListener using (lambda (?name ?event)
+    (if (= (?event getID) (WindowEvent.WINDOW_CLOSING)) then
+        (exit)))))</pre>
+
+</div>
+
+Now when you close the window Jess will exit. Notice how we can examine
+the <tt>?event</tt> parameter for event information. 
+<p></p>
+Because we imported the WindowEvent class, we were able to use 
+"<tt>(WindowEvent.WINDOW_CLOSING)</tt>" to access this static data
+member. See the documentation for the <a href="functions.html#import"><tt>import</tt></a> function
+for details. This technique is very often useful when programming GUIs
+with Jess.
+
+<p></p>
+We have used the "raw" AWT widgets here, but this same technique works
+fine with Swing as well.
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>(import javax.swing.*)</pre>
+
+<pre>
+<b>Jess&gt; </b>(import java.awt.event.*)</pre>
+
+<pre>
+<b>Jess&gt; </b>(import javax.swing.JFrame)</pre>
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*f* = (new JFrame "Button Demo"))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*b* = (new JButton "Hello"))</pre>
+
+<pre>
+<b>Jess&gt; </b>(defglobal ?*p* = (get ?*f* contentPane))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>(?*b* addActionListener (implement ActionListener using (lambda (?name ?event)
+     (printout t "Hello, World!" crlf))))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>(?*p* add ?*b*)</pre>
+
+<pre>
+<b>Jess&gt; </b>(?*f* pack)</pre>
+
+<pre>
+<b>Jess&gt; </b>(set ?*f* visible TRUE)</pre>
+
+
+<pre>
+<b>Jess&gt; </b>(?*f* setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE))</pre>
+  
+
+</div>
+
+
+<p></p>
+See the demo <tt>examples/jess/jframe.clp</tt> for a slightly more complex
+example of how you can build an entire Java graphical interface from within
+Jess.
+
+
+
+<a name="painting">
+<h3>13.2. Screen Painting and Graphics</h3>
+</a>
+
+As you may know, the most common method of drawing pictures in Java is
+to subclass either <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Canvas.html"><tt>java.awt.Canvas</tt></a> or <a href="http://java.sun.com/j2se/1.4.2/docs/api/javax/swing/JPanel.html"><tt>javax.swing.JPanel</tt></a>, overriding the <tt>void paint(Graphics
+g)</tt> or <tt>void paintComponent(Graphics g)</tt> method,
+respectively, to call the methods of the <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Graphics.html"><tt>java.awt.Graphics</tt></a> argument to do the drawing. Well, Jess
+can't help you to subclass a Java class (at least not yet!), but it
+does provide adaptor classes, much like the event adaptors described
+above, that will help you draw pictures. The classes are named <a href="api/jess/awt/Canvas.html"><tt>jess.awt.Canvas</tt></a> and <a href="api/jess/swing/JPanel.html"><tt>jess.swing.JPanel</tt></a>. They
+can be used as normal Java GUI components: <tt>Canvas</tt> in AWT
+applications, and <tt>JPanel</tt> with Swing. When you construct an
+instance of these classes, you pass in the name of a Jess function and
+a reference to a <a href="api/jess/Rete.html"><tt>jess.Rete</tt></a> object. Whenever the Java
+painting method is called to render the Jess component, the Jess
+component in turn will call the given function. The function will be
+passed two arguments: the <apc class="jess.awt.Canvas"></apc> or <a href="api/jess/swing/JPanel.html"><tt>jess.swing.JPanel</tt></a> instance itself, and the <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Graphics.html"><tt>java.awt.Graphics</tt></a> argument. In this way, Jess code can draw
+pictures using Java calls. An example looks like this:
+
+<div class="jesscode">
+
+<pre>
+<b>Jess&gt; </b>;; A painting deffunction. This function draws a red 'X' between the
+;; four corners of the Canvas on a blue field.
+(import java.awt.Color)
+(deffunction painter (?canvas ?graph)
+  (bind ?x (get-member (?canvas getSize) width))
+  (bind ?y (get-member (?canvas getSize) height))
+  (?graph setColor (Color.blue))
+  (?graph fillRect 0 0 ?x ?y)
+  (?graph setColor (Color.red))
+  (?graph drawLine 0 0 ?x ?y)
+  (?graph drawLine ?x 0 0 ?y))</pre>
+
+
+<pre>
+<b>Jess&gt; </b>;; Create a canvas and install the paint routine.
+(bind ?c (new jess.awt.Canvas painter (engine)))</pre>
+
+</div>
+
+Complete programs built on this example are in the files
+<tt>examples/jess/awtdraw.clp</tt> and
+<tt>examples/jess/swingdraw.clp</tt> in the Jess distribution. 
+
+
+</div>
+</body>
+
+</html>

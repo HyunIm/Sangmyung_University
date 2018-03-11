@@ -1,0 +1,1186 @@
+<?xml version='1.0' encoding='US-ASCII'?>
+<rulebase xmlns='http://www.jessrules.com/JessML/1.0'>
+<template>
+  <name>MAIN::take-sticks</name>
+  <slot>
+    <name>how-many</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>for-remainder</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+</template>
+
+<facts>
+  <name>MAIN::initial-phase</name>
+  <fact>
+    <name>MAIN::phase</name>
+    <slot>
+      <name>__data</name>
+      <value type='SYMBOL'>choose-player</value>
+      
+    </slot>
+  </fact>
+</facts>
+
+<facts>
+  <name>MAIN::take-sticks-information</name>
+  <fact>
+    <name>MAIN::take-sticks</name>
+    <slot>
+      <name>how-many</name>
+      <value type='INTEGER'>1</value>
+      
+    </slot>
+    <slot>
+      <name>for-remainder</name>
+      <value type='INTEGER'>1</value>
+      
+    </slot>
+  </fact>
+  <fact>
+    <name>MAIN::take-sticks</name>
+    <slot>
+      <name>how-many</name>
+      <value type='INTEGER'>1</value>
+      
+    </slot>
+    <slot>
+      <name>for-remainder</name>
+      <value type='INTEGER'>2</value>
+      
+    </slot>
+  </fact>
+  <fact>
+    <name>MAIN::take-sticks</name>
+    <slot>
+      <name>how-many</name>
+      <value type='INTEGER'>2</value>
+      
+    </slot>
+    <slot>
+      <name>for-remainder</name>
+      <value type='INTEGER'>3</value>
+      
+    </slot>
+  </fact>
+  <fact>
+    <name>MAIN::take-sticks</name>
+    <slot>
+      <name>how-many</name>
+      <value type='INTEGER'>3</value>
+      
+    </slot>
+    <slot>
+      <name>for-remainder</name>
+      <value type='INTEGER'>0</value>
+      
+    </slot>
+  </fact>
+</facts>
+
+<function>
+  <name>ask-start-again</name>
+  <arguments>
+  </arguments>
+  <funcall>
+    <name>printout</name>
+    <value type='SYMBOL'>t</value>
+    
+    <value type='STRING'>Play again? (y/n) </value>
+    
+  </funcall>
+  
+  <funcall>
+    <name>if</name>
+    <funcall>
+      <name>eq</name>
+      <funcall>
+        <name>read</name>
+      </funcall>
+      
+      <value type='SYMBOL'>y</value>
+      
+    </funcall>
+    
+    <value type='SYMBOL'>then</value>
+    
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>choose-player</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    
+  </funcall>
+  
+</function>
+
+<rule>
+  <name>MAIN::player-select</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>choose-player</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Who moves first (Computer: c </value>
+      
+      <value type='STRING'>Human: h)? </value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::player-select</name>
+        <slot>
+          <name>__data</name>
+          <funcall>
+            <name>read</name>
+          </funcall>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::good-player-choice</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <binding>phase</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>choose-player</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::player-select</name>
+        <binding>choice</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>player</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>or</name>
+              <funcall>
+                <name>eq</name>
+                <value type='VARIABLE'>player</value>
+                
+                <value type='SYMBOL'>c</value>
+                
+              </funcall>
+              
+              <funcall>
+                <name>eq</name>
+                <value type='VARIABLE'>player</value>
+                
+                <value type='SYMBOL'>h</value>
+                
+              </funcall>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>phase</value>
+      
+      <value type='VARIABLE'>choice</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::player-move</name>
+        <slot>
+          <name>__data</name>
+          <value type='VARIABLE'>player</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>select-pile-size</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::bad-player-choice</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <binding>phase</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>choose-player</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::player-select</name>
+        <binding>choice</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>player</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>c</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>h</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>phase</value>
+      
+      <value type='VARIABLE'>choice</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>choose-player</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Choose c or h.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::pile-select</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>select-pile-size</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>How many sticks in the pile? </value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::pile-select</name>
+        <slot>
+          <name>__data</name>
+          <funcall>
+            <name>read</name>
+          </funcall>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::good-pile-choice</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <binding>phase</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>select-pile-size</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::pile-select</name>
+        <binding>choice</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>integerp</name>
+              <value type='VARIABLE'>size</value>
+              
+            </funcall>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>&gt;</name>
+              <value type='VARIABLE'>size</value>
+              
+              <value type='INTEGER'>0</value>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>phase</value>
+      
+      <value type='VARIABLE'>choice</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::pile-size</name>
+        <slot>
+          <name>__data</name>
+          <value type='VARIABLE'>size</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::bad-pile-choice</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::phase</name>
+        <binding>phase</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>select-pile-size</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::pile-select</name>
+        <binding>choice</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>or</name>
+              <funcall>
+                <name>not</name>
+                <funcall>
+                  <name>integerp</name>
+                  <value type='VARIABLE'>size</value>
+                  
+                </funcall>
+                
+              </funcall>
+              
+              <funcall>
+                <name>&lt;=</name>
+                <value type='VARIABLE'>size</value>
+                
+                <value type='INTEGER'>0</value>
+                
+              </funcall>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>phase</value>
+      
+      <value type='VARIABLE'>choice</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::phase</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>select-pile-size</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Choose an integer greater than zero.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::computer-loses</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <binding>pile</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='INTEGER'>1</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::player-move</name>
+        <binding>move</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>c</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Computer must take the last stick!</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>I lose!</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>pile</value>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>move</value>
+      
+    </funcall>
+    <funcall>
+      <name>ask-start-again</name>
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::human-loses</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <binding>pile</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='INTEGER'>1</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::player-move</name>
+        <binding>move</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>h</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>You must take the last stick!</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>You lose!</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>pile</value>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>move</value>
+      
+    </funcall>
+    <funcall>
+      <name>ask-start-again</name>
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::get-human-move</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>&gt;</name>
+              <value type='VARIABLE'>size</value>
+              
+              <value type='INTEGER'>1</value>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::player-move</name>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>h</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>How many sticks do you wish to take? </value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::human-takes</name>
+        <slot>
+          <name>__data</name>
+          <funcall>
+            <name>read</name>
+          </funcall>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::good-human-move</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <binding>pile</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::human-takes</name>
+        <binding>move</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>choice</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>and</name>
+        <pattern>
+          <name>MAIN::player-move</name>
+          <binding>whose-turn</binding>
+          <slot>
+            <name>__data</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>h</value>
+              
+            </test>
+          </slot>
+        </pattern>
+        <pattern>
+          <name>test</name>
+          <slot>
+            <name>__data</name>
+            <test>
+              <type>eq</type>
+              <conjunction>and</conjunction>
+              <funcall>
+                <name>and</name>
+                <funcall>
+                  <name>integerp</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&gt;=</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='INTEGER'>1</value>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&lt;=</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='INTEGER'>3</value>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&lt;</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='VARIABLE'>size</value>
+                  
+                </funcall>
+                
+              </funcall>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>pile</value>
+      
+      <value type='VARIABLE'>move</value>
+      
+      <value type='VARIABLE'>whose-turn</value>
+      
+    </funcall>
+    <funcall>
+      <name>bind</name>
+      <value type='VARIABLE'>new-size</value>
+      
+      <funcall>
+        <name>-</name>
+        <value type='VARIABLE'>size</value>
+        
+        <value type='VARIABLE'>choice</value>
+        
+      </funcall>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::pile-size</name>
+        <slot>
+          <name>__data</name>
+          <value type='VARIABLE'>new-size</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='VARIABLE'>new-size</value>
+      
+      <value type='STRING'> stick(s) left in the pile.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::player-move</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>c</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::bad-human-move</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::human-takes</name>
+        <binding>move</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>choice</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>and</name>
+        <pattern>
+          <name>MAIN::player-move</name>
+          <binding>whose-turn</binding>
+          <slot>
+            <name>__data</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>h</value>
+              
+            </test>
+          </slot>
+        </pattern>
+        <pattern>
+          <name>test</name>
+          <slot>
+            <name>__data</name>
+            <test>
+              <type>eq</type>
+              <conjunction>and</conjunction>
+              <funcall>
+                <name>or</name>
+                <funcall>
+                  <name>not</name>
+                  <funcall>
+                    <name>integerp</name>
+                    <value type='VARIABLE'>choice</value>
+                    
+                  </funcall>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&lt;</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='INTEGER'>1</value>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&gt;</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='INTEGER'>3</value>
+                  
+                </funcall>
+                
+                <funcall>
+                  <name>&gt;=</name>
+                  <value type='VARIABLE'>choice</value>
+                  
+                  <value type='VARIABLE'>size</value>
+                  
+                </funcall>
+                
+              </funcall>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Number of sticks must be between 1 and 3,</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+      <value type='STRING'>and you must be forced to take the last </value>
+      
+      <value type='STRING'>stick.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>move</value>
+      
+      <value type='VARIABLE'>whose-turn</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::player-move</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>h</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::computer-move</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::player-move</name>
+        <binding>whose-turn</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>c</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::pile-size</name>
+        <binding>pile</binding>
+        <slot>
+          <name>__data</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>size</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>&gt;</name>
+              <value type='VARIABLE'>size</value>
+              
+              <value type='INTEGER'>1</value>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::take-sticks</name>
+        <slot>
+          <name>how-many</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>number</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>for-remainder</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>X</value>
+            
+          </test>
+          <test>
+            <type>eq</type>
+            <conjunction>and</conjunction>
+            <funcall>
+              <name>=</name>
+              <value type='VARIABLE'>X</value>
+              
+              <funcall>
+                <name>mod</name>
+                <value type='VARIABLE'>size</value>
+                
+                <value type='INTEGER'>4</value>
+                
+              </funcall>
+              
+            </funcall>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>whose-turn</value>
+      
+      <value type='VARIABLE'>pile</value>
+      
+    </funcall>
+    <funcall>
+      <name>bind</name>
+      <value type='VARIABLE'>new-size</value>
+      
+      <funcall>
+        <name>-</name>
+        <value type='VARIABLE'>size</value>
+        
+        <value type='VARIABLE'>number</value>
+        
+      </funcall>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Computer takes </value>
+      
+      <value type='VARIABLE'>number</value>
+      
+      <value type='STRING'> stick(s).</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='VARIABLE'>new-size</value>
+      
+      <value type='STRING'> stick(s) left in the pile.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::pile-size</name>
+        <slot>
+          <name>__data</name>
+          <value type='VARIABLE'>new-size</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::player-move</name>
+        <slot>
+          <name>__data</name>
+          <value type='SYMBOL'>h</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<funcall>
+  <name>reset</name>
+</funcall>
+
+<funcall>
+  <name>run</name>
+</funcall>
+
+</rulebase>

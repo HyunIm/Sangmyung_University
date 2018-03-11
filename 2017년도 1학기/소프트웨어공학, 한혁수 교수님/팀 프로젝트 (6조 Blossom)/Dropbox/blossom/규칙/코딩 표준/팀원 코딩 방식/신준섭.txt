@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int Maxnum(int a, int b, int c)
+{
+   int max;
+   if (a > b)
+      max = a;
+   else
+      max = b;
+   if (max > c)
+      max = max;
+   else
+      max = c;
+   return max;
+}
+
+int Minnum(int a, int b, int c)
+{
+   int min;
+   if (a > b)
+      min = b;
+   else
+      min= a;
+   if (min > c)
+      min = c;
+   else
+      min = min;
+   return min;
+}
+
+int main(void)
+{
+   int a, b, c;
+   printf("세개의 정수를 선택하세요 : ");
+   scanf("%d %d %d", &a, &b, &c);
+   printf("%d,%d,%d 중 가장큰수는 : %d\n", a, b, c, Maxnum(a, b, c));
+   printf("%d,%d,%d 중 가장작은수는 : %d\n", a, b, c, Minnum(a, b, c));
+
+   return 0;
+}

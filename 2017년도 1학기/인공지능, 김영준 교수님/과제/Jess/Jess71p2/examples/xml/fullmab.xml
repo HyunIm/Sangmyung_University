@@ -1,0 +1,3884 @@
+<?xml version='1.0' encoding='US-ASCII'?>
+<rulebase xmlns='http://www.jessrules.com/JessML/1.0'>
+<funcall>
+  <name>set-node-index-hash</name>
+  <value type='INTEGER'>3</value>
+  
+</funcall>
+
+<funcall>
+  <name>set-multithreaded-io</name>
+  <value type='SYMBOL'>TRUE</value>
+  
+</funcall>
+
+<template>
+  <name>MAIN::monkey</name>
+  <slot>
+    <name>location</name>
+    <value type='SYMBOL'>green-couch</value>
+    
+  </slot>
+  <slot>
+    <name>on-top-of</name>
+    <value type='SYMBOL'>floor</value>
+    
+  </slot>
+  <slot>
+    <name>holding</name>
+    <value type='SYMBOL'>nothing</value>
+    
+  </slot>
+</template>
+
+<template>
+  <name>MAIN::thing</name>
+  <slot>
+    <name>name</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>location</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>on-top-of</name>
+    <value type='SYMBOL'>floor</value>
+    
+  </slot>
+  <slot>
+    <name>weight</name>
+    <value type='SYMBOL'>light</value>
+    
+  </slot>
+</template>
+
+<template>
+  <name>MAIN::chest</name>
+  <slot>
+    <name>name</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>contents</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>unlocked-by</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+</template>
+
+<template>
+  <name>MAIN::goal-is-to</name>
+  <slot>
+    <name>action</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>argument-1</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+  <slot>
+    <name>argument-2</name>
+    <value type='SYMBOL'>nil</value>
+    
+  </slot>
+</template>
+
+<rule>
+  <name>MAIN::hold-chest-to-put-on-floor</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>unlock</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>chest</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>chest</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::put-chest-on-floor</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>unlock</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey throws the </value>
+      
+      <value type='VARIABLE'>chest</value>
+      
+      <value type='STRING'> off the </value>
+      
+      <value type='VARIABLE'>on</value>
+      
+      <value type='STRING'> onto the floor.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='SYMBOL'>blank</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>thing</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='VARIABLE'>place</value>
+        
+      </list>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='SYMBOL'>floor</value>
+        
+      </list>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::get-key-to-unlock</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>unlock</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>key</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>key</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::move-to-chest-with-key</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>unlock</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>cplace</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>cplace</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>walk-to</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>cplace</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>walk-to</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>cplace</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::unlock-chest-with-key</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>unlock</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::chest</name>
+        <binding>chest</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>contents</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>contents</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>key</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey opens the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'> with the </value>
+      
+      <value type='VARIABLE'>key</value>
+      
+      <value type='STRING'> revealing the </value>
+      
+      <value type='VARIABLE'>contents</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>chest</value>
+      
+      <list>
+        <value type='SYMBOL'>contents</value>
+        
+        <value type='SYMBOL'>nothing</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='VARIABLE'>contents</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='VARIABLE'>place</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='VARIABLE'>name</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::unlock-chest-to-hold-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>contents</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>unlock</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>chest</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>unlock</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>chest</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::use-ladder-to-hold</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ceiling</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::thing</name>
+          <slot>
+            <name>name</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>ladder</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>location</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>place</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>move</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>ladder</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-2</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>place</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>move</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>ladder</value>
+          
+        </slot>
+        <slot>
+          <name>argument-2</name>
+          <value type='VARIABLE'>place</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::climb-ladder-to-hold</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ceiling</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ladder</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>ladder</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>on</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>ladder</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>on</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>ladder</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::grab-object-from-ladder</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ceiling</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ladder</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>ladder</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey grabs the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>thing</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='SYMBOL'>held</value>
+        
+      </list>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='SYMBOL'>held</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='VARIABLE'>name</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::climb-to-hold</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>ceiling</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>on</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>on</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>on</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>on</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::walk-to-hold</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>ceiling</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>walk-to</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>place</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>walk-to</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>place</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::drop-to-hold</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>blank</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>blank</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::grab-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey grabs the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>thing</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='SYMBOL'>held</value>
+        
+      </list>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='SYMBOL'>held</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='VARIABLE'>name</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::drop-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>hold</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey drops the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='SYMBOL'>blank</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>thing</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='VARIABLE'>place</value>
+        
+      </list>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='VARIABLE'>on</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::unlock-chest-to-move-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>move</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>chest</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>contents</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>unlock</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>chest</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>unlock</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>chest</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::hold-object-to-move</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>move</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-2</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>obj</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>obj</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::move-object-to-place</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>move</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-2</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>walk-to</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>place</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>walk-to</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>place</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::drop-object-once-moved</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>move</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-2</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>weight</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>light</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey drops the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='SYMBOL'>blank</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>thing</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='VARIABLE'>place</value>
+        
+      </list>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='SYMBOL'>floor</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::already-moved-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>move</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-2</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::already-at-place</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>walk-to</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::get-on-floor-to-walk</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>walk-to</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>on</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>floor</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>on</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>floor</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::walk-holding-nothing</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>walk-to</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey walks to </value>
+      
+      <value type='VARIABLE'>place</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='VARIABLE'>place</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::walk-holding-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>walk-to</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey walks to </value>
+      
+      <value type='VARIABLE'>place</value>
+      
+      <value type='STRING'> holding the </value>
+      
+      <value type='VARIABLE'>obj</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>location</value>
+        
+        <value type='VARIABLE'>place</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::jump-onto-floor</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>floor</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey jumps off the </value>
+      
+      <value type='VARIABLE'>on</value>
+      
+      <value type='STRING'> onto the floor.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='SYMBOL'>floor</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::walk-to-place-to-climb</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>walk-to</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>place</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>walk-to</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>place</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::drop-to-climb</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>blank</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>blank</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::climb-indirectly</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+          <test>
+            <type>neq</type>
+            <conjunction>and</conjunction>
+            <value type='SYMBOL'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>on</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>on</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>on</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>on</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::climb-directly</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>location</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>place</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>blank</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey climbs onto the </value>
+      
+      <value type='VARIABLE'>obj</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>on-top-of</value>
+        
+        <value type='VARIABLE'>obj</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::already-on-object</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>on</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>on-top-of</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::hold-to-eat</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>eat</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>neq</type>
+            <value type='VARIABLE'>obj</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <group>
+        <name>not</name>
+        <pattern>
+          <name>MAIN::goal-is-to</name>
+          <slot>
+            <name>action</name>
+            <test>
+              <type>eq</type>
+              <value type='SYMBOL'>hold</value>
+              
+            </test>
+          </slot>
+          <slot>
+            <name>argument-1</name>
+            <test>
+              <type>eq</type>
+              <value type='VARIABLE'>obj</value>
+              
+            </test>
+          </slot>
+        </pattern>
+      </group>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>hold</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='VARIABLE'>obj</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::satisfy-hunger</name>
+  <lhs>
+    <group>
+      <name>and</name>
+      <pattern>
+        <name>MAIN::goal-is-to</name>
+        <binding>goal</binding>
+        <slot>
+          <name>action</name>
+          <test>
+            <type>eq</type>
+            <value type='SYMBOL'>eat</value>
+            
+          </test>
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::monkey</name>
+        <binding>monkey</binding>
+        <slot>
+          <name>holding</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+      <pattern>
+        <name>MAIN::thing</name>
+        <binding>thing</binding>
+        <slot>
+          <name>name</name>
+          <test>
+            <type>eq</type>
+            <value type='VARIABLE'>name</value>
+            
+          </test>
+        </slot>
+      </pattern>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>printout</name>
+      <value type='SYMBOL'>t</value>
+      
+      <value type='STRING'>Monkey eats the </value>
+      
+      <value type='VARIABLE'>name</value>
+      
+      <value type='STRING'>.</value>
+      
+      <value type='SYMBOL'>crlf</value>
+      
+    </funcall>
+    <funcall>
+      <name>modify</name>
+      <value type='VARIABLE'>monkey</value>
+      
+      <list>
+        <value type='SYMBOL'>holding</value>
+        
+        <value type='SYMBOL'>blank</value>
+        
+      </list>
+      
+    </funcall>
+    <funcall>
+      <name>retract</name>
+      <value type='VARIABLE'>goal</value>
+      
+      <value type='VARIABLE'>thing</value>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<rule>
+  <name>MAIN::startup</name>
+  <lhs>
+    <group>
+      <name>and</name>
+    </group>
+  </lhs>
+  <rhs>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::monkey</name>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t5-7</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>green-couch</value>
+          
+        </slot>
+        <slot>
+          <name>holding</name>
+          <value type='SYMBOL'>blank</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>green-couch</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t5-7</value>
+          
+        </slot>
+        <slot>
+          <name>weight</name>
+          <value type='SYMBOL'>heavy</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>red-couch</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t2-2</value>
+          
+        </slot>
+        <slot>
+          <name>weight</name>
+          <value type='SYMBOL'>heavy</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>big-pillow</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t2-2</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>red-couch</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>red-chest</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t2-2</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>big-pillow</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>red-chest</value>
+          
+        </slot>
+        <slot>
+          <name>contents</name>
+          <value type='SYMBOL'>ladder</value>
+          
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <value type='SYMBOL'>red-key</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>blue-chest</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t7-7</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>ceiling</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>grapes</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t7-8</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>ceiling</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>blue-chest</value>
+          
+        </slot>
+        <slot>
+          <name>contents</name>
+          <value type='SYMBOL'>bananas</value>
+          
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <value type='SYMBOL'>blue-key</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>blue-couch</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t8-8</value>
+          
+        </slot>
+        <slot>
+          <name>weight</name>
+          <value type='SYMBOL'>heavy</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>green-chest</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t8-8</value>
+          
+        </slot>
+        <slot>
+          <name>on-top-of</name>
+          <value type='SYMBOL'>ceiling</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::chest</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>green-chest</value>
+          
+        </slot>
+        <slot>
+          <name>contents</name>
+          <value type='SYMBOL'>blue-key</value>
+          
+        </slot>
+        <slot>
+          <name>unlocked-by</name>
+          <value type='SYMBOL'>red-key</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::thing</name>
+        <slot>
+          <name>name</name>
+          <value type='SYMBOL'>red-key</value>
+          
+        </slot>
+        <slot>
+          <name>location</name>
+          <value type='SYMBOL'>t1-3</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+    <funcall>
+      <name>assert</name>
+      <fact>
+        <name>MAIN::goal-is-to</name>
+        <slot>
+          <name>action</name>
+          <value type='SYMBOL'>eat</value>
+          
+        </slot>
+        <slot>
+          <name>argument-1</name>
+          <value type='SYMBOL'>bananas</value>
+          
+        </slot>
+      </fact>
+      
+    </funcall>
+  </rhs>
+</rule>
+
+<global>
+  <name>*time*</name>
+  <funcall>
+    <name>time</name>
+  </funcall>
+  
+</global>
+
+<funcall>
+  <name>set-reset-globals</name>
+  <value type='SYMBOL'>FALSE</value>
+  
+</funcall>
+
+<function>
+  <name>run-n-times</name>
+  <arguments>
+    <argument>
+      <name>n</name>
+      <type>VARIABLE</type>
+    </argument>
+  </arguments>
+  <funcall>
+    <name>while</name>
+    <funcall>
+      <name>&gt;</name>
+      <value type='VARIABLE'>n</value>
+      
+      <value type='INTEGER'>0</value>
+      
+    </funcall>
+    
+    <value type='SYMBOL'>do</value>
+    
+    <funcall>
+      <name>reset</name>
+    </funcall>
+    
+    <funcall>
+      <name>run</name>
+    </funcall>
+    
+    <funcall>
+      <name>bind</name>
+      <value type='VARIABLE'>n</value>
+      
+      <funcall>
+        <name>-</name>
+        <value type='VARIABLE'>n</value>
+        
+        <value type='INTEGER'>1</value>
+        
+      </funcall>
+      
+    </funcall>
+    
+  </funcall>
+  
+</function>
+
+<funcall>
+  <name>run-n-times</name>
+  <value type='INTEGER'>1</value>
+  
+</funcall>
+
+<funcall>
+  <name>printout</name>
+  <value type='SYMBOL'>t</value>
+  
+  <value type='STRING'>Elapsed time: </value>
+  
+  <funcall>
+    <name>integer</name>
+    <funcall>
+      <name>-</name>
+      <funcall>
+        <name>time</name>
+      </funcall>
+      
+      <value type='VARIABLE'>*time*</value>
+      
+    </funcall>
+    
+  </funcall>
+  
+  <value type='SYMBOL'>crlf</value>
+  
+</funcall>
+
+</rulebase>

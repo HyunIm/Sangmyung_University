@@ -1,0 +1,176 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css" title="style">
+</head>
+
+<body>
+
+<a class="filename" name="Order">Order.java:</a>
+
+<pre>
+package gov.sandia.jess.example.pricing.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+public class Order {
+    private List items;
+    private float total;
+    private Customer customer;
+    
+    public Order(Collection theItems, Customer aCustomer) {
+	items = new ArrayList(theItems);
+	for (Iterator it = items.iterator(); it.hasNext();) {
+	    OrderItem item = (OrderItem) it.next();
+	    total += item.getTotal();
+	}
+	customer = aCustomer;
+    }
+    
+    public Iterator getItems() {
+        return items.iterator();
+    }
+    
+    public float getTotal() {
+    	return total;
+    }
+    
+    public Customer getCustomer() {
+	return customer;
+    }
+}
+</pre>
+
+
+<a class="filename" name="OrderItem">OrderItem.java:</a>
+
+<pre>
+package gov.sandia.jess.example.pricing.model;
+
+import java.text.DecimalFormat;
+
+public class OrderItem {
+    private static DecimalFormat formatter = new DecimalFormat("0.00");	
+    private float price;
+    private int partNumber;
+    private String description;
+    private int quantity;
+
+    public OrderItem(String aDescription, int aPartNumber, float aPrice, int aQuantity) {
+	partNumber = aPartNumber;
+	description = aDescription;
+	price = aPrice;
+	quantity = aQuantity;
+    }
+	
+    public int getQuantity() {
+	return quantity;
+    }
+	
+    public float getPrice() {
+	return price;
+    }
+	
+    public int getPartNumber() {
+	return partNumber;
+    }
+
+    public float getTotal() {
+	return price * quantity;
+    }
+	
+    public String getDescription() {
+	return description;
+    }
+	
+    public String toString() {
+	return quantity + " " + description + ": " + formatter.format(getTotal());
+    }
+}
+</pre>
+
+
+<a class="filename" name="Customer">Customer.java:</a>
+
+<pre>
+package gov.sandia.jess.example.pricing.model;
+
+public class Customer {	
+    private int orderCount;
+    
+    public Customer(int anOrderCount) {
+	orderCount = anOrderCount;
+    }	
+    
+    public int getOrderCount() {
+	return orderCount;
+    }
+}
+</pre>
+
+<a class="filename" name="CatalogItem">CatalogItem.java:</a>
+
+<pre>
+package gov.sandia.jess.example.pricing.model;
+
+public class CatalogItem {
+    private String description;
+    private int partNumber;
+    private float price;
+
+    public CatalogItem(String aDescription, int aPartNumber, float aPrice) {
+	description = aDescription;
+	partNumber = aPartNumber;
+	price = aPrice;
+    }
+
+    public int getPartNumber() {
+	return partNumber;
+    }
+	
+    public String getDescription() {
+	return description;
+    }
+	
+    public float getPrice() {
+	return price;
+    }
+}
+</pre>
+
+<a class="filename" name="Offer">Offer.java:</a>
+
+<pre>
+package gov.sandia.jess.example.pricing.model;
+
+import java.text.DecimalFormat;
+
+public class Offer {
+    private final float amount;
+    private final String description;
+    private static DecimalFormat formatter = new DecimalFormat("-$0.00");
+
+    public Offer(String aDescription, float anAmount) {
+	description = aDescription;
+	amount = anAmount;		
+    }
+
+    public float getAmount() {
+	return amount;
+    }
+
+    public String getDescription() {
+	return description;
+    }
+
+    public String toString() {
+	return description + ": " + formatter.format(amount);
+    }
+}
+</pre>
+
+</body>
+
+</html>
