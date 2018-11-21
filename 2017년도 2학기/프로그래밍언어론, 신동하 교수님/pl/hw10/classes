@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# usage: $0 [-t] [pgm-file]
+# ======================================================================
+
+pl="mzscheme -M eopl -f misc.scm -f parse.scm -f object.scm -f value.scm -f env.scm -f store.scm -f run.scm"
+
+# ======================================================================
+
+if [ $# -eq 0 ]
+then
+  $pl
+  exit 0
+fi
+
+if [ $# -eq 1 ]
+then
+  if [ -f "$1" ]
+    then
+    echo "(runfile \"$1\")" | $pl
+    exit 0
+  fi
+  echo "usage: $0 [-t] [pgm-file]"
+  echo "pgm-file not found: $1"
+  exit 1
+fi
+
+if [ $# -eq 2 ]
+then
+  if [ "$1" == "-t" ]
+  then
+    if [ -f "$2" ]
+    then
+      echo "(runfile \"$2\")" | $pl -e "(set! trace-flag #t)"
+      exit 0
+    fi
+    echo "usage: $0 [-t] [pgm-file]"
+    echo "pgm-file not found: $2"
+    exit 1
+  fi
+fi  
+
+echo "usage: $0 [-t] [pgm-file]"
+exit 1
+
+# ======================================================================

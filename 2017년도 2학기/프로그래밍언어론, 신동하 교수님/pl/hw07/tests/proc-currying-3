@@ -1,0 +1,9 @@
+% ======================================================================
+% multiple arguments with proc that returns proc. (value=40)
+% (This is called Currying.)
+
+let plus=proc(x) proc(y) -(x,-(0,y))
+in let minus=proc(x) proc(y) -(x,y)
+   in ((minus ((plus 10) 20)) ((minus 40) 50))
+
+% ======================================================================

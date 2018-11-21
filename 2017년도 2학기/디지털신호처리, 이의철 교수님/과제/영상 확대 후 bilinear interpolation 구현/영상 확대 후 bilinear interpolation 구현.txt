@@ -1,0 +1,13 @@
+lenna.bmp 또는 coin.bmp 영상을
+
+
+
+가로 세로 각 3배 순방향 사상 확대하고,
+
+
+
+빈 부분(hole)을 bilinear interpolation으로 채우는 프로그램을 구현.
+
+
+
+*.cpp 파일 제출

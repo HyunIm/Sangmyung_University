@@ -1,0 +1,7 @@
+% ======================================================================
+% multiple arguments with proc that returns proc. (value=-1)
+% (This is called Currying.)
+
+((proc(x:int) proc(y:int) -(x,y) 5) 6)
+
+% ======================================================================

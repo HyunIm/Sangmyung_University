@@ -1,0 +1,35 @@
+% ======================================================================
+% inheritance example: colorpoint. (value=((6 8) (20 40) 87))
+
+class point extends object
+  field x
+  field y
+  method initialize(initx,inity)
+    begin
+      set x=initx;
+      set y=inity
+    end
+  method move(dx,dy)
+    begin
+      set x=+(x,dx);
+      set y=+(y,dy)
+    end
+  method get-location() list(x,y)
+
+class colorpoint extends point
+  field color
+  method set-color(c) set color=c
+  method get-color() color
+
+let p=new point(3,4)
+    cp=new colorpoint(10,20)
+in begin
+     send p move(3,4);
+     send cp set-color(87);
+     send cp move(10,20);
+     list(send p get-location(),
+          send cp get-location(),
+          send cp get-color())
+   end
+
+% ======================================================================

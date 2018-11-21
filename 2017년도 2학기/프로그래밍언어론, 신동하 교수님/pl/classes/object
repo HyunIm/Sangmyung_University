@@ -1,0 +1,26 @@
+% ======================================================================
+% shows how an object is represened.
+
+class c1 extends object
+  field x field y
+  method initialize()
+    begin set x=11; set y=12 end
+  method m1() 0
+  method m2() send self m3()
+class c2 extends c1
+  field y
+  method initialize()
+    begin super initialize();
+    set y=22 end
+  method m1(u,v) 0
+  method m3() 0
+class c3 extends c2
+  field x field z
+  method initialize()
+    begin super initialize();
+    set x=31; set z=32 end
+  method m3() 0
+let o3=new c3()
+in send o3 m1(7,8)
+
+% ======================================================================

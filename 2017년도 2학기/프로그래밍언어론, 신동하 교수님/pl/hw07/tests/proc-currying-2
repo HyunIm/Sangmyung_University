@@ -1,0 +1,8 @@
+% ======================================================================
+% multiple arguments with proc that returns proc. (value=-1)
+% (This is called Currying.)
+
+let f=proc(x)proc(y)-(x,y)
+in ((f 5) 6)
+
+% ======================================================================
