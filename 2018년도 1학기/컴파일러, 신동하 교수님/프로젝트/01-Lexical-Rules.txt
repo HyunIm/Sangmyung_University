@@ -1,0 +1,33 @@
+/* ====================================================================== */
+/* C-Minus lexical rules						  */
+/* ====================================================================== */
+
+1. keywords
+
+void(VOID) int(INT) if(IF) else(ELSE) while(WHILE) return(RETURN)
+input(INPUT) output(OUTPUT)
+
+2. special symbols
+
++(PLUS) -(MINUS) *(MULTIPLY) /(DIVIDE) <(LT) <=(LE) >(GT) >=(GE)
+==(EQ) !=(NE) =(ASSIGN) ,(COMMA) ;(SEMICOLON) ((LPAR) )(RPAR)
+{(LBRACE) }(RBRACE) [(LBRACKET) ](RBRACKET)
+
+3. other tokens
+
+ID = (letter|_)(letter|digit|_)*
+NUM = digit digit*
+
+letter = a|..|z|A|..|Z
+digit = 0|..|9
+
+4. whitespaces
+
+" " "\t" "\n" "\r"
+
+5. comments
+
+/* ... */
+// ... to the end of line
+
+/* ====================================================================== */

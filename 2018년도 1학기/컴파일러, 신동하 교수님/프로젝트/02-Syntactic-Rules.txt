@@ -1,0 +1,85 @@
+/* ====================================================================== */
+/* C-Minus syntactic rules						  */
+/* ====================================================================== */
+
+1. program -> var_declaration_list fun_declaration_list
+
+2. var_declaration_list -> var_declaration_list var_declaration | empty
+
+3. fun_declaration_list -> fun_declaration_list fun_declaration 
+	| fun_declaration
+
+4. var_declaration -> type_specifier var SEMICOLON
+	| type_specifier var LBRACKET num RBRACKET SEMICOLON
+
+5. type_specifier -> INT | VOID
+
+6. var -> ID
+
+7. num -> NUM
+
+7. fun_declaration -> type_specifier var LPAR params RPAR LBRACE
+		local_declarations statement_list RBRACE
+
+9. params -> param_list | VOID
+
+10. param_list -> param_list COMMA param | param
+
+11. param -> type_specifier var | type_specifier var LBRACKET RBRACKET
+
+12. local_declarations -> local_declarations var_declaration | empty
+
+13. statement_list -> statement_list statement | empty
+
+14. statement -> compound_stmt | expression_stmt | selection_stmt
+	| iteration_stmt | funcall_stmt | return_stmt | input_stmt
+	| output_stmt
+
+15. compound_stmt -> LBRACE statement_list RBRACE
+
+16. expression_stmt -> expression SEMICOLON | SEMICOLON
+
+17. expression -> var ASSIGN expression
+	| var LBRACKET expression RBRACKET ASSIGN expression
+	| simple_expression
+
+18. simple_expression -> additive_expression relop additive_expression
+	| additive_expression
+
+19. relop -> LT | LE | GT | GE | EQ | NE 
+
+20. additive_expression -> additive_expression addop term | term
+
+21. addop -> PLUS | MINUS
+
+22. term -> term mulop factor | factor
+
+23. mulop -> MULTIPLY | DIVIDE
+
+24. factor -> LPAR expression RPAR | var | var LBRACKET expression RBRACKET
+	| num | PLUS num | MINUS num
+
+25. selection_stmt -> IF LPAR expression RPAR statement ELSE statement
+
+26. iteration_stmt -> WHILE LPAR expression RPAR statement
+
+27. funcall_stmt -> var ASSIGN call
+	| var LBRACKET expression RBRACKET ASSIGN call
+	| call
+
+28. call -> var LPAR args RPAR
+
+29. args -> arg_list | empty
+
+30. arg_list -> arg_list COMMA expression | expression
+
+31. return_stmt -> RETURN SEMICOLON | RETURN expression SEMICOLON
+
+32. input_stmt -> INPUT var SEMICOLON 
+	| INPUT var LBRACKET expression RBRACKET SEMICOLON
+
+33. output_stmt -> OUTPUT expression SEMICOLON
+
+34. empty -> 
+
+/* ====================================================================== */

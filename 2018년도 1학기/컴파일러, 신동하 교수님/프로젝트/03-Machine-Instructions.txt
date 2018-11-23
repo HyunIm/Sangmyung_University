@@ -1,0 +1,56 @@
+/* ====================================================================== */
+/* Tiny Machine instructions						  */
+/* ====================================================================== */
+
+1. arithmetic
+
+add r, s, t		// reg[r] = reg[s] + reg[t]
+sub r, s, t		// reg[r] = reg[s] - reg[t]
+mul r, s, t		// reg[r] = reg[s] * reg[t]
+div r, s, t		// reg[r] = reg[s] / reg[t] (/0 signal)
+
+2.relational
+
+lt r, s, t		// reg[r] = ? (reg[s] < reg[t]) : 1 : 0
+le r, s, t		// reg[r] = ? (reg[s] <= reg[t]) : 1 : 0
+gt r, s, t		// reg[r] = ? (reg[s] > reg[t]) : 1 : 0
+ge r, s, t		// reg[r] = ? (reg[s] >= reg[t]) : 1 : 0
+eq r, s, t		// reg[r] = ? (reg[s] == reg[t]) : 1 : 0
+ne r, s, t		// reg[r] = ? (reg[s] != reg[t]) : 1 : 0
+
+3. load/store
+
+ld r, d(s)		// reg[r] = dMem[d + reg[s]]
+lda r, d(s)		// reg[r] = d + reg[s]
+ldc r, d		// reg[r] = d
+st r, d(s)		// dMem[d + reg[s]] = reg[r]
+
+4. jump
+
+jlt r, d(s)		// if(reg[r] < 0) reg[pc] = d + reg[s]
+jle r, d(s)		// if(reg[r] <= 0) reg[pc] = d + reg[s]
+jgt r, d(s)		// if(reg[r] > 0) reg[pc] = d + reg[s]
+jge r, d(s)		// if(reg[r] >= 0) reg[pc] = d + reg[s]
+jeq r, d(s)		// if(reg[r] == 0) reg[pc] = d + reg[s]
+jne r, d(s)		// if(reg[r] != 0) reg[pc] = d + reg[s]
+
+5. stack
+
+push r			// dMem[reg[sp]] = reg[r]; reg[sp] = reg[sp] - 1
+pop r			// reg[sp] = reg[sp] + 1; reg[r] = dMem[reg[sp]]
+
+6. input/output
+
+in r			// reg[r] <= in
+out r			// reg[r] => out
+
+7. halt
+
+halt			// machine halts
+
+8. Comments
+
+/* ... */
+// ... to the end of line
+
+/* ====================================================================== */
