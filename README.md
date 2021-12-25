@@ -137,12 +137,42 @@
 ## 2015년도 2학기
 ### [공학설계입문, 배경율 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2015%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B3%B5%ED%95%99%EC%84%A4%EA%B3%84%EC%9E%85%EB%AC%B8%2C%20%EB%B0%B0%EA%B2%BD%EC%9C%A8%20%EA%B5%90%EC%88%98%EB%8B%98) (Introduction to Engineering Design)
 설계의 본질과 공학의 주요 활동을 익히고 공학개념 설계의 절차와 정보획득 절차 및 설계관리 도구에 대하여 학습함으로써 공학도의 최소한의 소양을 갖추고 더 나아가 능력 있는 공학자의 자질을 배양
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>창의적 발상기법 기반의 창의공학설계</li>
+    <li>설계 프로세스로 배우는 창의적 공학설계</li>
+    <li>조별과제 (이어폰 연결 블루투스 장치)</li>
+    <li>독후감 (Cybersecurity What Everyone Needs to Know)</li>
+    <li>콘퍼런스 감상문 (ICOTEC 2015)</li>
+  </ul>
+</details>
+<br>
 
 ### [보안기초수학, 박종환 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2015%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EB%B3%B4%EC%95%88%EA%B8%B0%EC%B4%88%EC%88%98%ED%95%99%2C%20%EB%B0%95%EC%A2%85%ED%99%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Number Theory)
 본 과목은 정수론의 기본 개념들인 소수, 최대공약수, 합동, 원시근, 이차잉여류 등을 학습한다. 또한 학습한 개념들이 RSA, ElGamal 공개키 암호, DSA 등 현재 사용되는 다양한 암호기법을 설계하는데 어떻게 이용되는지 살펴볼 것이다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>없음</li>
+  </ul>
+</details>
+<br>
 
 ### [프로그래밍I, 이의철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2015%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8DI%2C%20%EC%9D%B4%EC%9D%98%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (Programming I)
 본 과목은 C 언어를 사용하여 컴퓨터 프로그래밍의 기본 이론과 실기를 배우는 과목이다. 세부 내용은 C 언어의 숫자형, 문자형, 연산자, 제어용 문장, 배열, 프로그램의 구조, 포인터, 문자열, 구조형, 배열의 배열, 포인터의 배열, 파일 입출력 등이다. 본 과목에서 배운 내용은 실제 컴퓨터상에서 프로그래밍 하여 익힌다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>실습 1_학생 점수 평균 및 분산</li>
+    <li>실습 2_직선의 교점 좌표</li>
+    <li>실습 3_정수 비트 연산</li>
+    <li>가위바위보 게임</li>
+    <li>숫자 맞추기 게임</li>
+    <li>버블 소팅</li>
+  </ul>
+</details>
+<br>
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
