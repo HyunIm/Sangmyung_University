@@ -12,7 +12,7 @@
   <p align="center">
     2015년도부터 2018년도까지의 상명대학교 컴퓨터과학과 과제 저장소
     <br>
-    <a href="https://github.com/HyunIm/Sangmyung_University"?<strong>저장소 살펴보기>></strong></a>
+    <a href="https://github.com/HyunIm/Sangmyung_University"><strong>저장소 살펴보기>></strong></a>
     <br>
   </p>
 </div>
@@ -95,6 +95,7 @@
     </li>
   </ol>
 </details>
+<br>
 
 
 ## 📚 2015년도 1학기
@@ -279,7 +280,7 @@
 ### [📘 인공지능 사회, 권지은 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%82%AC%ED%9A%8C%2C%20%EA%B6%8C%EC%A7%80%EC%9D%80%20%EA%B5%90%EC%88%98%EB%8B%98) (Artificial Intelligence Society)
 본 수업은 4차 산업혁명 기반 인공지능에 대한 논리와 기술을 이해하고 사회 트랜드와 미래 사회 등에 대한 지식을 배양한다. 인공지능 기술을 구현하기 위한 기본 컨셉과 개념을 이해할 수 있도록 한다. 다양한 Case study를 분석하고, 인간과 컴퓨터의 본질적인 관계와 지능사회 및 환경에 대한 특징을 학습한다.
 
-### [📘 캡스톤디자인II, 한혁수 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%BA%A1%EC%8A%A4%ED%86%A4%EB%94%94%EC%9E%90%EC%9D%B8II%2C%20%ED%95%9C%ED%98%81%EC%88%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Capstone Design2)
+### [📘 캡스톤디자인II, 한혁수 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%BA%A1%EC%8A%A4%ED%86%A4%EB%94%94%EC%9E%90%EC%9D%B8II%2C%20%ED%95%9C%ED%98%81%EC%88%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Capstone Design 2)
 소프트웨어 개발의 중요한 단계들인 계획, 분석, 설계, 구현, 테스트, 유지보수 과정을 효과적으로 수행하기 위한 기법을 배우고 이를 직접 팀을 구성하여 프로젝트에 적용시켜봄으로써 적은 비용으로 품질 높은 소프트웨어를 개발하는 능력과 실무 응용력, 문제 해결능력을 기른다.
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
