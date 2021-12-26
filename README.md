@@ -181,18 +181,75 @@
 ## 📚 2016년도 1학기
 ### [📘 논리회로, 민승욱 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%85%BC%EB%A6%AC%ED%9A%8C%EB%A1%9C%2C%20%EB%AF%BC%EC%8A%B9%EC%9A%B1%20%EA%B5%90%EC%88%98%EB%8B%98) (Logic Circuits)
 컴퓨터 하드웨어의 기본을 이루는 부울연산 및 논리 게이트에 대해 학습하고 가산기, 다중화기 등의 조합회로와 레지스터, 카운터 및 메모리 소자 등의 순서회로에 대한 이해를 통해 컴퓨터 하드웨어 설계에 응용할 수 있는 능력을 배양한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Lab 01 Logic minimization</li>
+    <li>Lab 02 Standard Boolean expressions</li>
+    <li>Lab 03 Adders using Carry Lookahead</li>
+    <li>Lab 04 Decoder & Multiplexer</li>
+    <li>Lab 05 Sequential Logic</li>
+    <li>Lab 06 Design of Synchronous Sequential Logics</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 선형대수학, 이의철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%84%A0%ED%98%95%EB%8C%80%EC%88%98%ED%95%99%2C%20%EC%9D%B4%EC%9D%98%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (Linear Algebra)
 선형대수학은 우리에게 지식을 체계화시킬 수 있는 논리를 제공해준다. 그러나 이러한 논리적 사고 능력은 단순히 암기해서는 되지 않으며 단계별로 이해해 나가는 연습과정 중에 얻어지게 된다. 이러한 논리적 사고 능력의 배양과 함께 선형대수의 기본 개념들을 탐구하고 적용할 수 있는 능력의 개발이 본 교과목이 목표하는 바이다. 본 과목에서는 이론만을 다루지 않고 그래프 이론, 암호 이론, 마르코프 프로세스, 컴퓨터 그래픽, 피보나치수열, 데이터의 곡선적합 등 선형대수의 응용을 적절하게 다룬다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>없음</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 시스템소프트웨어, 손성훈 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%2C%20%EC%86%90%EC%84%B1%ED%9B%88%20%EA%B5%90%EC%88%98%EB%8B%98) (System Softwares)
 컴퓨터 소프트웨어는 응용 소프트웨어와 컴퓨터 시스템의 작동을 기본적으로 제어하는 시스템 소프트웨어로 나누어진다. 컴퓨터 하드웨어의 제어와 밀접한 관련이 있는 어셈블리 언어를 배우고, 어셈블리 언어를 기계어로 바꾸어주는 어셈블러를 설계 구현한다. 또한 오브젝트 모듈을 하나의 수행가능 한 파일로 만드는 링커와 기계어 프로그램을 메모리에 올려주는 로더 등의 시스템 소프트웨어의 기능과 구조를 배움으로서 컴퓨터 시스템의 작동 원리를 보다 심도 있게 이해한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>lab-00-binary_number</li>
+    <li>lab-01-nasm</li>
+    <li>lab-02-asm-io</li>
+    <li>lab-03-loop</li>
+    <li>lab-04-array</li>
+    <li>lab-05-subprogram</li>
+    <li>lab-06-subprogram2</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 이산수학, 김윤호 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%9D%B4%EC%82%B0%EC%88%98%ED%95%99%2C%20%EA%B9%80%EC%9C%A4%ED%98%B8%20%EA%B5%90%EC%88%98%EB%8B%98) (Discrete Mathematics)
 자료의 정리와 배열에 관한 집합이론과 자료사이의 인과관계를 다루는 논리구조와 확률의 개념, 귀납법 및 순환법을 통해 주어진 문제를 논리적이고 오류없이 해결하는 방법을 배우며, 조합론 및 이산구조, 알고리즘 분석 등 다른 전공과목을 이해하는데 필요한 기초지식을 습득한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>handwriting_assignment #1</li>
+    <li>handwriting_assignment #2</li>
+    <li>handwriting_assignment #3</li>
+    <li>handwriting_assignment #4</li>
+    <li>handwriting_assignment #5</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 프로그래밍2, 홍철의 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D2%2C%20%ED%99%8D%EC%B2%A0%EC%9D%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Programming II)
 본 과목은 C 언어를 사용하여 컴퓨터 프로그래밍의 기본 이론과 실기를 배우는 과목이다. 세부 내용은 C 언어의 숫자형, 문자형, 연산자, 제어용 문장, 배열, 프로그램의 구조, 포인터, 문자열, 구조형, 배열의 배열, 포인터의 배열, 파일 입출력 등이다. 본 과목에서 배운 내용은 실제 컴퓨터상에서 프로그래밍 하여 익힌다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Chapter 08 조건에 따른 흐름의 분기</li>
+    <li>Chapter 11 1차원 배열</li>
+    <li>Chapter 12 포인터의 이해</li>
+    <li>Chapter 13 포인터와 배열! 함께 이해하기</li>
+    <li>Chapter 20 도전! 프로그래밍3</li>
+    <li>배열 과제</li>
+    <li>유클리드 알고리즘</li>
+    <li>대소문자 변환</li>
+  </ul>
+</details>
+<br>
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
