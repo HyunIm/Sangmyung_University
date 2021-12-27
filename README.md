@@ -98,6 +98,8 @@
 <br>
 
 
+<div id="2015년도-1학기"></div>
+
 ## 📚 2015년도 1학기
 ### [📘 미적분학, 박종환 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2015%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%AF%B8%EC%A0%81%EB%B6%84%ED%95%99%2C%20%EB%B0%95%EC%A2%85%ED%99%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Calculus)
 전공 학문의 이해를 높이기 위한 기초학문으로서 함수에 대한 기본이론은 물론 함수의 극한, 도함수, 미분 및 적분에 대한 풀이방법에 대해 학습한다.
@@ -134,6 +136,8 @@
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
+
+<div id="2015년도-2학기"></div>
 
 ## 📚 2015년도 2학기
 ### [📘 공학설계입문, 배경율 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2015%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B3%B5%ED%95%99%EC%84%A4%EA%B3%84%EC%9E%85%EB%AC%B8%2C%20%EB%B0%B0%EA%B2%BD%EC%9C%A8%20%EA%B5%90%EC%88%98%EB%8B%98) (Introduction to Engineering Design)
@@ -177,6 +181,8 @@
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
+
+<div id="2016년도-1학기"></div>
 
 ## 📚 2016년도 1학기
 ### [📘 논리회로, 민승욱 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%85%BC%EB%A6%AC%ED%9A%8C%EB%A1%9C%2C%20%EB%AF%BC%EC%8A%B9%EC%9A%B1%20%EA%B5%90%EC%88%98%EB%8B%98) (Logic Circuits)
@@ -254,6 +260,8 @@
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
 
+<div id="2016년도-2학기"></div>
+
 ## 📚 2016년도 2학기
 ### [📘 객체지향프로그래밍, 김영준 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%2C%20%EA%B9%80%EC%98%81%EC%A4%80%20%EA%B5%90%EC%88%98%EB%8B%98) (Object Oriented Programming)
 객체지향 분석, 설계 및 프로그래밍에 대한 개념과 다양한 객체지향 프로그래밍 언어의 특징과 기본을 배운다. 이를 통하여 객체지향 소프트웨어 시스템을 직접 개발하여 봄으로써 객체지향 패러다임을 이해하게 되며 객체지향 개념을 이용할 수 있는 소양을 쌓는다.
@@ -327,6 +335,8 @@
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
 
+<div id="2017년도-1학기"></div>
+
 ## 📚 2017년도 1학기
 ### [📘 데이터베이스, 송병호 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%2C%20%EC%86%A1%EB%B3%91%ED%98%B8%20%EA%B5%90%EC%88%98%EB%8B%98) (Database)
 실세계의 다양한 정보원들을 조직화하여 통합 저장하는 데이터베이스와 이를 중앙 관리하는 데이터베이스 관리 시스템 및 관련 이론과 기술을 배운다. 관계 데이터 모델을 기반으로 하여 관계 대수와 해석, 관계 질의어인 SQL과 QBE, 데이터베이스 설계의 대강, 데이터 종속성과 정규화 이론을 중점적으로 학습하며 데이터 마이닝이나 트랜잭션 처리, 인터넷 데이터베이스 등을 보조적으로 학습하며 최신 응용분야에 활용할 수 있는 안목을 기른다.
@@ -350,6 +360,8 @@
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
 
+<div id="2017년도-2학기"></div>
+
 ## 📚 2017년도 2학기
 ### [📘 게임소프트웨어디자인1, 김석규 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B2%8C%EC%9E%84%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%EB%94%94%EC%9E%90%EC%9D%B81%2C%20%EA%B9%80%EC%84%9D%EA%B7%9C%20%EA%B5%90%EC%88%98%EB%8B%98) (Game Software Design I)
 본 교과목은 게임제작의 기초이론을 바탕으로 게임 시스템을 기획 및 설계하고 게임제작에 대한 전반적인 기술 및 전문용어 등을 습득하여 실무에 적용 가능한 심층적인 학습을 제공한다.
@@ -365,6 +377,8 @@
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
+
+<div id="2018년도-1학기"></div>
 
 ## 📚 2018년도 1학기
 ### [📘 미적분학, 이석필 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%AF%B8%EC%A0%81%EB%B6%84%ED%95%99%2C%20%EC%9D%B4%EC%84%9D%ED%95%84%20%EA%B5%90%EC%88%98%EB%8B%98) (Calculus)
@@ -386,6 +400,8 @@
 확률변수를 이해하고, 통계적인 해석 기법을 익히기 위한 기본적인 내용을 학습한다. 또한 멀티미디어 신호 (영상 및 음향)와 같은 전자 신호의 특성을 응용분야로 이해한다.
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
+
+<div id="2018년도-2학기"></div>
 
 ## 📚 2018년도 2학기
 ### [📘 인공지능 사회, 권지은 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EC%82%AC%ED%9A%8C%2C%20%EA%B6%8C%EC%A7%80%EC%9D%80%20%EA%B5%90%EC%88%98%EB%8B%98) (Artificial Intelligence Society)
