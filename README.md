@@ -257,18 +257,72 @@
 ## 📚 2016년도 2학기
 ### [📘 객체지향프로그래밍, 김영준 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%2C%20%EA%B9%80%EC%98%81%EC%A4%80%20%EA%B5%90%EC%88%98%EB%8B%98) (Object Oriented Programming)
 객체지향 분석, 설계 및 프로그래밍에 대한 개념과 다양한 객체지향 프로그래밍 언어의 특징과 기본을 배운다. 이를 통하여 객체지향 소프트웨어 시스템을 직접 개발하여 봄으로써 객체지향 패러다임을 이해하게 되며 객체지향 개념을 이용할 수 있는 소양을 쌓는다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Member</li>
+    <li>Constructor</li>
+    <li>Vector</li>
+    <li>중간고사 실습</li>
+    <li>퀴즈</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 데이터통신, 정진우 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%86%B5%EC%8B%A0%2C%20%EC%A0%95%EC%A7%84%EC%9A%B0%20%EA%B5%90%EC%88%98%EB%8B%98) (Data Communication)
 대표적인 인터네트워킹 기술인 TCP/IP 프로토콜과 웹에 근간이 되는 다양한 프로토콜의 내부 구조와 구현 기술에 대하여 연구하며 공부한다. 또한 소켓 인터페이스를 이용하여 다양한 응용 프로토콜을 설계 구현할 수 있는 능력을 배양한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Homework #1 de facto</li>
+    <li>실습 1 - Ethernet</li>
+    <li>실습 2 - Switch Operation</li>
+    <li>실습 3 - WLAN</li>
+    <li>RTS-CTS-DATA-ACK의 영향</li>
+    <li>Ethernet으로 연결된 WLAN BSS</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 운영체제, 손성훈 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%2C%20%EC%86%90%EC%84%B1%ED%9B%88%20%EA%B5%90%EC%88%98%EB%8B%98) (Operating Systems)
 운영체제는 사용자의 편리한 컴퓨터 사용을 도와주고 컴퓨터 시스템의 자원을 효율적으로 사용하도록 관리하는 중요한 시스템 소프트웨어이다. 관리해야 할 컴퓨터 시스템의 특성, 운영체제의 요건 등과 프로세스, 메모리, 파일시스템, 입출력시스템 등에 대한 설계 원리와 구현에 대하여 학습한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>ch3 Process Concept, ch4 Multithreaded Programming</li>
+    <li>ch5 Process Scheduling</li>
+    <li>Pintos <a href="https://github.com/ckdgus0505/pintos">[Github]</a></li>
+  </ul>
+</details>
+<br>
 
 ### [📘 자료구조, 홍철의 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0%2C%20%ED%99%8D%EC%B2%A0%EC%9D%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Data Structures)
 본 과목에서는 효과적인 컴퓨터 소프트웨어 설계를 위하여 필수적인 자료의 표현 및 처리 방법을 다룬다. 주된 내용은 자료구조와 알고리즘의 개념을 이해하고 다양한 자료구조인 배열, 스택, 큐, 리스트, 트리, 그래프 등의 개념 및 각각의 자료구조와 관련된 기본 알고리즘을 다룬다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>1. 자료구조와 알고리즘 (연습문제)</li>
+    <li>2. 순환 (연습문제)</li>
+    <li>3. 배열 (연습문제)</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 컴퓨터구조, 김성철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2016%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EC%BB%B4%ED%93%A8%ED%84%B0%EA%B5%AC%EC%A1%B0%2C%20%EA%B9%80%EC%84%B1%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (Computer Architecture)
 컴퓨터의 구성 요소인 중앙 처리 장치(CPU), 명령어 세트, 성능 향상을 위한 파이프라인 방식의 이해, 메인 메모리, 캐쉬 메모리의 특성과 외부 메모리, 그리고 시스템 버스 및 입출력 장치 등 컴퓨터 구조의 전반적인 개념을 이해한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Homework #0 최신 PC 사양 조사</li>
+    <li>Homework #1</li>
+    <li>Homework #2</li>
+    <li>Homework #3</li>
+    <li>Homework #4</li>
+    <li>Homework #5</li>
+    <li>Homework #6</li>
+  </ul>
+</details>
+<br>
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
