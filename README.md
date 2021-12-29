@@ -340,21 +340,77 @@
 ## 📚 2017년도 1학기
 ### [📘 데이터베이스, 송병호 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%2C%20%EC%86%A1%EB%B3%91%ED%98%B8%20%EA%B5%90%EC%88%98%EB%8B%98) (Database)
 실세계의 다양한 정보원들을 조직화하여 통합 저장하는 데이터베이스와 이를 중앙 관리하는 데이터베이스 관리 시스템 및 관련 이론과 기술을 배운다. 관계 데이터 모델을 기반으로 하여 관계 대수와 해석, 관계 질의어인 SQL과 QBE, 데이터베이스 설계의 대강, 데이터 종속성과 정규화 이론을 중점적으로 학습하며 데이터 마이닝이나 트랜잭션 처리, 인터넷 데이터베이스 등을 보조적으로 학습하며 최신 응용분야에 활용할 수 있는 안목을 기른다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>#1 데이터 베이스 전문가로서 윤리적 직업적 책임 의식</li>
+    <li>#2 ER 다이어그램</li>
+    <li>#3 SQL</li>
+    <li>#4 데이터베이스 SQL 실행 리포트</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 소프트웨어공학, 한혁수 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%EA%B3%B5%ED%95%99%2C%20%ED%95%9C%ED%98%81%EC%88%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Software Engineering)
 소프트웨어 공학은 소프트웨어 개발을 위한 구조화된 방법을 강의하는 과목이다. 요구사항 분석부터 유지보수까지 연구된 이론들을 살펴보고, 계별로 최신 관련 연구를 통해 현재의 연구 방향을 이해한다. 이러한 이론을 바탕으로 체계적인 방법을 통해 소프트웨어를 개발해 내도록 교육한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>팀 프로젝트 <a href="https://github.com/SE-admin/SE2017_6_blossom">[Github]</a></li>
+  </ul>
+</details>
+<br>
 
 ### [📘 알고리즘, 홍철의 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%2C%20%ED%99%8D%EC%B2%A0%EC%9D%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Algorithm)
 컴퓨터를 사용하여 주어진 문제를 풀고 해답을 얻어내는 과정을 기술한 것을 알고리즘이라고 한다. 본 강좌에서는 정렬 문제와 트리 및 그래프로 추상화된 문제들에 대한 여러 알고리즘을 공부하고 각 알고리즘들의 시간적 공간적 측면의 효율을 비교하고 분석하는 기법을 배운다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>없음</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 유닉스프로그래밍, 백윤철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%9C%A0%EB%8B%89%EC%8A%A4%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%2C%20%EB%B0%B1%EC%9C%A4%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (UNIX Programming)
 본 과목은 C 언어와 유닉스 시스템 호출 인터페이스를 사용한 프로그래밍 방법을 공부한다. 세부적인 기술 사항은 다음과 같다. 쉘(shell), 파일 입출력, 파일 및 디렉토리, 시스템 데이터 파일 및 정보, 프로세스 환경, 프로세스 제어, 소켓(socket), 신호(signal), 쓰레드(thread), 프로세스 간 통신(IPC) 등이다. 또한 이 과목에서는 공학 설계 및 컴퓨터 윤리를 다룬다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>UNIX-lab-01-login-vi</li>
+    <li>UNIX-lab-02-FileIO</li>
+    <li>UNIX-lab-03-FileDirectory</li>
+    <li>UNIX-lab-04-infos</li>
+    <li>UNIX-lab-05-Process</li>
+    <li>UNIX-lab-06-signal-mmap</li>
+    <li>#1 myls 명령어 과제</li>
+    <li>#2 가위바위보 소켓 프로그래밍</li>
+    <li>unix201511054 디렉토리</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 인공지능, 김영준 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%2C%20%EA%B9%80%EC%98%81%EC%A4%80%20%EA%B5%90%EC%88%98%EB%8B%98) (Artificial Intelligence)
 인공지능과 관련된 기본 이론과 다양한 응용 방법을 다룬다. 특히 탐색 방법, 다양한 지식 표현 방법, 추론법, LISP와 PROLOG 등의 인공지능 언어 등에 대한 지식을 습득하고 지식 기반 시스템의 원리 및 구성 방법 등을 배운다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>#1 pl (knight's tour problem, 재정 상담 프로그램</li>
+    <li>#2 Jess (재정 상담 프로그램)</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 컴퓨터네트워크, 김성철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%BB%B4%ED%93%A8%ED%84%B0%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC%2C%20%EA%B9%80%EC%84%B1%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (Computer Networks)
 인터넷 프로토콜 스텍의 HTTP, FTP와 같은 어플리케이션 계층 프로토콜, TCP와 UDP의 트랜스포트 계층 프로토콜, IP 네트워크 계층 프로토콜 및 이더넷, ATM 등의 데이터링크 계층에서의 프로토콜들에 대한 이해와 인터넷에서의 트래픽 전송 특성 등에 대해 이해한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Homework #1</li>
+    <li>Homework #2</li>
+    <li>Homework #3</li>
+  </ul>
+</details>
+<br>
 
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
