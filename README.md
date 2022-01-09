@@ -421,15 +421,67 @@
 ## 📚 2017년도 2학기
 ### [📘 게임소프트웨어디자인1, 김석규 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EA%B2%8C%EC%9E%84%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%EB%94%94%EC%9E%90%EC%9D%B81%2C%20%EA%B9%80%EC%84%9D%EA%B7%9C%20%EA%B5%90%EC%88%98%EB%8B%98) (Game Software Design I)
 본 교과목은 게임제작의 기초이론을 바탕으로 게임 시스템을 기획 및 설계하고 게임제작에 대한 전반적인 기술 및 전문용어 등을 습득하여 실무에 적용 가능한 심층적인 학습을 제공한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>선수과목 미수강자 과제</li>
+    <li>#3, 물리엔진과 충돌 마스터하기</li>
+    <li>#4, 게임 오브젝트의 제어</li>
+    <li>#5, 3D 게임 만들기</li>
+    <li>2017 상명대학교 게임학과 졸업작품전시회 감상문</li>
+    <li>중간 발표</li>
+    <li>최종 발표</li>
+    <li>최종 게임 <a href="https://github.com/HyunIm/Morning-Running">[Github]</a></li>
+  </ul>
+</details>
+<br>
 
 ### [📘 디지털신호처리, 이의철 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%EB%94%94%EC%A7%80%ED%84%B8%EC%8B%A0%ED%98%B8%EC%B2%98%EB%A6%AC%2C%20%EC%9D%B4%EC%9D%98%EC%B2%A0%20%EA%B5%90%EC%88%98%EB%8B%98) (Computer Graphics)
 디지털신호의 기본 개념과 프로그래밍 언어를 통해 디지털 신호 및 영상으로부터 패턴인식을 위해 필요한 특징벡터 추출 방법을 학습한다. 이를 위해 디지털신호의 산술연산, 컨볼루션 연산, 기하학적 처리등의 시간 및 공간 영역에서의 처리기법과 퓨리에 변환에 기반한 주파수 영역에서의 처리방법을 학습한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Gonzalez 이진화 임계치 자동결정 프로그램 구현</li>
+    <li>영상 확대 후 bilinear interpolation 구현</li>
+    <li>#4, 게임 오브젝트의 제어</li>
+    <li>#5, 3D 게임 만들기</li>
+    <li>2017 상명대학교 게임학과 졸업작품전시회 감상문</li>
+    <li>중간 발표</li>
+    <li>최종 발표</li>
+    <li>최종 게임 <a href="https://github.com/HyunIm/Morning-Running">[Github]</a></li>
+  </ul>
+</details>
+<br>
 
 ### [📘 프로그래밍언어론, 신동하 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%EC%96%B8%EC%96%B4%EB%A1%A0%2C%20%EC%8B%A0%EB%8F%99%ED%95%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Theory of Programming Languages)
 본 과목은 프로그래밍 언어의 기본 이론을 소개한다. 먼저 귀납법(induction), 문맥 자유 문법(context-free grammar), 파싱(parsing) 등의 형식적(formal) 이론을 소개한 후 다양한 언어의 실제적인 의미(semantics)에 대하여 공부한다. 본 과목에서 다루는 자세한 내용은 귀납법, 문맥 자유 문법, 파싱, 식(expression) 중심 언어, 상태(state) 중심 언어, 형(type) 중심 언어, 객체(object) 중심 언어 등의 의미를 포함하고 있다. 본 과목에서 학생들은 여러 언어의 인터프리터를 구현해 봄으로서 배운 이론을 연습한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>hw01-Scheme</li>
+    <li>hw02-Scheme Programs</li>
+    <li>hw03-Context-Free Grammar</li>
+    <li>hw04-Datatype</li>
+    <li>hw05-SLLGEN-System</li>
+    <li>hw06-LET</li>
+    <li>hw07-LETREC</li>
+    <li>hw08-IMPLICIT-REFS</li>
+    <li>hw09-CHECKED</li>
+    <li>hw10-CLASSES</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 휴먼컴퓨터인터렉션, 한혁수 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2017%EB%85%84%EB%8F%84%202%ED%95%99%EA%B8%B0/%ED%9C%B4%EB%A8%BC%EC%BB%B4%ED%93%A8%ED%84%B0%EC%9D%B8%ED%84%B0%EB%A0%89%EC%85%98%2C%20%ED%95%9C%ED%98%81%EC%88%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Human Computer Interaction)
 소프트웨어를 개발하는 프로그래머들에게 여러 인터페이스 개발 방법들을 소개하고, 이 방법들을 적용 분야와 적용 목적에 따라 그 차이를 비교함으로서 보다 편리한 인터페이스를 개발하는 방법을 학습한다. 또한 소프트웨어들이 지금까지 사용해 왔던 방법들을 살펴보고 사용자 측면에서 문제점을 알아봄으로써 보다 효과적인 인터페이스 설계를 할 수 있도록 하는데 목적이 있다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>엑셀의 ‘피벗 테이블’에 대한 Conceptual model 설명</li>
+    <li>Safety와 Security 의 관계</li>
+  </ul>
+</details>
+<br>
 
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
