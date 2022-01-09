@@ -441,14 +441,8 @@
 <details>
   <summary>과제</summary>
   <ul>
-    <li>Gonzalez 이진화 임계치 자동결정 프로그램 구현</li>
-    <li>영상 확대 후 bilinear interpolation 구현</li>
-    <li>#4, 게임 오브젝트의 제어</li>
-    <li>#5, 3D 게임 만들기</li>
-    <li>2017 상명대학교 게임학과 졸업작품전시회 감상문</li>
-    <li>중간 발표</li>
-    <li>최종 발표</li>
-    <li>최종 게임 <a href="https://github.com/HyunIm/Morning-Running">[Github]</a></li>
+    <li>1_Gonzalez 이진화 임계치 자동결정 프로그램 구현</li>
+    <li>2_영상 확대 후 bilinear interpolation 구현</li>
   </ul>
 </details>
 <br>
