@@ -485,21 +485,84 @@
 ## 📚 2018년도 1학기
 ### [📘 미적분학, 이석필 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%AF%B8%EC%A0%81%EB%B6%84%ED%95%99%2C%20%EC%9D%B4%EC%84%9D%ED%95%84%20%EA%B5%90%EC%88%98%EB%8B%98) (Calculus)
 전공 학문의 이해를 높이기 위한 기초학문으로서 함수에 대한 기본이론은 물론 함수의 극한, 도함수, 미분 및 적분에 대한 풀이방법에 대해 학습한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>미분과 적분의 필요성</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 보안프로그래밍, 강상욱 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EB%B3%B4%EC%95%88%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%2C%20%EA%B0%95%EC%83%81%EC%9A%B1%20%EA%B5%90%EC%88%98%EB%8B%98) (Secure Programming)
 본 과목은 안전한 프로그래밍을 위한 다음과 같은 기술을 공부한다. 안전 프로그래밍 문제, 프로그램 정적 분석, 타입 검사, 입력의 처리 방법, 버퍼 오버플로, 오류 및 예외 처리, 안전 프로그래밍 언어, 웹 응용, HTTP 응용, XML 및 웹 응용.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>#1 whitelisting</li>
+    <li>#2 easylogin</li>
+    <li>#3 Buffer overflow</li>
+    <li>#4 정수 취약점</li>
+    <li>한국IT서비스학회 2018 춘계학술대회</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 임베디드소프트웨어I, 신동하 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%9E%84%EB%B2%A0%EB%94%94%EB%93%9C%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%20I%2C%20%EC%8B%A0%EB%8F%99%ED%95%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Embedded Software I)
 본 과목은 임베디드 소프트웨어 개발을 위한 ARM 구조와 실시간 커널을 소개한다. 본 과목에서 공부하는 기술은 다음과 같다. ARM 구조 기초, ARM 어셈블리 프로그래밍, ELF 구조, 개발 환경, 디바이스 프로그래밍, 예외 프로그래밍, 타이머 인터럽트 프로그래밍, 실시간 시스템 개념, 실시간 커널의 구조, 태스크 관리, 시간 관리, 이벤트 관리, 세마포 관리, 메모리 관리 등이다. 본 과목에서 학생들은 ARM 개발 키트 상에서 배운 기술을 연습하는 다양한 프로그래밍 실습을 수행한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>lab01-Running BeagleBone</li>
+    <li>lab02-ARM Assembly Programming</li>
+    <li>lab03-ELF Sections</li>
+    <li>lab04-UART Programming</li>
+    <li>lab05-Exception Programming</li>
+    <li>lab06-SWI Programming</li>
+    <li>lab07-Timer Interrupt Programming</li>
+    <li>lab08-uCOS-II Task Programming</li>
+    <li>lab09-uCOS-II Synchronization Programming</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 캡스톤디자인I, 한혁수 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%BA%A1%EC%8A%A4%ED%86%A4%EB%94%94%EC%9E%90%EC%9D%B8I%2C%20%ED%95%9C%ED%98%81%EC%88%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Capstone Design I)
 소프트웨어 개발의 중요한 단계들인 계획, 분석, 설계, 구현, 테스트, 유지보수 과정을 효과적으로 수행하기 위한 기법을 배우고 이를 직접 팀을 구성하여 프로젝트에 적용시켜봄으로써 적은 비용으로 품질 높은 소프트웨어를 개발하는 능력과 실무 응용력, 문제 해결능력을 기른다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>졸업 프로젝트 <a href="https://github.com/SMU-SE-Admin/2018_Capstone_D.VA_Doc">[Github]</a></li>
+  </ul>
+</details>
+<br>
 
 ### [📘 컴파일러, 신동하 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC%2C%20%EC%8B%A0%EB%8F%99%ED%95%98%20%EA%B5%90%EC%88%98%EB%8B%98) (Compilers)
 본 과목은 고급(high level) 언어를 저급(low level) 언어로 변환하는 컴파일러를 개발하는 데 필요한 기본 기술을 소개한다. 본 과목에서 다루는 기술적인 사항은 다음과 같다. 정규 식(regular expression), 유한 자동 기계(finite automata), 정규 언어(regular languages), flex 컴파일러 도구, 문맥 자유 문법(context-free grammar), 푸시 다운 자동 기계(push-down automata), 문맥 자유 언어(context-free language), 하향식 파싱(top-down parsing), 상향식 파싱(bottom-up parsing), bison 컴파일러 도구, 속성 문법(attribute grammar), 심볼 테이블, 타겟 기계, 실행 시간 환경, 코드 생성 등이다. 본 과목에서 학생들은 작은 C 언어의 컴파일러를 직접 구현해 봄으로서 컴파일러 개발 기술을 연습한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>Homework-01-Finite-Automata</li>
+    <li>Homework-02-Regular-Languages</li>
+    <li>Homework-03-C-Minus-Scanner</li>
+    <li>Homework-04-Context-Free Grammar</li>
+    <li>Homework-05-C-Minus Parser</li>
+    <li>Homework-06-C-Minus Symbol Table</li>
+    <li>Project-C-Minus-To-TM-Compiler</li>
+  </ul>
+</details>
+<br>
 
 ### [📘 통계, 유훈 교수님](https://github.com/HyunIm/Sangmyung_University/tree/master/2018%EB%85%84%EB%8F%84%201%ED%95%99%EA%B8%B0/%ED%86%B5%EA%B3%84%2C%20%EC%9C%A0%ED%9B%88%20%EA%B5%90%EC%88%98%EB%8B%98) (Statistics)
 확률변수를 이해하고, 통계적인 해석 기법을 익히기 위한 기본적인 내용을 학습한다. 또한 멀티미디어 신호 (영상 및 음향)와 같은 전자 신호의 특성을 응용분야로 이해한다.
+<details>
+  <summary>과제</summary>
+  <ul>
+    <li>#1 Grouped Data와 Ungrouped Data의 차이</li>
+    <li>#2 병명 진단 알고리즘</li>
+    <li>스팸 필터링 (기말고사 대체 과제) <a href="https://github.com/HyunIm/SMS_SPAM_Filtering">[Github]</a></li>
+  </ul>
+</details>
+<br>
+
 <p align="right">(<a href="#top">맨 위로</a>)</p>
 
 
